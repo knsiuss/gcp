@@ -126,13 +126,13 @@ BINAUTHZ_SA_EMAIL="service-${PROJECT_NUMBER}@gcp-sa-binaryauthorization.iam.gser
 
 cat > ./iam_request.json << EOM
 {
-  'resource': 'projects/${PROJECT_ID}/notes/vulnerability_note',
-  'policy': {
-    'bindings': [
+  "resource": "projects/${PROJECT_ID}/notes/vulnerability_note",
+  "policy": {
+    "bindings": [
       {
-        'role': 'roles/containeranalysis.notes.occurrences.viewer',
-        'members': [
-          'serviceAccount:${BINAUTHZ_SA_EMAIL}'
+        "role": "roles/containeranalysis.notes.occurrences.viewer",
+        "members": [
+          "serviceAccount:${BINAUTHZ_SA_EMAIL}"
         ]
       }
     ]

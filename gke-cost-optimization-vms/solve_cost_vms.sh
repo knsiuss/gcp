@@ -65,7 +65,7 @@ gcloud container node-pools delete my-node-pool --cluster hello-demo-cluster --z
 
 echo -e "\n${YELLOW}[Step 7] Provisioning Regional Demo Cluster...${NC}"
 # Extract region from the cluster zone
-REGION=$(echo "$ZONE" | cut -d'-' -f1-2)
+REGION=$(echo "$ZONE" | sed 's/-[a-z]$//')
 echo -e "${YELLOW}[*] Regional GKE Cluster Region:${NC} $REGION"
 
 gcloud container clusters create regional-demo --region="$REGION" --num-nodes=1 --quiet

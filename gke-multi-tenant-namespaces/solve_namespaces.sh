@@ -58,6 +58,7 @@ kubectl create -f developer-role.yaml || true
 
 # Bind the developer role to team-a-dev
 kubectl create rolebinding team-a-developers \
+  --namespace=team-a \
   --role=developer \
   --user="team-a-dev@${PROJECT_ID}.iam.gserviceaccount.com" || true
 

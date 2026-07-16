@@ -168,33 +168,33 @@ steps:
   - '-c'
   - |
     (gcloud artifacts docker images scan \
-    "${REGION}-docker.pkg.dev/\${PROJECT_ID}/artifact-scanning-repo/sample-image" \
+    "${REGION}-docker.pkg.dev/${PROJECT_ID}/artifact-scanning-repo/sample-image" \
     --location ${REGION} \
     --format="value(response.scan)") > /workspace/scan_id.txt
 
 #Analyze the result of the scan
-- id: severity check
+- id: severity-check
   name: 'gcr.io/cloud-builders/gcloud'
   entrypoint: 'bash'
   args:
   - '-c'
   - |
-      gcloud artifacts docker images list-vulnerabilities \$(cat /workspace/scan_id.txt) \
+      gcloud artifacts docker images list-vulnerabilities \$$(cat /workspace/scan_id.txt) \
       --format="value(vulnerability.effectiveSeverity)" | if grep -Fxq CRITICAL; \
       then echo "Failed vulnerability check for CRITICAL level" && exit 1; else echo "No CRITICAL vulnerability found, congrats !" && exit 0; fi
 
 #Retag
 - id: "retag"
   name: 'gcr.io/cloud-builders/docker'
-  args: ['tag',  '${REGION}-docker.pkg.dev/\${PROJECT_ID}/artifact-scanning-repo/sample-image', '${REGION}-docker.pkg.dev/\${PROJECT_ID}/artifact-scanning-repo/sample-image:good']
+  args: ['tag',  '${REGION}-docker.pkg.dev/${PROJECT_ID}/artifact-scanning-repo/sample-image', '${REGION}-docker.pkg.dev/${PROJECT_ID}/artifact-scanning-repo/sample-image:good']
 
 #pushing to artifact registry
 - id: "push"
   name: 'gcr.io/cloud-builders/docker'
-  args: ['push',  '${REGION}-docker.pkg.dev/\${PROJECT_ID}/artifact-scanning-repo/sample-image:good']
+  args: ['push',  '${REGION}-docker.pkg.dev/${PROJECT_ID}/artifact-scanning-repo/sample-image:good']
 
 images:
-  - '${REGION}-docker.pkg.dev/\${PROJECT_ID}/artifact-scanning-repo/sample-image'
+  - '${REGION}-docker.pkg.dev/${PROJECT_ID}/artifact-scanning-repo/sample-image'
 EOF
 
 echo -e "${YELLOW}[*] Testing build breaks on CRITICAL vulnerabilities (this build is EXPECTED to fail)...${NC}"

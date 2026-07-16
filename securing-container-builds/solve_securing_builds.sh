@@ -128,7 +128,7 @@ echo -e "${GREEN}[+] Package deployed successfully!${NC}"
 
 echo -e "\n${YELLOW}[Step 5] Task 3: Creating Remote Maven Central Cache...${NC}"
 gcloud artifacts repositories create maven-central-cache \
-    --project=\$PROJECT_ID \
+    --project="$PROJECT_ID" \
     --repository-format=maven \
     --location=us-central1 \
     --description="Remote repository for Maven Central caching" \
@@ -226,7 +226,7 @@ cat > ./policy.json << EOF
 EOF
 
 gcloud artifacts repositories create virtual-maven-repo \
-    --project=\${PROJECT_ID} \
+    --project="${PROJECT_ID}" \
     --repository-format=maven \
     --mode=virtual-repository \
     --location=us-central1 \
@@ -289,12 +289,12 @@ with open('pom.xml', 'w') as f:
 
 echo -e "${YELLOW}[*] Deleting and recreating central cache repo to empty cache...${NC}"
 gcloud artifacts repositories delete maven-central-cache \
-    --project=\$PROJECT_ID \
+    --project="$PROJECT_ID" \
     --location=us-central1 \
     --quiet
 
 gcloud artifacts repositories create maven-central-cache \
-    --project=\$PROJECT_ID \
+    --project="$PROJECT_ID" \
     --repository-format=maven \
     --location=us-central1 \
     --description="Remote repository for Maven Central caching" \
