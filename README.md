@@ -112,3 +112,15 @@ Each lab is organized into its own folder. Simply open **Google Cloud Shell** in
     ./solve_namespaces.sh
     ```
 
+### 10. Exploring Cost-optimization for GKE Virtual Machines (GSP767)
+*   **Folder**: `gke-cost-optimization-vms/`
+*   **Script**: `solve_cost_vms.sh`
+*   **Execution**:
+    ```bash
+    git clone https://github.com/knsiuss/gcp.git gcp-labs
+    cd gcp-labs/gke-cost-optimization-vms
+    chmod +x solve_cost_vms.sh
+    ./solve_cost_vms.sh
+    ```
+
+
