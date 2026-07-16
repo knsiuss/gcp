@@ -6,7 +6,7 @@ print("=== Starting ARC114 Automation ===")
 
 # 1. Enable APIs
 print("Enabling necessary APIs...")
-subprocess.run("gcloud services enable language.googleapis.com speech.googleapis.com", shell=True)
+subprocess.run("gcloud services enable language.googleapis.com speech.googleapis.com apikeys.googleapis.com", shell=True)
 
 # 2. Find VM name and zone
 print("Locating VM instance...")
