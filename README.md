@@ -211,6 +211,18 @@ Each lab is organized into its own folder. Simply open **Google Cloud Shell** in
     ./solve_gsp510.sh
     ```
 
+### 19. Introduction to SQL for BigQuery and Cloud SQL (GSP281)
+*   **Folder**: `bq-sql-cloudsql-gsp281/`
+*   **Script**: `solve_gsp281_task6.sh`
+*   **Execution**:
+    ```bash
+    git clone https://github.com/knsiuss/gcp.git gcp-labs
+    cd gcp-labs/bq-sql-cloudsql-gsp281
+    chmod +x solve_gsp281_task6.sh
+    ./solve_gsp281_task6.sh
+    ```
+
+
 
 
 
