@@ -74,11 +74,14 @@ token = subprocess.check_output("gcloud auth print-access-token", shell=True).de
 
 entity_url = f"https://dataplex.googleapis.com/v1/projects/{PROJECT_ID}/locations/{REGION}/lakes/customer-lake/zones/public-zone/entities"
 
+# Note: The "asset" field MUST be the full resource name of the asset, not just the ID!
+asset_resource_path = f"projects/{PROJECT_ID}/locations/{REGION}/lakes/customer-lake/zones/public-zone/assets/customer-raw-data"
+
 payload = {
     "id": "public_table",
     "displayName": "My Entity",
     "type": "TABLE",
-    "asset": "customer-raw-data",
+    "asset": asset_resource_path,
     "dataPath": f"gs://{PROJECT_ID}-customer-bucket",
     "system": "CLOUD_STORAGE",
     "format": {
