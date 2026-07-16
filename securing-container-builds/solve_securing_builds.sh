@@ -38,6 +38,36 @@ gcloud artifacts repositories create container-dev-java-repo \
 echo -e "${GREEN}[+] Standard Repository created! (Please check progress on Qwiklabs)${NC}"
 
 echo -e "\n${YELLOW}[Step 4] Task 2: Configuring Maven for Artifact Registry...${NC}"
+# Patch pom.xml to bypass wrong local parent POM lookup by adding relativePath tag
+python3 -c "
+with open('pom.xml', 'r') as f:
+    content = f.read()
+
+target = '''  <parent>
+    <groupId>com.google.cloud.samples</groupId>
+    <artifactId>shared-configuration</artifactId>
+    <version>1.2.0</version>
+  </parent>'''
+
+replacement = '''  <parent>
+    <groupId>com.google.cloud.samples</groupId>
+    <artifactId>shared-configuration</artifactId>
+    <version>1.2.0</version>
+    <relativePath/>
+  </parent>'''
+
+if target in content:
+    content = content.replace(target, replacement)
+    print('Parent POM patched with empty relativePath!')
+else:
+    # Fallback to general replace
+    content = content.replace('<version>1.2.0</version>', '<version>1.2.0</version>\\n    <relativePath/>')
+    print('Parent POM version patched with relativePath!')
+
+with open('pom.xml', 'w') as f:
+    f.write(content)
+"
+
 # Use Python to modify pom.xml to add distributionManagement, repositories and Wagon extension before </project>
 python3 -c "
 import sys
@@ -92,6 +122,7 @@ with open('pom.xml', 'w') as f:
 
 echo -e "${YELLOW}[*] Deploying package to Artifact Registry...${NC}"
 mvn deploy -DskipTests
+
 
 echo -e "${GREEN}[+] Package deployed successfully!${NC}"
 
