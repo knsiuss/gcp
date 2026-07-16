@@ -145,6 +145,18 @@ Each lab is organized into its own folder. Simply open **Google Cloud Shell** in
     ./solve_autoscaling.sh
     ```
 
+### 13. Optimize Costs for Google Kubernetes Engine: Challenge Lab (GSP343)
+*   **Folder**: `gke-cost-optimization-challenge/`
+*   **Script**: `solve_optimize.sh`
+*   **Execution**:
+    ```bash
+    git clone https://github.com/knsiuss/gcp.git gcp-labs
+    cd gcp-labs/gke-cost-optimization-challenge
+    chmod +x solve_optimize.sh
+    ./solve_optimize.sh
+    ```
+
+
 
 
 
