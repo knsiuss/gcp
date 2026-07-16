@@ -1,116 +1,102 @@
-# Terraform Google Cloud Challenge Lab (GSP345)
+# Google Cloud (GCP) Arcade Labs Automation
 
-This repository contains the Terraform configuration files for the **Build Infrastructure with Terraform on Google Cloud: Challenge Lab (GSP345)**.
+Welcome! This repository contains automated shell scripts and configurations to solve all your Google Cloud (GCP) Arcade and Security badge labs in a single run.
 
-## How to Use this Repository in the Lab
-
-### Step 1: Clone and Prepare
-Once you open Google Cloud Shell, clone this repository (or copy these files into your Cloud Shell).
-
-First, run the Terraform installation script provided by the lab to ensure Terraform is installed and persists:
-```bash
-cat <<'EOF' > ~/.customize_environment
-# Set up HashiCorp repository and install Terraform
-wget -O - https://apt.releases.hashicorp.com/gpg | sudo gpg --dearmor -o /usr/share/keyrings/hashicorp-archive-keyring.gpg
-echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com $(grep -oP '(?<=UBUNTU_CODENAME=).*' /etc/os-release || lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/hashicorp.list
-sudo apt update && sudo apt install -y terraform
-EOF
-bash ~/.customize_environment
-```
-Verify the installation:
-```bash
-terraform --version
-```
-
-Next, run the setup script to configure your specific randomized lab names (Project ID, GCS Bucket Name, VPC Network Name, and Third Instance Name):
-```bash
-chmod +x setup_lab.sh
-./setup_lab.sh
-```
+Each lab is organized into its own folder. Simply open **Google Cloud Shell** in the respective lab session, clone this repository, navigate to the folder, and run the solver script.
 
 ---
 
-### Step 2: Task Walkthrough
+## List of Labs
 
-#### Task 1: Create the configuration files
-Initialize Terraform in the root directory:
-```bash
-terraform init
-```
+### 1. Build Infrastructure with Terraform on Google Cloud: Challenge Lab (GSP345)
+*   **Folder**: `terraform-challenge/`
+*   **Script**: `setup_lab.sh`
+*   **Execution**:
+    ```bash
+    git clone https://github.com/knsiuss/gcp.git .
+    cd terraform-challenge
+    chmod +x setup_lab.sh
+    ./setup_lab.sh
+    ```
 
-#### Task 2: Import Infrastructure
-Two VM instances (`tf-instance-1` and `tf-instance-2`) already exist in Google Cloud. Import them into the instances module:
-```bash
-# Get your Google Cloud Project ID
-PROJECT_ID=$(gcloud config get-value project)
+### 2. Gating Deployments with Binary Authorization (GSP1183)
+*   **Folder**: `binary-authorization/`
+*   **Script**: `solve_binauthz.sh`
+*   **Execution**:
+    ```bash
+    git clone https://github.com/knsiuss/gcp.git .
+    cd binary-authorization
+    chmod +x solve_binauthz.sh
+    ./solve_binauthz.sh
+    ```
+    *Input the region (e.g. `us-east1`) and zone (e.g. `us-east1-d`) when prompted.*
 
-# Import tf-instance-1
-terraform import module.instances.google_compute_instance.tf-instance-1 projects/$PROJECT_ID/zones/europe-west1-b/instances/tf-instance-1
+### 3. Securing Container Builds (GSP1185)
+*   **Folder**: `securing-container-builds/`
+*   **Script**: `solve_securing_builds.sh`
+*   **Execution**:
+    ```bash
+    git clone https://github.com/knsiuss/gcp.git .
+    cd securing-container-builds
+    chmod +x solve_securing_builds.sh
+    ./solve_securing_builds.sh
+    ```
 
-# Import tf-instance-2
-terraform import module.instances.google_compute_instance.tf-instance-2 projects/$PROJECT_ID/zones/europe-west1-b/instances/tf-instance-2
-```
-After importing, apply the configuration to align Terraform's state:
-```bash
-terraform apply -auto-approve
-```
+### 4. Secure Software Delivery: Challenge Lab (GSP521)
+*   **Folder**: `secure-software-delivery/`
+*   **Script**: `solve_delivery.sh`
+*   **Execution**:
+    ```bash
+    git clone https://github.com/knsiuss/gcp.git .
+    cd secure-software-delivery
+    chmod +x solve_delivery.sh
+    ./solve_delivery.sh
+    ```
+    *Input the region (e.g. `us-east1`) when prompted.*
 
-#### Task 3: Configure a remote backend
-1. First, create the storage bucket using Terraform:
-   ```bash
-   terraform apply -auto-approve
-   ```
-2. Once the bucket is created, open `main.tf` and **uncomment** the `backend "gcs"` block:
-   ```hcl
-   backend "gcs" {
-     bucket = "tf-bucket-XXXXXX" # Configured automatically by setup_lab.sh
-     prefix = "terraform/state"
-   }
-   ```
-3. Initialize the backend and migrate the state:
-   ```bash
-   terraform init -migrate-state
-   ```
-   *Type `yes` when prompted to copy the state.*
+### 5. Get Started with Security Command Center (GSP1124)
+*   **Folder**: `scc-get-started/`
+*   **Script**: `solve_scc.sh`
+*   **Execution**:
+    ```bash
+    git clone https://github.com/knsiuss/gcp.git .
+    cd scc-get-started
+    chmod +x solve_scc.sh
+    ./solve_scc.sh
+    ```
 
-#### Task 4: Modify and update infrastructure
-1. Open `modules/instances/instances.tf`.
-2. Change the `machine_type` of both `tf-instance-1` and `tf-instance-2` to `e2-standard-2`.
-3. **Uncomment** the third instance block `google_compute_instance.tf-instance-3` (which represents your randomized `tf-instance-XXXXXX`).
-4. Apply the updates:
-   ```bash
-   terraform apply -auto-approve
-   ```
+### 6. Analyze Findings with Security Command Center (GSP1164)
+*   **Folder**: `scc-findings-analysis/`
+*   **Script**: `solve_scc_analysis.sh`
+*   **Execution**:
+    ```bash
+    git clone https://github.com/knsiuss/gcp.git .
+    cd scc-findings-analysis
+    chmod +x solve_scc_analysis.sh
+    ./solve_scc_analysis.sh
+    ```
+    *Input the region (e.g. `us-east1`) and zone (e.g. `us-east1-d`) when prompted.*
 
-#### Task 5: Destroy resources
-1. Open `modules/instances/instances.tf`.
-2. **Comment out** (or delete) the third instance block `google_compute_instance.tf-instance-3` that you added in Task 4.
-3. Apply the changes to destroy the instance:
-   ```bash
-   terraform apply -auto-approve
-   ```
+### 7. Detect and Investigate Threats with Security Command Center (GSP1125)
+*   **Folder**: `scc-threat-detection/`
+*   **Script**: `solve_threats.sh`
+*   **Execution**:
+    ```bash
+    git clone https://github.com/knsiuss/gcp.git .
+    cd scc-threat-detection
+    chmod +x solve_threats.sh
+    ./solve_threats.sh
+    ```
+    *Input the region (e.g. `us-east1`) and zone (e.g. `us-east1-d`) when prompted.*
 
-#### Task 6: Use a module from the Registry
-1. Open `main.tf`:
-   - **Uncomment** the `module "vpc"` block.
-   - **Uncomment** the three subnet variable references inside the `module "instances"` block:
-     ```hcl
-     network_name  = var.vpc_name
-     subnet_1_name = "subnet-01"
-     subnet_2_name = "subnet-02"
-     ```
-2. Initialize the new network module and apply changes:
-   ```bash
-   terraform init
-   terraform apply -auto-approve
-   ```
-
-#### Task 7: Configure a firewall
-1. Open `main.tf`.
-2. **Uncomment** the `google_compute_firewall` resource block `tf-firewall`.
-3. Apply the firewall configuration:
-   ```bash
-   terraform apply -auto-approve
-   ```
-
-Verify that all checkpoints in the Google Cloud Console are green (100/100). Congratulations!
+### 8. Mitigate Threats and Vulnerabilities with Security Command Center: Challenge Lab (GSP382)
+*   **Folder**: `scc-mitigation/`
+*   **Script**: `solve_mitigation.sh`
+*   **Execution**:
+    ```bash
+    git clone https://github.com/knsiuss/gcp.git .
+    cd scc-mitigation
+    chmod +x solve_mitigation.sh
+    ./solve_mitigation.sh
+    ```
+    *Input the region (e.g. `us-east1`) and zone (e.g. `us-east1-d`) when prompted.*
