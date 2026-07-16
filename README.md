@@ -200,6 +200,18 @@ Each lab is organized into its own folder. Simply open **Google Cloud Shell** in
     ./solve_data_warehouse.sh
     ```
 
+### 18. Manage Kubernetes in Google Cloud: Challenge Lab (GSP510)
+*   **Folder**: `gke-manage-kubernetes-gsp510/`
+*   **Script**: `solve_gsp510.sh`
+*   **Execution**:
+    ```bash
+    git clone https://github.com/knsiuss/gcp.git gcp-labs
+    cd gcp-labs/gke-manage-kubernetes-gsp510
+    chmod +x solve_gsp510.sh
+    ./solve_gsp510.sh
+    ```
+
+
 
 
 
