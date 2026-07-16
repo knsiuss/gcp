@@ -222,6 +222,18 @@ Each lab is organized into its own folder. Simply open **Google Cloud Shell** in
     ./solve_gsp281_task6.sh
     ```
 
+### 20. Derive Insights from BigQuery Data: Challenge Lab (GSP787 - Task 5)
+*   **Folder**: `bq-insights-challenge-gsp787/`
+*   **Script**: `solve_task5.sh`
+*   **Execution**:
+    ```bash
+    git clone https://github.com/knsiuss/gcp.git gcp-labs
+    cd gcp-labs/bq-insights-challenge-gsp787
+    chmod +x solve_task5.sh
+    ./solve_task5.sh
+    ```
+
+
 
 
 
