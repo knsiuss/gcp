@@ -15,6 +15,11 @@ echo -e "${BLUE}================================================================
 echo -e "${BLUE}    GSP375: Customer Solver (Tasks 2 & 3)                            ${NC}"
 echo -e "${BLUE}======================================================================${NC}"
 
+# Set the correct Customer project
+CUSTOMER_PROJECT="qwiklabs-gcp-00-f02f67f8365d"
+echo -e "${YELLOW}[*] Setting active project to Customer Project: $CUSTOMER_PROJECT...${NC}"
+gcloud config set project "$CUSTOMER_PROJECT"
+
 # Detect active project
 export PROJECT_ID=$(gcloud config get-value project)
 echo -e "${YELLOW}[*] Customer Project ID:${NC} $PROJECT_ID"

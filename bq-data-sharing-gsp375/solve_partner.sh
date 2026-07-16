@@ -15,6 +15,11 @@ echo -e "${BLUE}================================================================
 echo -e "${BLUE}    GSP375: Data Sharing Partner Solver (Task 1)                     ${NC}"
 echo -e "${BLUE}======================================================================${NC}"
 
+# Set the correct Partner project
+PARTNER_PROJECT="qwiklabs-gcp-04-321389a30a6e"
+echo -e "${YELLOW}[*] Setting active project to Partner Project: $PARTNER_PROJECT...${NC}"
+gcloud config set project "$PARTNER_PROJECT"
+
 # Detect active project
 export PROJECT_ID=$(gcloud config get-value project)
 echo -e "${YELLOW}[*] Partner Project ID:${NC} $PROJECT_ID"
