@@ -189,6 +189,18 @@ Each lab is organized into its own folder. Simply open **Google Cloud Shell** in
     ./solve_json_arrays.sh
     ```
 
+### 17. Build a Data Warehouse with BigQuery: Challenge Lab (GSP340)
+*   **Folder**: `bq-data-warehouse-challenge/`
+*   **Script**: `solve_data_warehouse.sh`
+*   **Execution**:
+    ```bash
+    git clone https://github.com/knsiuss/gcp.git gcp-labs
+    cd gcp-labs/bq-data-warehouse-challenge
+    chmod +x solve_data_warehouse.sh
+    ./solve_data_warehouse.sh
+    ```
+
+
 
 
 
