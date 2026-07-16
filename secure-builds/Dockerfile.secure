@@ -1,0 +1,11 @@
+FROM python:3.12-alpine
+
+# App
+WORKDIR /app
+COPY . ./
+
+RUN pip3 install Flask==3.0.3
+RUN pip3 install gunicorn==22.0.0
+RUN pip3 install Werkzeug==3.0.3
+
+CMD exec gunicorn --bind :\$PORT --workers 1 --threads 8 main:app
