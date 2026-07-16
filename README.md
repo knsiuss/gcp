@@ -156,6 +156,18 @@ Each lab is organized into its own folder. Simply open **Google Cloud Shell** in
     ./solve_optimize.sh
     ```
 
+### 14. Creating Date-Partitioned Tables in BigQuery (GSP414)
+*   **Folder**: `bq-partition-tables/`
+*   **Script**: `solve_partition.sh`
+*   **Execution**:
+    ```bash
+    git clone https://github.com/knsiuss/gcp.git gcp-labs
+    cd gcp-labs/bq-partition-tables
+    chmod +x solve_partition.sh
+    ./solve_partition.sh
+    ```
+
+
 
 
 
