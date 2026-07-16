@@ -21,8 +21,18 @@ print(f"VM Name: {vm_name}, Zone: {zone}")
 
 # 3. Create or retrieve API Key
 print("Retrieving or creating API Key...")
-subprocess.run("gcloud beta services api-keys create --display-name='ARC114 API Key' 2>/dev/null || true", shell=True)
-api_key = subprocess.check_output("gcloud beta services api-keys list --format='value(keyString)' --limit=1", shell=True).decode().strip()
+api_key = ""
+for attempt in range(12):
+    subprocess.run("gcloud beta services api-keys create --display-name='ARC114 API Key' 2>/dev/null || true", shell=True)
+    try:
+        api_key = subprocess.check_output("gcloud beta services api-keys list --format='value(keyString)' --limit=1", shell=True).decode().strip()
+        if api_key:
+            break
+    except Exception:
+        pass
+    print(f"Waiting for API Key creation / GAIA ID sync (attempt {attempt+1}/12)...")
+    time.sleep(10)
+
 if not api_key:
     print("Error: Could not retrieve API Key.")
     sys.exit(1)
