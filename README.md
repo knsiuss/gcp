@@ -100,3 +100,15 @@ Each lab is organized into its own folder. Simply open **Google Cloud Shell** in
     ./solve_mitigation.sh
     ```
     *Input the region (e.g. `us-east1`) and zone (e.g. `us-east1-d`) when prompted.*
+
+### 9. Managing a GKE Multi-tenant Cluster with Namespaces (GSP766)
+*   **Folder**: `gke-multi-tenant-namespaces/`
+*   **Script**: `solve_namespaces.sh`
+*   **Execution**:
+    ```bash
+    git clone https://github.com/knsiuss/gcp.git gcp-labs
+    cd gcp-labs/gke-multi-tenant-namespaces
+    chmod +x solve_namespaces.sh
+    ./solve_namespaces.sh
+    ```
+
