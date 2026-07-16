@@ -33,6 +33,13 @@ echo -e "${GREEN}Zone: $ZONE${NC}"
 echo -e "${GREEN}Region: $REGION${NC}"
 echo -e "${GREEN}Lab VM Zone: $LAB_VM_ZONE${NC}"
 
+# Pre-generate SSH keys to ensure gcloud compute ssh is 100% non-interactive
+if [ ! -f ~/.ssh/google_compute_engine ]; then
+  echo -e "${YELLOW}Pre-generating SSH keys for non-interactive access...${NC}"
+  mkdir -p ~/.ssh
+  ssh-keygen -t rsa -N "" -f ~/.ssh/google_compute_engine
+fi
+
 # Task 1: Enable and Explore Gemini (skip chat)
 gcloud services enable cloudaisearch.googleapis.com --project=$PROJECT_ID || true
 
@@ -119,7 +126,7 @@ echo -e "${YELLOW}Creating compute instance 'bigquery-instance'...${NC}"
 gcloud compute instances create bigquery-instance \
     --zone=${ZONE} \
     --service-account=${BQ_SA} \
-    --scopes="https://www.googleapis.com/auth/bigquery" \
+    --scopes="https://www.googleapis.com/auth/cloud-platform" \
     --machine-type=e2-micro || true
 
 echo -e "${YELLOW}Running query directly using SA key to bypass slow Python/pip compile times on VM...${NC}"
