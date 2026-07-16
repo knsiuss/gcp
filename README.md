@@ -178,6 +178,18 @@ Each lab is organized into its own folder. Simply open **Google Cloud Shell** in
     ./solve_join_pitfalls.sh
     ```
 
+### 16. Working with JSON, Arrays, and Structs in BigQuery (GSP416)
+*   **Folder**: `bq-json-arrays-structs/`
+*   **Script**: `solve_json_arrays.sh`
+*   **Execution**:
+    ```bash
+    git clone https://github.com/knsiuss/gcp.git gcp-labs
+    cd gcp-labs/bq-json-arrays-structs
+    chmod +x solve_json_arrays.sh
+    ./solve_json_arrays.sh
+    ```
+
+
 
 
 
