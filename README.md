@@ -134,5 +134,17 @@ Each lab is organized into its own folder. Simply open **Google Cloud Shell** in
     ./solve_secure_builds.sh
     ```
 
+### 12. Understanding and Combining GKE Autoscaling Strategies (GSP768)
+*   **Folder**: `gke-autoscaling-strategies/`
+*   **Script**: `solve_autoscaling.sh`
+*   **Execution**:
+    ```bash
+    git clone https://github.com/knsiuss/gcp.git gcp-labs
+    cd gcp-labs/gke-autoscaling-strategies
+    chmod +x solve_autoscaling.sh
+    ./solve_autoscaling.sh
+    ```
+
+
 
 
