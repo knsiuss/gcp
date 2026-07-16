@@ -1,0 +1,31 @@
+steps:
+
+# build
+- id: "build"
+  name: 'gcr.io/cloud-builders/docker'
+  args: ['build', '-t', '${_REGION}-docker.pkg.dev/${PROJECT_ID}/artifact-scanning-repo/sample-image', '.']
+  waitFor: ['-']
+
+# Retag
+- id: "retag"
+  name: 'gcr.io/cloud-builders/docker'
+  args: ['tag',  '${_REGION}-docker.pkg.dev/${PROJECT_ID}/artifact-scanning-repo/sample-image', '${_REGION}-docker.pkg.dev/${PROJECT_ID}/artifact-scanning-repo/sample-image:good']
+
+# pushing to artifact registry
+- id: "push"
+  name: 'gcr.io/cloud-builders/docker'
+  args: ['push',  '${_REGION}-docker.pkg.dev/${PROJECT_ID}/artifact-scanning-repo/sample-image:good']
+
+# Sign the image only if the previous severity check passes
+- id: 'create-attestation'
+  name: 'gcr.io/${PROJECT_ID}/binauthz-attestation:latest'
+  args:
+    - '--artifact-url'
+    - '${_REGION}-docker.pkg.dev/${PROJECT_ID}/artifact-scanning-repo/sample-image:good'
+    - '--attestor'
+    - 'projects/${PROJECT_ID}/attestors/vulnz-attestor'
+    - '--keyversion'
+    - 'projects/${PROJECT_ID}/locations/global/keyRings/binauthz-keys/cryptoKeys/codelab-key/cryptoKeyVersions/1'
+
+images:
+  - '${_REGION}-docker.pkg.dev/${PROJECT_ID}/artifact-scanning-repo/sample-image:good'
