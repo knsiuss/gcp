@@ -167,6 +167,18 @@ Each lab is organized into its own folder. Simply open **Google Cloud Shell** in
     ./solve_partition.sh
     ```
 
+### 15. Troubleshooting and Solving Data Join Pitfalls (GSP412)
+*   **Folder**: `bq-join-pitfalls/`
+*   **Script**: `solve_join_pitfalls.sh`
+*   **Execution**:
+    ```bash
+    git clone https://github.com/knsiuss/gcp.git gcp-labs
+    cd gcp-labs/bq-join-pitfalls
+    chmod +x solve_join_pitfalls.sh
+    ./solve_join_pitfalls.sh
+    ```
+
+
 
 
 
