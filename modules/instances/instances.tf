@@ -1,9 +1,9 @@
 resource "google_compute_instance" "tf-instance-1" {
   name         = "tf-instance-1"
-  # Task 2: Set to "n1-standard-1" initially during import.
+  # Task 2: Set to "e2-micro" initially during import.
   # Task 4: Modify to "e2-standard-2"
-  machine_type = "e2-standard-2"
-  zone         = var.zone
+  machine_type = "e2-micro"
+  zone         = "us-east1-b"
 
   boot_disk {
     initialize_params {
@@ -25,10 +25,10 @@ resource "google_compute_instance" "tf-instance-1" {
 
 resource "google_compute_instance" "tf-instance-2" {
   name         = "tf-instance-2"
-  # Task 2: Set to "n1-standard-1" initially during import.
+  # Task 2: Set to "e2-micro" initially during import.
   # Task 4: Modify to "e2-standard-2"
-  machine_type = "e2-standard-2"
-  zone         = var.zone
+  machine_type = "e2-micro"
+  zone         = "us-east1-b"
 
   boot_disk {
     initialize_params {
