@@ -23,9 +23,15 @@ export PROJECT_NUMBER=$(gcloud projects describe $PROJECT_ID --format='value(pro
 echo -e "${YELLOW}[*] Project ID:${NC} $PROJECT_ID"
 echo -e "${YELLOW}[*] Project Number:${NC} $PROJECT_NUMBER"
 
-# Ask for Region if not set
+# Auto-detect Region from Metadata Server if not set
 if [ -z "$REGION" ]; then
-    read -p "Enter Google Cloud Region (e.g. us-central1): " REGION
+    echo -e "${YELLOW}[*] Attempting to auto-detect region...${NC}"
+    REGION=$(curl -s -H "Metadata-Flavor: Google" http://metadata.google.internal/computeMetadata/v1/instance/zone | cut -d/ -f4 | sed 's/-[a-z]$//')
+fi
+
+# Fallback to prompt if metadata detection failed
+if [ -z "$REGION" ]; then
+    read -p "Enter Google Cloud Region (e.g. europe-west1): " REGION
 fi
 
 if [ -z "$REGION" ]; then
@@ -67,13 +73,14 @@ gcloud auth configure-docker "${REGION}-docker.pkg.dev" --quiet
 echo -e "${GREEN}[+] Repositories created and docker auth configured! (Task 1 Checkpoint)${NC}"
 
 echo -e "\n${YELLOW}[Step 4] Granting Initial Roles to Cloud Build Service Account...${NC}"
-gcloud projects add-iam-policy-binding ${PROJECT_ID} \
-        --member="serviceAccount:${PROJECT_NUMBER}@cloudbuild.gserviceaccount.com" \
-        --role="roles/iam.serviceAccountUser"
-
-gcloud projects add-iam-policy-binding ${PROJECT_ID} \
-        --member="serviceAccount:${PROJECT_NUMBER}@cloudbuild.gserviceaccount.com" \
-        --role="roles/ondemandscanning.admin"
+for member in "serviceAccount:${PROJECT_NUMBER}@cloudbuild.gserviceaccount.com" "serviceAccount:service-${PROJECT_NUMBER}@gcp-sa-cloudbuild.iam.gserviceaccount.com"; do
+    gcloud projects add-iam-policy-binding ${PROJECT_ID} \
+        --member="$member" \
+        --role="roles/iam.serviceAccountUser" || true
+    gcloud projects add-iam-policy-binding ${PROJECT_ID} \
+        --member="$member" \
+        --role="roles/ondemandscanning.admin" || true
+done
 
 echo -e "\n${YELLOW}[Step 5] Task 2: Submitting Basic Cloud Build Pipeline...${NC}"
 # Configure basic cloudbuild.yaml for Task 2 (Build and Push only)
@@ -179,24 +186,25 @@ echo -e "${GREEN}[+] Binary Authorization and KMS key setup completed! (Task 3 C
 
 echo -e "\n${YELLOW}[Step 7] Task 4: Preparing Secure CI/CD Pipeline...${NC}"
 # Grant additional roles to Cloud Build Service Account
-gcloud projects add-iam-policy-binding ${PROJECT_ID} \
-  --member serviceAccount:${PROJECT_NUMBER}@cloudbuild.gserviceaccount.com \
-  --role roles/binaryauthorization.attestorsViewer || true
-
-gcloud projects add-iam-policy-binding ${PROJECT_ID} \
-  --member serviceAccount:${PROJECT_NUMBER}@cloudbuild.gserviceaccount.com \
-  --role roles/cloudkms.signerVerifier || true
+for member in "serviceAccount:${PROJECT_NUMBER}@cloudbuild.gserviceaccount.com" "serviceAccount:service-${PROJECT_NUMBER}@gcp-sa-cloudbuild.iam.gserviceaccount.com"; do
+    gcloud projects add-iam-policy-binding ${PROJECT_ID} \
+      --member "$member" \
+      --role roles/binaryauthorization.attestorsViewer || true
+    gcloud projects add-iam-policy-binding ${PROJECT_ID} \
+      --member "$member" \
+      --role roles/cloudkms.signerVerifier || true
+    gcloud projects add-iam-policy-binding ${PROJECT_ID} \
+      --member "$member" \
+      --role roles/containeranalysis.notes.attacher || true
+done
 
 gcloud projects add-iam-policy-binding ${PROJECT_ID} \
   --member serviceAccount:${PROJECT_NUMBER}-compute@developer.gserviceaccount.com \
   --role roles/cloudkms.signerVerifier || true
 
-gcloud projects add-iam-policy-binding ${PROJECT_ID} \
-  --member serviceAccount:${PROJECT_NUMBER}@cloudbuild.gserviceaccount.com \
-  --role roles/containeranalysis.notes.attacher || true
-
 # Install Custom Build Step
-git clone https://github.com/GoogleCloudPlatform/cloud-builders-community.git || true
+rm -rf cloud-builders-community
+git clone https://github.com/GoogleCloudPlatform/cloud-builders-community.git
 cd cloud-builders-community/binauthz-attestation
 gcloud builds submit . --config cloudbuild.yaml
 cd ../..
@@ -248,7 +256,7 @@ steps:
     - '--artifact-url'
     - '${REGION}-docker.pkg.dev/${PROJECT_ID}/artifact-scanning-repo/sample-image:latest'
     - '--attestor'
-    - 'projects/${PROJECT_ID}/attestors/vulnerability-attestor'
+    - 'vulnerability-attestor'
     - '--keyversion'
     - 'projects/${PROJECT_ID}/locations/global/keyRings/binauthz-keys/cryptoKeys/lab-key/cryptoKeyVersions/1'
 
