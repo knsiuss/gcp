@@ -123,4 +123,16 @@ Each lab is organized into its own folder. Simply open **Google Cloud Shell** in
     ./solve_cost_vms.sh
     ```
 
+### 11. Secure Builds with Cloud Build (GSP1184)
+*   **Folder**: `secure-builds-cloudbuild/`
+*   **Script**: `solve_secure_builds.sh`
+*   **Execution**:
+    ```bash
+    git clone https://github.com/knsiuss/gcp.git gcp-labs
+    cd gcp-labs/secure-builds-cloudbuild
+    chmod +x solve_secure_builds.sh
+    ./solve_secure_builds.sh
+    ```
+
+
 
