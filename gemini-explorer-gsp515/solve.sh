@@ -202,12 +202,12 @@ EOF
 echo -e "${YELLOW}Copying updater script to JupyterLab VM...${NC}"
 gcloud compute scp --quiet /tmp/update_notebook.py ${VM_NAME}:/tmp/update_notebook.py --zone=${VM_ZONE}
 
-# 5. Run updater script on VM
+# 5. Run updater script on VM as jupyter user
 echo -e "${YELLOW}Running updater script on VM to modify the notebook...${NC}"
-gcloud compute ssh --quiet ${VM_NAME} --zone=${VM_ZONE} --command="python3 /tmp/update_notebook.py"
+gcloud compute ssh --quiet ${VM_NAME} --zone=${VM_ZONE} --command="sudo chmod 644 /tmp/update_notebook.py && sudo -u jupyter python3 /tmp/update_notebook.py"
 
-# 6. Execute the notebook on the VM using jupyter nbconvert
+# 6. Execute the notebook on the VM using jupyter nbconvert as jupyter user
 echo -e "${YELLOW}Executing the notebook on the VM (this runs all cells and generates the required output)...${NC}"
-gcloud compute ssh --quiet ${VM_NAME} --zone=${VM_ZONE} --command="find /home/jupyter/ -name 'gemini-explorer-challenge.ipynb' -exec jupyter nbconvert --to notebook --execute --inplace {} \;"
+gcloud compute ssh --quiet ${VM_NAME} --zone=${VM_ZONE} --command="sudo -u jupyter find /home/jupyter/ -name 'gemini-explorer-challenge.ipynb' -exec jupyter nbconvert --to notebook --execute --inplace {} \;"
 
 echo -e "${GREEN}All tasks completed successfully! Please wait a moment and check your progress on Qwiklabs.${NC}"
