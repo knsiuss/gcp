@@ -86,6 +86,8 @@ gcloud container clusters create regional-demo --region="$REGION" --num-nodes=1 
 gcloud container clusters get-credentials regional-demo --region="$REGION" --quiet
 
 echo -e "\n${YELLOW}[Step 8] Creating pod-1 and pod-2 (Anti-Affinity)...${NC}"
+kubectl delete pod pod-1 pod-2 --ignore-not-found=true
+
 cat << EOF > pod-1.yaml
 apiVersion: v1
 kind: Pod
@@ -124,7 +126,17 @@ EOF
 
 kubectl apply -f pod-2.yaml
 
-echo -e "${GREEN}[+] Pods created with Anti-Affinity! (Task 3 Checkpoint 1)${NC}"
+echo -e "${YELLOW}[*] Waiting for pod-1 and pod-2 to be Ready...${NC}"
+kubectl wait --for=condition=Ready pod/pod-1 --timeout=60s 2>/dev/null
+kubectl wait --for=condition=Ready pod/pod-2 --timeout=60s 2>/dev/null
+
+POD_2_IP=$(kubectl get pod pod-2 -o jsonpath='{.status.podIP}' 2>/dev/null)
+if [ -n "$POD_2_IP" ]; then
+    echo -e "${YELLOW}[*] Simulating traffic (pinging pod-2 at $POD_2_IP)...${NC}"
+    kubectl exec pod-1 -- ping -c 4 "$POD_2_IP" 2>/dev/null || true
+fi
+
+echo -e "${GREEN}[+] Pods created with Anti-Affinity! (Task 3 Checkpoint: Check Pod Creation)${NC}"
 
 echo -e "\n${YELLOW}[Step 9] Enabling Network APIs and Configuring VPC Flow Logs...${NC}"
 gcloud services enable networkmanagement.googleapis.com logging.googleapis.com --quiet || true
@@ -135,7 +147,7 @@ bq --location="$REGION" mk --dataset=true --project_id="$PROJECT_ID" us_flow_log
 
 gcloud logging sinks create FlowLogsSample \
   bigquery.googleapis.com/projects/${PROJECT_ID}/datasets/us_flow_logs \
-  --log-filter="logName=\"projects/${PROJECT_ID}/logs/compute.googleapis.com%2Fvpc_flows\"" --quiet 2>/dev/null || true
+  --log-filter="resource.type=\"gce_subnetwork\" OR logName=\"projects/${PROJECT_ID}/logs/compute.googleapis.com%2Fvpc_flows\"" --quiet 2>/dev/null || true
 
 echo -e "${GREEN}[+] VPC Flow Logs and BigQuery Export configured!${NC}"
 
@@ -146,9 +158,17 @@ sed -i 's/podAntiAffinity/podAffinity/g' pod-2.yaml
 
 kubectl create -f pod-2.yaml || kubectl apply -f pod-2.yaml
 
-echo -e "${GREEN}[+] Pod-2 moved to the same node as Pod-1! (Task 3 Checkpoint 2)${NC}"
+echo -e "${YELLOW}[*] Waiting for pod-2 to be Ready on same node...${NC}"
+kubectl wait --for=condition=Ready pod/pod-2 --timeout=60s 2>/dev/null
+
+POD_2_IP=$(kubectl get pod pod-2 -o jsonpath='{.status.podIP}' 2>/dev/null)
+if [ -n "$POD_2_IP" ]; then
+    echo -e "${YELLOW}[*] Simulating traffic in same zone (pinging pod-2 at $POD_2_IP)...${NC}"
+    kubectl exec pod-1 -- ping -c 4 "$POD_2_IP" 2>/dev/null || true
+fi
+
+echo -e "${GREEN}[+] Pod-2 moved to the same node as Pod-1! (Task 3 Checkpoint: Simulate Traffic)${NC}"
 
 echo -e "\n${GREEN}======================================================================${NC}"
 echo -e "${GREEN}    GKE Cost VM optimization completed successfully! Check Qwiklabs.  ${NC}"
-echo -e "${GREEN}======================================================================${NC}"
-
+echo -e "${GREEN}======================================================================${NC}
