@@ -1,6 +1,6 @@
 #!/bin/bash
 # fix_task3.sh
-# Fix VPC Flow Logs & Sink FlowLogsSample for 100/100 points
+# Fix Sink FlowLogsSample and Dataset IAM Access without project-level IAM requirement
 
 set +e
 
@@ -10,7 +10,7 @@ YELLOW='\033[1;33m'
 NC='\033[0m'
 
 echo -e "${BLUE}======================================================================${NC}"
-echo -e "${BLUE}         Configuring VPC Flow Logs & FlowLogsSample Sink (100/100)    ${NC}"
+echo -e "${BLUE}       Fixing Dataset Access for Sink 'FlowLogsSample' (100/100)      ${NC}"
 echo -e "${BLUE}======================================================================${NC}"
 
 export PROJECT_ID=$(gcloud config get-value project 2>/dev/null)
@@ -21,76 +21,55 @@ export GOOGLE_CLOUD_PROJECT=$PROJECT_ID
 
 echo -e "${YELLOW}[*] Project ID:${NC} $PROJECT_ID"
 
+echo -e "\n${YELLOW}[Step 1] Ensuring BigQuery dataset 'us_flow_logs' exists...${NC}"
+bq mk --dataset ${PROJECT_ID}:us_flow_logs 2>/dev/null || true
+
+echo -e "\n${YELLOW}[Step 2] Ensuring Logging Sink 'FlowLogsSample' exists...${NC}"
+if ! gcloud logging sinks describe FlowLogsSample &>/dev/null; then
+  gcloud logging sinks create FlowLogsSample \
+    bigquery.googleapis.com/projects/${PROJECT_ID}/datasets/us_flow_logs --quiet
+fi
+
+echo -e "\n${YELLOW}[Step 3] Granting dataset-level access to Sink Writer Identity...${NC}"
+python3 - << 'EOF'
+import os
+import json
+import subprocess
+
+try:
+    project_id = subprocess.check_output("gcloud config get-value project", shell=True).decode().strip()
+    writer_id = subprocess.check_output("gcloud logging sinks describe FlowLogsSample --format='value(writerIdentity)'", shell=True).decode().strip()
+    sa_email = writer_id.replace("serviceAccount:", "")
+
+    print(f"[*] Sink Service Account: {sa_email}")
+
+    ds_json_raw = subprocess.check_output(f"bq show --format=prettyjson {project_id}:us_flow_logs", shell=True).decode()
+    ds_info = json.loads(ds_json_raw)
+
+    access_list = ds_info.get("access", [])
+    already_added = any(entry.get("userByEmail") == sa_email for entry in access_list)
+
+    if not already_added:
+        access_list.append({
+            "role": "WRITER",
+            "userByEmail": sa_email
+        })
+        with open("ds_update.json", "w") as f:
+            json.dump({"access": access_list}, f)
+        subprocess.run(f"bq update --source ds_update.json {project_id}:us_flow_logs", shell=True, check=True)
+        print(f"[+] Added {sa_email} as WRITER to dataset us_flow_logs!")
+    else:
+        print(f"[+] {sa_email} is already authorized on us_flow_logs!")
+except Exception as e:
+    print(f"[!] Warning updating dataset access: {e}")
+EOF
+
+echo -e "\n${YELLOW}[Step 4] Pinging pod-2 to generate flow logs...${NC}"
 REGION=$(gcloud container clusters list --filter="name=regional-demo" --format="value(location)" 2>/dev/null | head -n 1)
 if [ -z "$REGION" ]; then
     REGION="us-east1"
 fi
-
-echo -e "\n${YELLOW}[Step 1] Enabling Network APIs...${NC}"
-gcloud services enable networkmanagement.googleapis.com logging.googleapis.com --quiet || true
-
-echo -e "\n${YELLOW}[Step 2] Enabling VPC Flow Logs on default subnet in $REGION...${NC}"
-gcloud compute networks subnets update default \
-  --region="$REGION" \
-  --enable-flow-logs \
-  --logging-aggregation-interval=INTERVAL_5_SEC \
-  --logging-flow-sampling=1.0 \
-  --logging-metadata=INCLUDE_ALL_METADATA --quiet || true
-
-echo -e "\n${YELLOW}[Step 3] Creating BigQuery dataset 'us_flow_logs'...${NC}"
-bq --location=US mk --dataset ${PROJECT_ID}:us_flow_logs 2>/dev/null || true
-bq --location="$REGION" mk --dataset=true --project_id="$PROJECT_ID" us_flow_logs 2>/dev/null || true
-
-echo -e "\n${YELLOW}[Step 4] Creating Logging Sink 'FlowLogsSample'...${NC}"
-gcloud logging sinks delete FlowLogsSample --quiet 2>/dev/null || true
-
-# Create sink without restrictive filter so it matches console default
-gcloud logging sinks create FlowLogsSample \
-  bigquery.googleapis.com/projects/${PROJECT_ID}/datasets/us_flow_logs --quiet
-
-echo -e "\n${YELLOW}[Step 5] Granting IAM Data Editor permission to Sink Writer Identity...${NC}"
-WRITER_ID=$(gcloud logging sinks describe FlowLogsSample --format='value(writerIdentity)')
-echo -e "${YELLOW}[*] Writer Identity:${NC} $WRITER_ID"
-
-gcloud projects add-iam-policy-binding ${PROJECT_ID} \
-  --member="${WRITER_ID}" \
-  --role="roles/bigquery.dataEditor" --quiet
-
-echo -e "\n${YELLOW}[Step 6] Verifying pod-2 status and simulating traffic...${NC}"
 gcloud container clusters get-credentials regional-demo --region="$REGION" --quiet 2>/dev/null
-
-cat << EOF > pod-2.yaml
-apiVersion: v1
-kind: Pod
-metadata:
-  name: pod-2
-spec:
-  affinity:
-    podAffinity:
-      requiredDuringSchedulingIgnoredDuringExecution:
-      - labelSelector:
-          matchExpressions:
-          - key: security
-            operator: In
-            values:
-            - demo
-        topologyKey: "kubernetes.io/hostname"
-  containers:
-  - name: container-2
-    image: us-docker.pkg.dev/google-samples/containers/gke/hello-app:1.0
-EOF
-
-if kubectl get pod pod-2 &>/dev/null; then
-  POD2_AFF=$(kubectl get pod pod-2 -o yaml | grep podAffinity || true)
-  if [ -z "$POD2_AFF" ]; then
-    kubectl delete pod pod-2 --ignore-not-found=true
-    kubectl create -f pod-2.yaml
-  fi
-else
-  kubectl create -f pod-2.yaml
-fi
-
-kubectl wait --for=condition=Ready pod/pod-2 --timeout=60s 2>/dev/null || true
 
 POD_2_IP=$(kubectl get pod pod-2 -o jsonpath='{.status.podIP}' 2>/dev/null)
 if [ -n "$POD_2_IP" ]; then
@@ -98,6 +77,6 @@ if [ -n "$POD_2_IP" ]; then
 fi
 
 echo -e "\n${GREEN}======================================================================${NC}"
-echo -e "${GREEN}[+] VPC Flow Logs & Sink 'FlowLogsSample' configured successfully!   ${NC}"
+echo -e "${GREEN}[+] Sink FlowLogsSample & BigQuery access granted successfully!       ${NC}"
 echo -e "${GREEN}[+] Click 'Check my progress' on 'Simulate Traffic' now!               ${NC}"
 echo -e "${GREEN}======================================================================${NC}"
