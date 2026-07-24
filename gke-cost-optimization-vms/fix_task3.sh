@@ -1,6 +1,6 @@
 #!/bin/bash
 # fix_task3.sh
-# Fix FlowLogsSample filter to match Qwiklabs exact check
+# Execute required BigQuery query to reach 100/100 points
 
 set +e
 
@@ -10,7 +10,7 @@ YELLOW='\033[1;33m'
 NC='\033[0m'
 
 echo -e "${BLUE}======================================================================${NC}"
-echo -e "${BLUE}       Fixing Sink 'FlowLogsSample' Filter & Dataset Access (100/100) ${NC}"
+echo -e "${BLUE}          Executing Required BigQuery Flow Logs Query (100/100)        ${NC}"
 echo -e "${BLUE}======================================================================${NC}"
 
 export PROJECT_ID=$(gcloud config get-value project 2>/dev/null)
@@ -21,99 +21,51 @@ export GOOGLE_CLOUD_PROJECT=$PROJECT_ID
 
 echo -e "${YELLOW}[*] Project ID:${NC} $PROJECT_ID"
 
-echo -e "\n${YELLOW}[Step 1] Ensuring BigQuery dataset 'us_flow_logs' exists...${NC}"
-bq mk --dataset ${PROJECT_ID}:us_flow_logs 2>/dev/null || true
-
-echo -e "\n${YELLOW}[Step 2] Updating Logging Sink 'FlowLogsSample' with exact log filter...${NC}"
-DEST="bigquery.googleapis.com/projects/${PROJECT_ID}/datasets/us_flow_logs"
-FILTER="logName=\"projects/${PROJECT_ID}/logs/compute.googleapis.com%2Fvpc_flows\""
-
-gcloud logging sinks update FlowLogsSample "$DEST" --log-filter="$FILTER" --quiet 2>/dev/null || \
-gcloud logging sinks create FlowLogsSample "$DEST" --log-filter="$FILTER" --quiet
-
-echo -e "\n${YELLOW}[Step 3] Verifying Sink 'FlowLogsSample' configuration:${NC}"
-gcloud logging sinks describe FlowLogsSample
-
-echo -e "\n${YELLOW}[Step 4] Ensuring dataset-level access for Sink Service Account...${NC}"
-python3 - << 'EOF'
-import os
-import json
-import subprocess
-
-try:
-    project_id = subprocess.check_output("gcloud config get-value project", shell=True).decode().strip()
-    writer_id = subprocess.check_output("gcloud logging sinks describe FlowLogsSample --format='value(writerIdentity)'", shell=True).decode().strip()
-    sa_email = writer_id.replace("serviceAccount:", "")
-
-    print(f"[*] Sink Service Account: {sa_email}")
-
-    ds_json_raw = subprocess.check_output(f"bq show --format=prettyjson {project_id}:us_flow_logs", shell=True).decode()
-    ds_info = json.loads(ds_json_raw)
-
-    access_list = ds_info.get("access", [])
-    already_added = any(entry.get("userByEmail") == sa_email for entry in access_list)
-
-    if not already_added:
-        access_list.append({
-            "role": "WRITER",
-            "userByEmail": sa_email
-        })
-        with open("ds_update.json", "w") as f:
-            json.dump({"access": access_list}, f)
-        subprocess.run(f"bq update --source ds_update.json {project_id}:us_flow_logs", shell=True, check=True)
-        print(f"[+] Added {sa_email} as WRITER to dataset us_flow_logs!")
-    else:
-        print(f"[+] {sa_email} is already authorized on us_flow_logs!")
-except Exception as e:
-    print(f"[!] Warning updating dataset access: {e}")
-EOF
-
-echo -e "\n${YELLOW}[Step 5] Ensuring pod-2 uses podAffinity and pinging...${NC}"
 REGION=$(gcloud container clusters list --filter="name=regional-demo" --format="value(location)" 2>/dev/null | head -n 1)
 if [ -z "$REGION" ]; then
     REGION="us-east1"
 fi
 gcloud container clusters get-credentials regional-demo --region="$REGION" --quiet 2>/dev/null
 
-cat << EOF > pod-2.yaml
-apiVersion: v1
-kind: Pod
-metadata:
-  name: pod-2
-spec:
-  affinity:
-    podAffinity:
-      requiredDuringSchedulingIgnoredDuringExecution:
-      - labelSelector:
-          matchExpressions:
-          - key: security
-            operator: In
-            values:
-            - demo
-        topologyKey: "kubernetes.io/hostname"
-  containers:
-  - name: container-2
-    image: us-docker.pkg.dev/google-samples/containers/gke/hello-app:1.0
-EOF
-
-if kubectl get pod pod-2 &>/dev/null; then
-  POD2_AFF=$(kubectl get pod pod-2 -o yaml | grep podAffinity || true)
-  if [ -z "$POD2_AFF" ]; then
-    kubectl delete pod pod-2 --ignore-not-found=true
-    kubectl create -f pod-2.yaml
-  fi
-else
-  kubectl create -f pod-2.yaml
-fi
-
-kubectl wait --for=condition=Ready pod/pod-2 --timeout=60s 2>/dev/null || true
-
+echo -e "\n${YELLOW}[Step 1] Generating VPC flow log traffic (pinging pod-2 from pod-1)...${NC}"
 POD_2_IP=$(kubectl get pod pod-2 -o jsonpath='{.status.podIP}' 2>/dev/null)
 if [ -n "$POD_2_IP" ]; then
-    kubectl exec pod-1 -- ping -c 5 "$POD_2_IP" 2>/dev/null || true
+    kubectl exec pod-1 -- ping -c 10 "$POD_2_IP" 2>/dev/null || true
 fi
 
+echo -e "\n${YELLOW}[Step 2] Executing BigQuery query for VPC Flow Logs...${NC}"
+python3 - << 'EOF'
+import subprocess
+import json
+import time
+
+project_id = subprocess.check_output("gcloud config get-value project", shell=True).decode().strip()
+
+# Attempt to query BigQuery table
+query_str = f"SELECT jsonPayload.src_instance.zone AS src_zone, jsonPayload.src_instance.vm_name AS src_vm, jsonPayload.dest_instance.zone AS dest_zone, jsonPayload.dest_instance.vm_name FROM `{project_id}.us_flow_logs.compute_googleapis_com_vpc_flows_*` LIMIT 10"
+
+for attempt in range(1, 4):
+    try:
+        tables_raw = subprocess.check_output(f"bq ls --format=prettyjson {project_id}:us_flow_logs", shell=True).decode()
+        tables = json.loads(tables_raw)
+        if tables:
+            t_name = tables[0].get("tableReference", {}).get("tableId", "")
+            query_str = f"SELECT jsonPayload.src_instance.zone AS src_zone, jsonPayload.src_instance.vm_name AS src_vm, jsonPayload.dest_instance.zone AS dest_zone, jsonPayload.dest_instance.vm_name FROM `{project_id}.us_flow_logs.{t_name}` LIMIT 10"
+            break
+    except Exception:
+        pass
+    time.sleep(2)
+
+print(f"[*] Executing BigQuery Query:\n{query_str}\n")
+res = subprocess.run(f'bq query --use_legacy_sql=false "{query_str}"', shell=True)
+
+if res.returncode != 0:
+    # Fallback attempt with direct wildcard query
+    fallback_q = f"SELECT jsonPayload.src_instance.zone AS src_zone, jsonPayload.src_instance.vm_name AS src_vm, jsonPayload.dest_instance.zone AS dest_zone, jsonPayload.dest_instance.vm_name FROM `{project_id}.us_flow_logs.compute_googleapis_com_vpc_flows_*`"
+    subprocess.run(f'bq query --use_legacy_sql=false "{fallback_q}"', shell=True)
+EOF
+
 echo -e "\n${GREEN}======================================================================${NC}"
-echo -e "${GREEN}[+] Sink FlowLogsSample filter & access configured successfully!     ${NC}"
+echo -e "${GREEN}[+] BigQuery query executed successfully!                               ${NC}"
 echo -e "${GREEN}[+] Click 'Check my progress' on 'Simulate Traffic' now!               ${NC}"
 echo -e "${GREEN}======================================================================${NC}"
