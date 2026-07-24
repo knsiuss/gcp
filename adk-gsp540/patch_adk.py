@@ -36,7 +36,9 @@ def patch_my_google_search_agent(content):
     # Ensure google_search is imported
     if "google_search" not in content:
         if "from google.adk.tools import" in content:
-            content = content.replace("from google.adk.tools import", "from google.adk.tools import google_search,")
+            content = content.replace("from google.adk.tools import", "from google.adk.tools import google_search, ")
+        elif "from google.genai.types import" in content:
+            content = "from google.adk.tools import google_search\n" + content
         else:
             content = "from google.adk.tools import google_search\n" + content
 
@@ -58,11 +60,11 @@ def patch_my_google_search_agent(content):
 def patch_geo_validator(content):
     # Add BaseModel & CountryCapital if not present
     if "class CountryCapital" not in content:
-        pydantic_code = """
-from pydantic import BaseModel
+        pydantic_code = """from pydantic import BaseModel
 
 class CountryCapital(BaseModel):
     capital: str
+
 """
         content = pydantic_code + content
 
@@ -83,7 +85,7 @@ class CountryCapital(BaseModel):
 def patch_llm_auditor(content):
     # Uncomment reviser import if commented out
     content = re.sub(r"#\s*(from\s+\.?reviser\s+import\s+reviser_agent)", r"\1", content)
-    content = re.sub(r"#\s*(import\s+reviser_agent)", r"\1", content)
+    content = re.sub(r"#\s*(from\s+reviser\s+import\s+reviser_agent)", r"\1", content)
 
     # Ensure reviser_agent is in sub_agents list
     if "sub_agents" in content:
