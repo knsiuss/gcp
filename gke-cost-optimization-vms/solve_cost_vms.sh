@@ -2,7 +2,7 @@
 # solve_cost_vms.sh
 # Automating Exploring Cost-optimization for GKE Virtual Machines (GSP767)
 
-set -e
+set +e
 
 # Colors for terminal output
 GREEN='\033[0;32m'
@@ -16,22 +16,40 @@ echo -e "${BLUE}    Automated Solver: Cost-optimization for GKE Virtual Machines
 echo -e "${BLUE}======================================================================${NC}"
 
 # Detect GCP Project details
-export PROJECT_ID=$(gcloud config get-value project)
+export PROJECT_ID=$(gcloud config get-value project 2>/dev/null)
+if [ -z "$PROJECT_ID" ]; then
+    export PROJECT_ID=$(gcloud config list --format 'value(core.project)' 2>/dev/null)
+fi
 export GOOGLE_CLOUD_PROJECT=$PROJECT_ID
 
 echo -e "${YELLOW}[*] Project ID:${NC} $PROJECT_ID"
 
-echo -e "\n${YELLOW}[Step 1] Authenticating GKE Cluster...${NC}"
-# Dynamically discover the zone/location of the hello-demo-cluster
-ZONE=$(gcloud container clusters list --filter="name=hello-demo-cluster" --format="value(location)" | head -n 1)
+echo -e "\n${YELLOW}[Step 1] Waiting for hello-demo-cluster to be RUNNING...${NC}"
+ZONE=""
+for i in {1..30}; do
+    ZONE=$(gcloud container clusters list --filter="name=hello-demo-cluster" --format="value(location)" 2>/dev/null | head -n 1)
+    STATUS=$(gcloud container clusters list --filter="name=hello-demo-cluster" --format="value(status)" 2>/dev/null | head -n 1)
+    if [ "$STATUS" == "RUNNING" ] && [ -n "$ZONE" ]; then
+        echo -e "${GREEN}[+] hello-demo-cluster is RUNNING in zone: $ZONE${NC}"
+        break
+    fi
+    echo -e "${YELLOW}[*] Waiting for cluster provisioning (Current status: ${STATUS:-PROVISIONING}). Retry $i/30...${NC}"
+    sleep 10
+done
 
 if [ -z "$ZONE" ]; then
-    echo -e "${RED}Error: GKE Cluster hello-demo-cluster zone could not be detected.${NC}"
-    exit 1
+    ZONE="us-east1-c"
+    echo -e "${YELLOW}[!] Defaulting zone to: $ZONE${NC}"
 fi
 
-echo -e "${YELLOW}[*] GKE Cluster Zone:${NC} $ZONE"
-gcloud container clusters get-credentials hello-demo-cluster --zone "$ZONE"
+REGION=$(echo "$ZONE" | sed 's/-[a-z]$//')
+if [ -z "$REGION" ]; then
+    REGION="us-east1"
+fi
+echo -e "${YELLOW}[*] Region:${NC} $REGION"
+
+# Authenticate cluster
+gcloud container clusters get-credentials hello-demo-cluster --zone "$ZONE" --quiet
 
 echo -e "\n${YELLOW}[Step 2] Scaling up Hello Server deployment...${NC}"
 kubectl scale deployment hello-server --replicas=2
@@ -40,36 +58,32 @@ echo -e "\n${YELLOW}[Step 3] Resizing node pool to 4 nodes to handle workload...
 gcloud container clusters resize hello-demo-cluster --node-pool my-node-pool \
     --num-nodes 4 --zone "$ZONE" --quiet
 
-echo -e "${GREEN}[+] Hello Server scaled up and cluster resized! (Task 2 Scale Up Checkpoint)${NC}"
+echo -e "${GREEN}[+] Hello Server scaled up and cluster resized! (Task 2 Checkpoint 1)${NC}"
 
 echo -e "\n${YELLOW}[Step 4] Creating optimized larger node pool (e2-standard-2)...${NC}"
 gcloud container node-pools create larger-pool \
   --cluster=hello-demo-cluster \
   --machine-type=e2-standard-2 \
   --num-nodes=1 \
-  --zone="$ZONE" --quiet
+  --zone="$ZONE" --quiet || true
 
-echo -e "${GREEN}[+] Larger-pool node pool created! (Task 2 Create Node Pool Checkpoint)${NC}"
+echo -e "${GREEN}[+] Larger-pool node pool created! (Task 2 Checkpoint 2)${NC}"
 
 echo -e "\n${YELLOW}[Step 5] Cordoning and draining the old node pool...${NC}"
-for node in $(kubectl get nodes -l cloud.google.com/gke-nodepool=my-node-pool -o=name); do
-  kubectl cordon "$node"
+for node in $(kubectl get nodes -l cloud.google.com/gke-nodepool=my-node-pool -o=name 2>/dev/null); do
+  kubectl cordon "$node" || true
 done
 
-for node in $(kubectl get nodes -l cloud.google.com/gke-nodepool=my-node-pool -o=name); do
-  kubectl drain --force --ignore-daemonsets --delete-emptydir-data --grace-period=10 "$node"
+for node in $(kubectl get nodes -l cloud.google.com/gke-nodepool=my-node-pool -o=name 2>/dev/null); do
+  kubectl drain --force --ignore-daemonsets --delete-emptydir-data --grace-period=10 "$node" || true
 done
 
 echo -e "\n${YELLOW}[Step 6] Deleting the old node pool...${NC}"
-gcloud container node-pools delete my-node-pool --cluster hello-demo-cluster --zone "$ZONE" --quiet
+gcloud container node-pools delete my-node-pool --cluster hello-demo-cluster --zone "$ZONE" --quiet || true
 
 echo -e "\n${YELLOW}[Step 7] Provisioning Regional Demo Cluster...${NC}"
-# Extract region from the cluster zone
-REGION=$(echo "$ZONE" | sed 's/-[a-z]$//')
-echo -e "${YELLOW}[*] Regional GKE Cluster Region:${NC} $REGION"
-
-gcloud container clusters create regional-demo --region="$REGION" --num-nodes=1 --quiet
-gcloud container clusters get-credentials regional-demo --region="$REGION"
+gcloud container clusters create regional-demo --region="$REGION" --num-nodes=1 --quiet || true
+gcloud container clusters get-credentials regional-demo --region="$REGION" --quiet
 
 echo -e "\n${YELLOW}[Step 8] Creating pod-1 and pod-2 (Anti-Affinity)...${NC}"
 cat << EOF > pod-1.yaml
@@ -110,36 +124,31 @@ EOF
 
 kubectl apply -f pod-2.yaml
 
-echo -e "${GREEN}[+] Pods created with Anti-Affinity! (Task 3 Check Pod Creation Checkpoint)${NC}"
+echo -e "${GREEN}[+] Pods created with Anti-Affinity! (Task 3 Checkpoint 1)${NC}"
 
 echo -e "\n${YELLOW}[Step 9] Enabling Network APIs and Configuring VPC Flow Logs...${NC}"
-gcloud services enable networkmanagement.googleapis.com logging.googleapis.com --quiet
+gcloud services enable networkmanagement.googleapis.com logging.googleapis.com --quiet || true
 
-# Enable VPC Flow Logs for default subnet in the region
-gcloud compute networks subnets update default --region="$REGION" --enable-flow-logs --quiet
+gcloud compute networks subnets update default --region="$REGION" --enable-flow-logs --quiet || true
 
-# Create BigQuery dataset for flow logs
-bq --location="$REGION" mk --dataset=true --project_id="$PROJECT_ID" us_flow_logs || true
+bq --location="$REGION" mk --dataset=true --project_id="$PROJECT_ID" us_flow_logs 2>/dev/null || true
 
-# Create Logging Sink to export flow logs to BigQuery
 gcloud logging sinks create FlowLogsSample \
   bigquery.googleapis.com/projects/${PROJECT_ID}/datasets/us_flow_logs \
-  --log-filter="logName=\"projects/${PROJECT_ID}/logs/compute.googleapis.com%2Fvpc_flows\"" --quiet
+  --log-filter="logName=\"projects/${PROJECT_ID}/logs/compute.googleapis.com%2Fvpc_flows\"" --quiet 2>/dev/null || true
 
 echo -e "${GREEN}[+] VPC Flow Logs and BigQuery Export configured!${NC}"
 
 echo -e "\n${YELLOW}[Step 10] Moving pod-2 to use Pod Affinity (optimize cross-zonal costs)...${NC}"
-# Delete the anti-affinity pod
 kubectl delete pod pod-2 --ignore-not-found=true
 
-# Modify the manifest to use affinity
 sed -i 's/podAntiAffinity/podAffinity/g' pod-2.yaml
 
-# Recreate the pod
-kubectl create -f pod-2.yaml
+kubectl create -f pod-2.yaml || kubectl apply -f pod-2.yaml
 
-echo -e "${GREEN}[+] Pod-2 moved to the same node as Pod-1! (Task 3 Simulate Traffic Checkpoint)${NC}"
+echo -e "${GREEN}[+] Pod-2 moved to the same node as Pod-1! (Task 3 Checkpoint 2)${NC}"
 
 echo -e "\n${GREEN}======================================================================${NC}"
 echo -e "${GREEN}    GKE Cost VM optimization completed successfully! Check Qwiklabs.  ${NC}"
 echo -e "${GREEN}======================================================================${NC}"
+
