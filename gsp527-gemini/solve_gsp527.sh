@@ -36,7 +36,7 @@ echo -e "${CYAN}[*] Region:         ${REGION}${NC}"
 # Task 1: Environment Setup & Copy Files
 echo -e "\n${YELLOW}[Task 1] Downloading cymbal-superstore source files...${NC}"
 cd ~
-gsutil -m cp -r gs://spls/gsp527/cymbal-superstore .
+gsutil -m cp -r gs://spls/gsp527/cymbal-superstore . 2>/dev/null || true
 
 # Task 2: Unit tests for /outofstock
 echo -e "\n${YELLOW}[Task 2] Setting up unit tests in backend/index.test.ts...${NC}"
@@ -88,8 +88,8 @@ fi
 
 npm run test || true
 
-# Task 4: Cloud Function outofstock
-echo -e "\n${YELLOW}[Task 4] Updating functions/index.js & deploying Cloud Function...${NC}"
+# Task 4: Cloud Function outofstock (Use --no-gen2 for 1st gen compatibility)
+echo -e "\n${YELLOW}[Task 4] Updating functions/index.js & deploying 1st-Gen Cloud Function...${NC}"
 cd ~/cymbal-superstore/functions
 
 cat > index.js << 'EOF'
@@ -204,8 +204,9 @@ function addOrUpdateFirestore(product) {
 }
 EOF
 
-echo "Deploying Cloud Function 'outofstock' to region ${REGION}..."
+echo "Deploying 1st Gen Cloud Function 'outofstock' to region ${REGION}..."
 gcloud functions deploy outofstock \
+  --no-gen2 \
   --runtime=nodejs20 \
   --trigger-http \
   --entry-point=outofstock \
