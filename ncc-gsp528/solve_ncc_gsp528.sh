@@ -12,13 +12,29 @@ CYAN='\033[0;36m'
 NC='\033[0m'
 BOLD='\033[1m'
 
+# Auto-activate gcloud account & project
+ACTIVE_ACCOUNT=$(gcloud auth list --format="value(account)" 2>/dev/null | head -1)
+if [ -n "$ACTIVE_ACCOUNT" ]; then
+    gcloud config set account "$ACTIVE_ACCOUNT" --quiet 2>/dev/null || true
+fi
+
+if [ -n "$DEVSHELL_PROJECT_ID" ]; then
+    gcloud config set project "$DEVSHELL_PROJECT_ID" --quiet 2>/dev/null || true
+fi
+
 PROJECT_ID=$(gcloud config get-value project 2>/dev/null)
+
+if [ -z "$PROJECT_ID" ] && [ -n "$DEVSHELL_PROJECT_ID" ]; then
+    PROJECT_ID="$DEVSHELL_PROJECT_ID"
+fi
+
 HUB_NAME="ncc-hub"
 
 echo -e "${BOLD}======================================================================${NC}"
 echo -e "${BOLD}  GSP528 - Connecting Cloud Networks with NCC Solver${NC}"
 echo -e "${BOLD}======================================================================${NC}"
-echo -e "${CYAN}[*] Project ID: ${PROJECT_ID}${NC}"
+echo -e "${CYAN}[*] Active Account: ${ACTIVE_ACCOUNT}${NC}"
+echo -e "${CYAN}[*] Project ID:     ${PROJECT_ID}${NC}"
 
 # Detect Region from VPN tunnels
 REGION=$(gcloud compute vpn-tunnels list --format="value(region)" 2>/dev/null | head -1)
@@ -26,11 +42,11 @@ REGION=$(gcloud compute vpn-tunnels list --format="value(region)" 2>/dev/null | 
 if [ -z "$REGION" ]; then
     REGION="us-central1"
 fi
-echo -e "${CYAN}[*] Region: ${REGION}${NC}"
+echo -e "${CYAN}[*] Region:         ${REGION}${NC}"
 
 # Enable Network Connectivity API
 echo -e "\n${YELLOW}[Step 1] Enabling Network Connectivity API...${NC}"
-gcloud services enable networkconnectivity.googleapis.com --quiet
+gcloud services enable networkconnectivity.googleapis.com --quiet 2>/dev/null || true
 
 # Task 1: Create Hub & On-Prem VPN Spokes
 echo -e "\n${YELLOW}[Task 1] Creating Network Connectivity Center Hub '${HUB_NAME}'...${NC}"
