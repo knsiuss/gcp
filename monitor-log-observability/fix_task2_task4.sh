@@ -28,9 +28,9 @@ echo -e "${CYAN}[*] Zone:        $ZONE${NC}"
 echo -e "${CYAN}[*] Instance ID: $INSTANCE_ID${NC}"
 
 # ============================================================================
-# FIX TASK 2: Configure VM startup script & restart VM
+# FIX TASK 2: Configure VM startup script with grpc@v1.29.1 pin & reset VM
 # ============================================================================
-echo -e "\n${YELLOW}[Step 1] Creating fail-safe startup script for video-queue-monitor...${NC}"
+echo -e "\n${YELLOW}[Step 1] Creating fail-safe startup script with pinned gRPC version...${NC}"
 
 cat > /tmp/startup_gsp338_fix.sh << EOF
 #!/bin/bash
@@ -70,10 +70,10 @@ mkdir -p /work/go/cache
 gsutil cp gs://spls/gsp338/video_queue/main.go /work/go/video/main.go || true
 
 cd /work/go/video
-go mod init video || true
-sed -i 's/1.23.0/1.15/g' go.mod 2>/dev/null || true
-sed -i 's/1.23/1.15/g' go.mod 2>/dev/null || true
+rm -f go.mod go.sum
 
+go mod init video || true
+go get google.golang.org/grpc@v1.29.1 || true
 go get go.opencensus.io@v0.24.0 || true
 go get contrib.go.opencensus.io/exporter/stackdriver@v0.13.4 || true
 
