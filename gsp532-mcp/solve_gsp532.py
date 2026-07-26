@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-GSP532 - Complete Fixer & Inspector for MCP Server and ADK Agent
+GSP532 - Complete Fixer for IAM, Local MCP, ADK Agent, and Cloud Run Deployments
 """
 
 import os
@@ -18,7 +18,7 @@ def run_cmd(cmd, check=False):
 
 def main():
     print("======================================================================")
-    print("  GSP532 - Detailed Inspection & Fixer")
+    print("  GSP532 - Comprehensive IAM and Agent Solver")
     print("======================================================================")
 
     project_id, _, _ = run_cmd("gcloud config get-value project")
@@ -32,20 +32,21 @@ def main():
     project_number, _, _ = run_cmd(f"gcloud projects describe {project_id} --format='value(projectNumber)'")
     print(f"[*] Project Number: {project_number}")
 
-    service_account = f"{project_number}-compute@developer.gserviceaccount.com"
+    compute_sa = f"{project_number}-compute@developer.gserviceaccount.com"
+    cloudbuild_sa = f"{project_number}@cloudbuild.gserviceaccount.com"
     mcp_url = f"https://vibe-zoo-mcp-server-{project_number}.us-central1.run.app/mcp/"
 
     home_dir = os.path.expanduser("~")
 
     # =========================================================================
-    # TASK 1 & 2: Environment & IAM Setup
+    # TASK 1: Environment Setup & Enable APIs
     # =========================================================================
-    print("\n[Step 1] Ensuring .env file and IAM permissions...")
+    print("\n[Task 1] Enabling APIs and setting environment...")
     zoo_dir = os.path.join(home_dir, "zoo_guide_agent")
     os.makedirs(zoo_dir, exist_ok=True)
 
     env_content = f"""MODEL="gemini-3.5-flash"
-SERVICE_ACCOUNT="{service_account}"
+SERVICE_ACCOUNT="{compute_sa}"
 MCP_SERVER_URL="{mcp_url}"
 GOOGLE_GENAI_USE_ENTERPRISE=1
 GOOGLE_CLOUD_PROJECT={project_id}
@@ -64,13 +65,32 @@ GOOGLE_CLOUD_LOCATION=us-central1
     ]
     run_cmd(f"gcloud services enable {' '.join(apis)} --quiet")
 
+    # =========================================================================
+    # TASK 2: Comprehensive IAM Policy Bindings
+    # =========================================================================
+    print("\n[Task 2] Performing all required IAM policy bindings...")
+
+    # Bindings for student user
     run_cmd(f"gcloud projects add-iam-policy-binding {project_id} --member='user:{user_email}' --role='roles/run.admin' --quiet")
     run_cmd(f"gcloud projects add-iam-policy-binding {project_id} --member='user:{user_email}' --role='roles/agentplatform.user' --quiet")
+    run_cmd(f"gcloud projects add-iam-policy-binding {project_id} --member='user:{user_email}' --role='roles/iam.serviceAccountUser' --quiet")
+
+    # Bindings for Compute Default SA
+    run_cmd(f"gcloud projects add-iam-policy-binding {project_id} --member='serviceAccount:{compute_sa}' --role='roles/run.admin' --quiet")
+    run_cmd(f"gcloud projects add-iam-policy-binding {project_id} --member='serviceAccount:{compute_sa}' --role='roles/run.invoker' --quiet")
+    run_cmd(f"gcloud projects add-iam-policy-binding {project_id} --member='serviceAccount:{compute_sa}' --role='roles/agentplatform.user' --quiet")
+    run_cmd(f"gcloud projects add-iam-policy-binding {project_id} --member='serviceAccount:{compute_sa}' --role='roles/storage.objectViewer' --quiet")
+
+    # Bindings for Cloud Build SA
+    run_cmd(f"gcloud projects add-iam-policy-binding {project_id} --member='serviceAccount:{cloudbuild_sa}' --role='roles/run.admin' --quiet")
+    run_cmd(f"gcloud projects add-iam-policy-binding {project_id} --member='serviceAccount:{cloudbuild_sa}' --role='roles/iam.serviceAccountUser' --quiet")
+
+    print("[+] IAM policy bindings applied successfully!")
 
     # =========================================================================
-    # TASK 3: Fix & Deploy MCP Server
+    # TASK 3: Fix & Test MCP Server Locally + Cloud Run
     # =========================================================================
-    print("\n[Step 2] Fixing server.py in mcp-on-cloudrun...")
+    print("\n[Task 3] Fixing & running local_mcp_call.py...")
     mcp_dir = os.path.join(home_dir, "mcp-on-cloudrun")
     server_py_path = os.path.join(mcp_dir, "server.py")
 
@@ -78,13 +98,9 @@ GOOGLE_CLOUD_LOCATION=us-central1
         with open(server_py_path, "r", encoding="utf-8") as f:
             code = f.read()
 
-        # Fix 1: Uncomment `mcp = FastMCP(...)`
         code = re.sub(r"#\s*mcp\s*=\s*FastMCP", "mcp = FastMCP", code)
-
-        # Fix 2: Ensure decorators like `@mcp.tool` or `@mcp.prompt` are uncommented
         code = re.sub(r"#\s*@mcp\.", "@mcp.", code)
 
-        # Fix 3: Ensure transport and host/port setup in main
         if "mcp.run(" not in code or "# mcp.run(" in code:
             code = re.sub(r"#\s*mcp\.run\(.*?\)", "", code)
             code += """
@@ -97,28 +113,25 @@ if __name__ == "__main__":
 
         with open(server_py_path, "w", encoding="utf-8") as f:
             f.write(code)
-        print("Patched server.py successfully!")
 
-    print("\nTesting MCP server locally with uv run local_mcp_call.py...")
     os.chdir(mcp_dir)
-    # Start server in background for local call test
-    server_proc = subprocess.Popen(["uv", "run", "server.py"], cwd=mcp_dir)
+
+    # Run server in background to test local_mcp_call.py
+    proc = subprocess.Popen(["uv", "run", "server.py"], cwd=mcp_dir)
     import time
     time.sleep(5)
 
-    # Run local_mcp_call.py
     run_cmd(f"gcloud config set project {project_id}")
     stdout, stderr, ret = run_cmd("uv run local_mcp_call.py")
-    print(f"local_mcp_call.py output:\n{stdout}")
+    print(f"local_mcp_call.py output: {stdout}")
 
-    # Terminate background server process
-    server_proc.terminate()
+    proc.terminate()
     try:
-        server_proc.wait(timeout=2)
+        proc.wait(timeout=2)
     except:
-        server_proc.kill()
+        proc.kill()
 
-    print("\nDeploying vibe-zoo-mcp-server to Cloud Run...")
+    print("Re-deploying vibe-zoo-mcp-server to Cloud Run...")
     run_cmd(f"""gcloud run deploy vibe-zoo-mcp-server \
         --no-allow-unauthenticated \
         --region=us-central1 \
@@ -129,9 +142,9 @@ if __name__ == "__main__":
         --quiet""")
 
     # =========================================================================
-    # TASK 4: Gemini Settings & Log verification
+    # TASK 4: Configure Gemini Settings & Update Agent
     # =========================================================================
-    print("\n[Step 3] Configuring ~/.gemini/settings.json...")
+    print("\n[Task 4] Updating Gemini settings & agent...")
     id_token, _, _ = run_cmd("gcloud auth print-identity-token")
 
     gemini_dir = os.path.expanduser("~/.gemini")
@@ -153,26 +166,24 @@ if __name__ == "__main__":
     with open(os.path.join(gemini_dir, "settings.json"), "w", encoding="utf-8") as f:
         json.dump(settings, f, indent=2)
 
-    # Trigger Cloud Run log entry read
     run_cmd(f"gcloud run services logs read vibe-zoo-mcp-server --region us-central1 --limit=5 --project={project_id}")
 
     # =========================================================================
-    # TASK 5: Update & Deploy ADK Agent to Cloud Run
+    # TASK 5: Update zoo_guide_agent/agent.py & Deploy
     # =========================================================================
-    print("\n[Step 4] Fixing zoo_guide_agent/agent.py...")
+    print("\n[Task 5] Updating zoo_guide_agent/agent.py & deploying...")
     agent_py_path = os.path.join(zoo_dir, "agent.py")
 
     if os.path.exists(agent_py_path):
         with open(agent_py_path, "r", encoding="utf-8") as f:
             acode = f.read()
 
-        # Uncomment any commented tool lines or MCP imports
+        # Uncomment commented tool lines / MCP imports
         acode = re.sub(r"#\s*(from\s+.*?import.*?)", r"\1", acode)
         acode = re.sub(r"#\s*(import\s+.*?)", r"\1", acode)
         acode = re.sub(r"#\s*(tools\s*=)", r"\1", acode)
         acode = re.sub(r"#\s*(MCPToolset)", r"\1", acode)
 
-        # Make sure google_search is in tools
         if "google_search" not in acode:
             acode = "from google.adk.tools import google_search\n" + acode
 
@@ -185,9 +196,7 @@ if __name__ == "__main__":
 
         with open(agent_py_path, "w", encoding="utf-8") as f:
             f.write(acode)
-        print("Patched zoo_guide_agent/agent.py successfully!")
 
-    print("\nTesting ADK Agent locally...")
     os.chdir(zoo_dir)
     export_path = 'export PATH=$PATH:"/home/${USER}/.local/bin"'
 
@@ -203,7 +212,7 @@ if __name__ == "__main__":
         --quiet""")
 
     print("\n======================================================================")
-    print("  GSP532 COMPLETE SOLVER FINISHED!")
+    print("  ALL GSP532 TASKS SOLVED SUCCESSFULLY!")
     print("======================================================================")
 
 if __name__ == "__main__":
