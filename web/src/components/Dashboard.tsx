@@ -6,91 +6,118 @@ import { QuotaCard } from './QuotaCard'
 interface DashboardProps {
   arcade: ArcadeState
   onBrowse: () => void
+  onOpenLab: (id: string) => void
 }
 
-export function Dashboard({ arcade, onBrowse }: DashboardProps) {
-  const { stats } = arcade
-  const { doneIds, monthBadges, totalBadges, pointsEstimate, matches } = stats
+function BadgeTile({
+  name,
+  earnedAt,
+  lab,
+  onOpen,
+}: {
+  name: string
+  earnedAt: string | null
+  lab: { id: string; name: string } | null
+  onOpen: (id: string) => void
+}) {
+  return (
+    <div className={`badge-tile${lab ? ' matched' : ''}`}>
+      <div className="badge-tile-top">
+        <span className="badge-medal">
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2">
+            <circle cx="12" cy="9" r="5" />
+            <path d="M9 13.5 7.5 21 12 18.5 16.5 21 15 13.5" />
+          </svg>
+        </span>
+        {lab && (
+          <button className="badge-link" onClick={() => onOpen(lab.id)} title={`Buka ${lab.name}`}>
+            Lab ↗
+          </button>
+        )}
+      </div>
+      <div className="badge-tile-name">{name}</div>
+      {lab ? (
+        <div className="badge-tile-sub">{lab.name}</div>
+      ) : (
+        <div className="badge-tile-sub muted">{earnedAt ?? ''}</div>
+      )}
+    </div>
+  )
+}
 
-  const doneCount = doneIds.size
-  const unmatchedBadges = stats.badges.filter((b) => ![...matches.values()].some((m) => m.badgeName === b.name))
+export function Dashboard({ arcade, onBrowse, onOpenLab }: DashboardProps) {
+  const { stats } = arcade
+
+  const labByBadge = new Map<string, { id: string; name: string }>()
+  for (const [labId, m] of stats.matches.entries()) {
+    const lab = catalog.find((l) => l.id === labId)
+    if (lab) labByBadge.set(m.badgeName, { id: lab.id, name: lab.name })
+  }
+
+  const doneCount = stats.doneIds.size
+  const allBadges = stats.badges
 
   const statCards = [
     { label: 'Total labs', value: catalog.length },
-    { label: 'Badge diambil', value: doneCount, sub: `${catalog.length - doneCount} belum` },
-    { label: 'Selesai bulan ini', value: monthBadges },
-    { label: 'Estimasi poin', value: pointsEstimate, sub: 'Arcade 2026' },
+    { label: 'Badge diambil', value: doneCount, sub: `${catalog.length - doneCount} tersisa` },
+    { label: 'Bulan ini', value: stats.monthBadges, sub: `target ${arcade.targets.monthlyBadges}` },
+    { label: 'Arcade Points', value: stats.pointsEstimate, sub: `Legend ${arcade.targets.legendTarget}` },
   ]
 
   return (
-    <article className="dashboard">
+    <div className="dash">
       <section className="hero">
-        <div className="hero-overline">Google Cloud Arcade 2026</div>
-        <h1 className="hero-title">Arcade Labs Solver Portal</h1>
+        <p className="hero-kicker">Google Cloud Arcade 2026</p>
+        <h1 className="hero-title">Arcade Labs.</h1>
         <p className="hero-sub">
-          Koleksi script otomatis untuk semua lab Google Cloud Skills Boost — lengkap dengan tracker badge, quota
-          Arcade 2026, dan command siap salin untuk Cloud Shell.
+          Koleksi script otomatis untuk lab Google Cloud Skills Boost. Tandai badge yang sudah kamu ambil, pantau
+          kuota Arcade 2026, dan salin command siap pakai untuk Cloud Shell.
         </p>
         <div className="hero-actions">
-          <a className="btn-primary" href="https://go.cloudskillsboost.google/arcade" target="_blank" rel="noreferrer">
-            Buka Google Arcade →
+          <a className="btn" href="https://go.cloudskillsboost.google/arcade" target="_blank" rel="noreferrer">
+            Buka Google Arcade ↗
           </a>
-          <button className="btn-ghost" onClick={onBrowse}>
-            Lihat daftar lab
+          <button className="btn ghost" onClick={onBrowse}>
+            Lihat Labs
           </button>
         </div>
       </section>
 
-      <section className="stat-row">
+      <section className="stats">
         {statCards.map((s) => (
-          <div key={s.label} className="stat-card">
-            <div className="stat-value">{typeof s.value === 'number' ? s.value : '—'}</div>
+          <div key={s.label} className="stat">
+            <div className="stat-num">{typeof s.value === 'number' ? s.value : '—'}</div>
             <div className="stat-label">{s.label}</div>
             {s.sub && <div className="stat-sub">{s.sub}</div>}
           </div>
         ))}
       </section>
 
-      <div className="dash-grid">
+      <div className="cards">
         <ProfileCard arcade={arcade} />
         <QuotaCard arcade={arcade} />
       </div>
 
-      <section className="card">
-        <h2 className="card-title">Badge ↔ Lab mapping</h2>
-        {totalBadges === 0 ? (
-          <p className="dim">Belum ada data badge. Connect profil untuk melihat pemetaan badge ke lab solver.</p>
+      <section className="badges-sec">
+        <div className="badges-head">
+          <h2>Skill Badges</h2>
+          <span className="badges-count">
+            {allBadges.length} dari Google Skills
+            {allBadges.length > 0 && ' · ' + stats.matches.size + ' cocok dengan lab'}
+          </span>
+        </div>
+        {allBadges.length === 0 ? (
+          <p className="empty-note">
+            Belum ada data badge. Tempel public profile URL kamu di kartu Connect di atas.
+          </p>
         ) : (
           <div className="badge-grid">
-            <div className="badge-col">
-              <h3>Matched · {matches.size} badge → lab</h3>
-              <ul className="badge-list">
-                {[...matches.entries()].map(([labId, m]) => {
-                  const lab = catalog.find((l) => l.id === labId)
-                  return (
-                    <li key={labId} className="badge-li">
-                      <span className="badge-name">{m.badgeName}</span>
-                      <span className="badge-to">→</span>
-                      <span className="badge-lab">{lab?.name ?? labId}</span>
-                    </li>
-                  )
-                })}
-              </ul>
-            </div>
-            <div className="badge-col">
-              <h3>Belum matched · {unmatchedBadges.length} badge</h3>
-              <ul className="badge-list">
-                {unmatchedBadges.map((b, i) => (
-                  <li key={i} className="badge-li">
-                    <span className="badge-name">{b.name}</span>
-                    <span className="badge-date">{b.earnedAt ?? ''}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
+            {allBadges.map((b, i) => (
+              <BadgeTile key={`${b.name}-${i}`} name={b.name} earnedAt={b.earnedAt} lab={labByBadge.get(b.name) ?? null} onOpen={onOpenLab} />
+            ))}
           </div>
         )}
       </section>
-    </article>
+    </div>
   )
 }

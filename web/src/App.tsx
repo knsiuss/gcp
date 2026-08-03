@@ -3,7 +3,8 @@ import { catalog, generatedAt } from './generated/catalog'
 import { allCategories, filterLabs } from './lib/catalog'
 import type { StatusFilter } from './lib/types'
 import { useArcade } from './lib/useArcade'
-import { Sidebar } from './components/Sidebar'
+import { Topbar } from './components/Topbar'
+import { LabList } from './components/LabList'
 import { LabDetail } from './components/LabDetail'
 import { Dashboard } from './components/Dashboard'
 import './index.css'
@@ -21,7 +22,7 @@ export default function App() {
 
   const goView = (v: 'dashboard' | 'labs') => {
     setView(v)
-    if (v === 'labs' && !selected) setSelectedId(catalog[0]?.id ?? null)
+    if (v === 'labs' && !selectedId) setSelectedId(catalog[0]?.id ?? null)
   }
 
   const selectLab = (id: string) => {
@@ -31,37 +32,41 @@ export default function App() {
 
   return (
     <div className="app">
-      <Sidebar
-        labs={labs}
-        total={catalog.length}
-        categories={allCategories}
-        query={query}
-        category={category}
-        status={status}
-        selectedId={selected?.id ?? null}
-        view={view}
-        doneIds={arcade.stats.doneIds}
-        onQueryChange={setQuery}
-        onCategoryChange={setCategory}
-        onStatusChange={setStatus}
-        onSelect={selectLab}
-        onViewChange={goView}
-      />
-      <main className="main">
-        {view === 'dashboard' ? (
-          <Dashboard arcade={arcade} onBrowse={() => goView('labs')} />
-        ) : selected ? (
-          <LabDetail key={selected.id} lab={selected} arcade={arcade} />
-        ) : (
-          <div className="empty">No lab matches your search.</div>
-        )}
-        <footer className="footer">
-          {catalog.length} labs · generated {new Date(generatedAt).toLocaleDateString()} · repo GitHub{' '}
-          <a className="footer-link" href="https://github.com/knsiuss/gcp" target="_blank" rel="noreferrer">
-            knsiuss/gcp
-          </a>
-        </footer>
-      </main>
+      <Topbar view={view} onViewChange={goView} />
+
+      {view === 'dashboard' ? (
+        <main className="main">
+          <Dashboard arcade={arcade} onBrowse={() => goView('labs')} onOpenLab={selectLab} />
+        </main>
+      ) : (
+        <main className="main labs-main">
+          <LabList
+            labs={labs}
+            total={catalog.length}
+            categories={allCategories}
+            query={query}
+            category={category}
+            status={status}
+            selectedId={selected?.id ?? null}
+            doneIds={arcade.stats.doneIds}
+            onQueryChange={setQuery}
+            onCategoryChange={setCategory}
+            onStatusChange={setStatus}
+            onSelect={selectLab}
+          />
+          <div className="detail-pane">
+            {selected ? (
+              <LabDetail key={selected.id} lab={selected} arcade={arcade} />
+            ) : (
+              <div className="empty">Tidak ada lab yang cocok</div>
+            )}
+          </div>
+        </main>
+      )}
+
+      <footer className="footer">
+        {catalog.length} labs · generated {new Date(generatedAt).toLocaleDateString()}
+      </footer>
     </div>
   )
 }

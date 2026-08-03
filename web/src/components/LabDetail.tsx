@@ -99,28 +99,19 @@ export function LabDetail({ lab, arcade }: LabDetailProps) {
         <div className="detail-meta">
           <span className="code-badge">{formatCode(lab.code)}</span>
           <span className="cat-badge">{lab.category}</span>
-          {done && <span className="done-badge">Badge diambil ✓</span>}
+          {done && <span className="done-badge">Badge diambil</span>}
         </div>
         <h1 className="detail-title">{lab.name}</h1>
         {lab.description && <p className="detail-desc">{lab.description}</p>}
-        <div className="detail-folder">
-          <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" strokeWidth="2">
-            <path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
-          </svg>
-          {lab.folder}/
-        </div>
-        <div className="done-toggle">
-          <button
-            className={`btn-toggle${done ? ' is-done' : ''}`}
-            onClick={() => arcade.toggleDone(lab.id, !done)}
-          >
+        <div className="detail-actions">
+          <button className={`btn${done ? ' done' : ''}`} onClick={() => arcade.toggleDone(lab.id, !done)}>
             {done ? 'Tandai belum diambil' : 'Tandai sudah diambil'}
           </button>
-          {manual && <span className="manual-note">(set manual)</span>}
+          {manual && <span className="manual-note">set manual</span>}
         </div>
         {matched && (
           <div className="match-note">
-            Auto-match: badge <strong>“{matched.badgeName}”</strong>
+            Badge: <strong>“{matched.badgeName}”</strong>
             {matched.earnedAt ? ` · ${matched.earnedAt}` : ''}
           </div>
         )}

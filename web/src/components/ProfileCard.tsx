@@ -5,77 +5,66 @@ interface ProfileCardProps {
 }
 
 export function ProfileCard({ arcade }: ProfileCardProps) {
-  const { profileUrl, setProfileUrl, connecting, connectError, connectProfile, clearLocalProfile, effectiveProfile, serverProfile, localProfile } = arcade
+  const { profileUrl, setProfileUrl, connecting, connectError, connectProfile, clearLocalProfile, effectiveProfile, localProfile } = arcade
 
   return (
-    <section className="card profile-card">
-      <h2 className="card-title">Connect Google Skills Profile</h2>
+    <section className="card">
+      <h2 className="card-title">Google Skills Profile</h2>
       <p className="card-hint">
-        Tempel public profile URL kamu di bawah — badge langsung diambil dari input (via reader proxy, tersimpan di
-        browser). Untuk auto-refresh terus-menerus tanpa buka situs, isi{' '}
-        <code className="dim-code">web/public/profile-source.json</code> lalu push, dan GitHub Actions akan update tiap
-        12 jam.
+        Tempel public profile URL kamu. Badge diambil langsung dari Google Skills dan tersimpan di browser ini.
       </p>
 
-      <div className="profile-form">
+      <div className="field-row">
         <input
           type="text"
-          className="text-input"
+          className="field"
           value={profileUrl}
           onChange={(e) => setProfileUrl(e.target.value)}
-          placeholder="https://www.cloudskillsboost.google/public_profiles/…"
+          placeholder="cloudskillsboost.google/public_profiles/…"
           spellCheck={false}
         />
-        <button className="btn-primary" onClick={() => connectProfile(profileUrl)} disabled={connecting}>
-          {connecting ? 'Menghubungkan…' : 'Connect'}
+        <button className="btn" onClick={() => connectProfile(profileUrl)} disabled={connecting}>
+          {connecting ? 'Menghubungkan' : 'Connect'}
         </button>
       </div>
 
-      {connectError && <div className="form-error">{connectError}</div>}
+      {connectError && <p className="form-error">{connectError}</p>}
 
       {effectiveProfile ? (
         <div className="profile-status">
-          <div className="profile-main">
-            <span className="profile-avatar">{(effectiveProfile.name ?? '?').charAt(0)}</span>
-            <div>
-              <div className="profile-name">{effectiveProfile.name ?? 'Connected'}</div>
-              <div className="profile-id">{effectiveProfile.id}</div>
+          <div className="profile-row">
+            <span className="avatar">{effectiveProfile.name ? effectiveProfile.name.charAt(0) : 'G'}</span>
+            <div className="profile-id">
+              <div className="profile-name">{effectiveProfile.name ?? 'Terhubung'}</div>
+              <div className="profile-sub">{effectiveProfile.id}</div>
             </div>
+            <span className="source-tag">{localProfile ? 'dari input' : 'auto · Actions'}</span>
           </div>
-          <div className="profile-stats">
-            <div className="profile-stat">
+          <div className="profile-metrics">
+            <div>
               <strong>{effectiveProfile.badges.length}</strong>
               <span>badges</span>
             </div>
-            <div className="profile-stat">
+            <div>
               <strong>{effectiveProfile.points ?? '—'}</strong>
               <span>points</span>
             </div>
-            <div className="profile-stat">
+            <div>
               <strong>{new Date(effectiveProfile.fetchedAt).toLocaleDateString()}</strong>
-              <span>fetched</span>
+              <span>terakhir sync</span>
             </div>
           </div>
-          <div className="profile-actions">
-            <span className="source-tag">
-              {localProfile ? 'dari input browser' : serverProfile ? 'auto · GitHub Actions' : 'lokal'}
-            </span>
-            {localProfile && (
-              <button className="btn-ghost" onClick={clearLocalProfile}>
-                Reset browser cache
-              </button>
-            )}
-          </div>
-        </div>
-      ) : (
-        <div className="profile-empty">
-          Belum ada profil terhubung — tempel link di atas lalu klik Connect.{' '}
-          {serverProfile === null && (
-            <span className="dim">
-              Opsional: isi <code>web/public/profile-source.json</code> untuk auto-update via GitHub Actions.
-            </span>
+          {localProfile && (
+            <button className="text-btn" onClick={clearLocalProfile}>
+              Reset data browser
+            </button>
           )}
         </div>
+      ) : (
+        <p className="empty-note">
+          Belum terhubung. Opsional: isi <code>web/public/profile-source.json</code> untuk auto-update via GitHub
+          Actions tiap 12 jam.
+        </p>
       )}
     </section>
   )
