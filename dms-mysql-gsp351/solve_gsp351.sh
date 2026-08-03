@@ -77,9 +77,19 @@ fi
 echo -e "\n${YELLOW}[Setup] Enabling required APIs...${NC}"
 gcloud services enable datamigration.googleapis.com sqladmin.googleapis.com servicenetworking.googleapis.com --quiet 2>/dev/null || true
 
+# --- Detect the DMS CLI release track (GA preferred, then beta, then alpha) --
+if gcloud database-migration --help >/dev/null 2>&1; then
+  DMS="gcloud database-migration"
+elif gcloud beta database-migration --help >/dev/null 2>&1; then
+  DMS="gcloud beta database-migration"
+else
+  DMS="gcloud alpha database-migration"
+fi
+echo -e "${CYAN}[*] DMS command: ${DMS}${NC}"
+
 # --- Helpers ----------------------------------------------------------------
 job_state() {
-  gcloud beta database-migration migration-jobs describe "$1" --region="$REGION" --format='value(state)' 2>/dev/null || echo "NONE"
+  $DMS migration-jobs describe "$1" --region="$REGION" --format='value(state)' 2>/dev/null || echo "NONE"
 }
 
 wait_for_state() {
@@ -104,7 +114,7 @@ wait_for_state() {
 start_job() {
   local job="$1" i
   for i in $(seq 1 5); do
-    if gcloud beta database-migration migration-jobs start "$job" --region="$REGION" --quiet 2>/dev/null; then
+    if $DMS migration-jobs start "$job" --region="$REGION" --quiet 2>/dev/null; then
       echo -e "${GREEN}  [OK] Started $job${NC}"
       return 0
     fi
@@ -143,10 +153,10 @@ cloudsql_query() {
 # Task 1: Source connection profile (external IP)
 # ============================================================================
 echo -e "\n${YELLOW}[Task 1] Creating MySQL source connection profile (external IP)...${NC}"
-if gcloud beta database-migration connection-profiles describe "$SRC_PROFILE" --region="$REGION" >/dev/null 2>&1; then
+if $DMS connection-profiles describe "$SRC_PROFILE" --region="$REGION" >/dev/null 2>&1; then
   echo "  Connection profile '$SRC_PROFILE' already exists."
 else
-  gcloud beta database-migration connection-profiles create mysql "$SRC_PROFILE" \
+  $DMS connection-profiles create mysql "$SRC_PROFILE" \
     --region="$REGION" \
     --mysql-host="$EXTERNAL_IP" \
     --mysql-port=3306 \
@@ -160,23 +170,23 @@ fi
 # Task 2: One-time migration -> mysql-fin-2rv
 # ============================================================================
 echo -e "\n${YELLOW}[Task 2] One-time migration to $DST1...${NC}"
-if gcloud beta database-migration connection-profiles describe "$DST1_PROFILE" --region="$REGION" >/dev/null 2>&1; then
+if $DMS connection-profiles describe "$DST1_PROFILE" --region="$REGION" >/dev/null 2>&1; then
   echo "  Destination profile '$DST1_PROFILE' already exists."
 else
-  if ! gcloud beta database-migration connection-profiles create cloudsql "$DST1_PROFILE" \
+  if ! $DMS connection-profiles create cloudsql "$DST1_PROFILE" \
       --region="$REGION" --cloudsql-instance="$DST1" \
       --display-name="Cloud SQL dest: $DST1" --quiet; then
-    gcloud beta database-migration connection-profiles create cloudsql "$DST1_PROFILE" \
+    $DMS connection-profiles create cloudsql "$DST1_PROFILE" \
       --region="$REGION" --cloudsql-instance="projects/$PROJECT_ID/locations/$REGION/instances/$DST1" \
       --display-name="Cloud SQL dest: $DST1" --quiet
   fi
   echo -e "${GREEN}  [OK] Created destination connection profile: $DST1_PROFILE${NC}"
 fi
 
-if gcloud beta database-migration migration-jobs describe "$JOB1" --region="$REGION" >/dev/null 2>&1; then
+if $DMS migration-jobs describe "$JOB1" --region="$REGION" >/dev/null 2>&1; then
   echo "  Migration job '$JOB1' already exists."
 else
-  gcloud beta database-migration migration-jobs create "$JOB1" \
+  $DMS migration-jobs create "$JOB1" \
     --region="$REGION" --source="$SRC_PROFILE" --destination="$DST1_PROFILE" \
     --type=ONE_TIME --display-name="One-time migration to $DST1" --quiet
   echo -e "${GREEN}  [OK] Created one-time migration job: $JOB1${NC}"
@@ -193,23 +203,23 @@ fi
 # Task 3: Continuous migration -> mysql-fin-2rv-cont (VPC peering)
 # ============================================================================
 echo -e "\n${YELLOW}[Task 3] Continuous migration to $DST2 (VPC peering)...${NC}"
-if gcloud beta database-migration connection-profiles describe "$DST2_PROFILE" --region="$REGION" >/dev/null 2>&1; then
+if $DMS connection-profiles describe "$DST2_PROFILE" --region="$REGION" >/dev/null 2>&1; then
   echo "  Destination profile '$DST2_PROFILE' already exists."
 else
-  if ! gcloud beta database-migration connection-profiles create cloudsql "$DST2_PROFILE" \
+  if ! $DMS connection-profiles create cloudsql "$DST2_PROFILE" \
       --region="$REGION" --cloudsql-instance="$DST2" \
       --display-name="Cloud SQL dest: $DST2" --quiet; then
-    gcloud beta database-migration connection-profiles create cloudsql "$DST2_PROFILE" \
+    $DMS connection-profiles create cloudsql "$DST2_PROFILE" \
       --region="$REGION" --cloudsql-instance="projects/$PROJECT_ID/locations/$REGION/instances/$DST2" \
       --display-name="Cloud SQL dest: $DST2" --quiet
   fi
   echo -e "${GREEN}  [OK] Created destination connection profile: $DST2_PROFILE${NC}"
 fi
 
-if gcloud beta database-migration migration-jobs describe "$JOB2" --region="$REGION" >/dev/null 2>&1; then
+if $DMS migration-jobs describe "$JOB2" --region="$REGION" >/dev/null 2>&1; then
   echo "  Migration job '$JOB2' already exists."
 else
-  if gcloud beta database-migration migration-jobs create "$JOB2" \
+  if $DMS migration-jobs create "$JOB2" \
       --region="$REGION" --source="$SRC_PROFILE" --destination="$DST2_PROFILE" \
       --type=CONTINUOUS --peer-vpc="$VPC_NAME" \
       --display-name="Continuous migration to $DST2" --quiet; then
@@ -301,7 +311,7 @@ fi
 # Task 5: Promote the continuous destination to standalone
 # ============================================================================
 echo -e "\n${YELLOW}[Task 5] Promoting continuous migration destination to standalone...${NC}"
-if gcloud beta database-migration migration-jobs promote "$JOB2" --region="$REGION" --quiet 2>/dev/null; then
+if $DMS migration-jobs promote "$JOB2" --region="$REGION" --quiet 2>/dev/null; then
   echo -e "${GREEN}  [OK] Promote accepted for job: $JOB2${NC}"
 else
   echo -e "${YELLOW}  Promote returned non-zero (may already be promoted / still validating). Checking state...${NC}"
