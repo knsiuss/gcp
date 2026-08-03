@@ -202,7 +202,7 @@ else
 fi
 
 ST=$(job_state "$JOB1")
-if [ "$ST" == "NONE" ] || [ "$ST" == "CREATING" ] || [ "$ST" == "STARTING" ]; then
+if [ "$ST" == "NONE" ] || [ "$ST" == "NOT_STARTED" ] || [ "$ST" == "CREATING" ] || [ "$ST" == "STARTING" ]; then
   demote_job "$JOB1"
   start_job "$JOB1" || true
 else
@@ -239,7 +239,7 @@ else
 fi
 
 ST=$(job_state "$JOB2")
-if [ "$ST" == "NONE" ] || [ "$ST" == "CREATING" ] || [ "$ST" == "STARTING" ]; then
+if [ "$ST" == "NONE" ] || [ "$ST" == "NOT_STARTED" ] || [ "$ST" == "CREATING" ] || [ "$ST" == "STARTING" ]; then
   demote_job "$JOB2"
   start_job "$JOB2" || true
 else
