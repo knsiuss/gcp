@@ -233,6 +233,18 @@ Each lab is organized into its own folder. Simply open **Google Cloud Shell** in
     ./solve_task5.sh
     ```
 
+### 21. Migrate MySQL Data to Cloud SQL Using Database Migration Service: Challenge Lab (GSP351)
+*   **Folder**: `dms-mysql-gsp351/`
+*   **Script**: `solve_gsp351.sh`
+*   **Execution**:
+    ```bash
+    git clone https://github.com/knsiuss/gcp.git gcp-labs
+    cd gcp-labs/dms-mysql-gsp351
+    chmod +x solve_gsp351.sh
+    ./solve_gsp351.sh
+    ```
+    *Creates the source connection profile (external IP), the one-time migration job to `mysql-fin-2rv`, the continuous migration job to `mysql-fin-2rv-cont` (VPC peering), tests replication, and promotes the destination. Region/zone are derived automatically (defaults `us-east1` / `us-east1-d`).*
+
 
 
 
