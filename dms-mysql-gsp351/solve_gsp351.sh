@@ -125,6 +125,18 @@ start_job() {
   return 1
 }
 
+demote_job() {
+  # Existing Cloud SQL destinations must be demoted to a read replica before the
+  # migration job can run. The console does this automatically; gcloud does not.
+  local job="$1"
+  echo "  Demoting destination instance for $job (best-effort)..."
+  if $DMS migration-jobs demote-destination "$job" --region="$REGION" --quiet 2>/dev/null; then
+    echo -e "${GREEN}  [OK] Demote request accepted for $job${NC}"
+  else
+    echo -e "${YELLOW}  Demote skipped (may already be demoted or handled automatically).${NC}"
+  fi
+}
+
 ensure_mysql_client() {
   if ! command -v mysql >/dev/null 2>&1; then
     echo "  Installing mysql client..."
@@ -173,13 +185,10 @@ echo -e "\n${YELLOW}[Task 2] One-time migration to $DST1...${NC}"
 if $DMS connection-profiles describe "$DST1_PROFILE" --region="$REGION" >/dev/null 2>&1; then
   echo "  Destination profile '$DST1_PROFILE' already exists."
 else
-  if ! $DMS connection-profiles create cloudsql "$DST1_PROFILE" \
-      --region="$REGION" --cloudsql-instance="$DST1" \
-      --display-name="Cloud SQL dest: $DST1" --quiet; then
-    $DMS connection-profiles create cloudsql "$DST1_PROFILE" \
-      --region="$REGION" --cloudsql-instance="projects/$PROJECT_ID/locations/$REGION/instances/$DST1" \
-      --display-name="Cloud SQL dest: $DST1" --quiet
-  fi
+  $DMS connection-profiles create mysql "$DST1_PROFILE" \
+    --region="$REGION" \
+    --cloudsql-instance="$DST1" \
+    --display-name="Cloud SQL dest: $DST1" --quiet
   echo -e "${GREEN}  [OK] Created destination connection profile: $DST1_PROFILE${NC}"
 fi
 
@@ -194,6 +203,7 @@ fi
 
 ST=$(job_state "$JOB1")
 if [ "$ST" == "NONE" ] || [ "$ST" == "CREATING" ] || [ "$ST" == "STARTING" ]; then
+  demote_job "$JOB1"
   start_job "$JOB1" || true
 else
   echo "  One-time job already in state: $ST"
@@ -206,13 +216,10 @@ echo -e "\n${YELLOW}[Task 3] Continuous migration to $DST2 (VPC peering)...${NC}
 if $DMS connection-profiles describe "$DST2_PROFILE" --region="$REGION" >/dev/null 2>&1; then
   echo "  Destination profile '$DST2_PROFILE' already exists."
 else
-  if ! $DMS connection-profiles create cloudsql "$DST2_PROFILE" \
-      --region="$REGION" --cloudsql-instance="$DST2" \
-      --display-name="Cloud SQL dest: $DST2" --quiet; then
-    $DMS connection-profiles create cloudsql "$DST2_PROFILE" \
-      --region="$REGION" --cloudsql-instance="projects/$PROJECT_ID/locations/$REGION/instances/$DST2" \
-      --display-name="Cloud SQL dest: $DST2" --quiet
-  fi
+  $DMS connection-profiles create mysql "$DST2_PROFILE" \
+    --region="$REGION" \
+    --cloudsql-instance="$DST2" \
+    --display-name="Cloud SQL dest: $DST2" --quiet
   echo -e "${GREEN}  [OK] Created destination connection profile: $DST2_PROFILE${NC}"
 fi
 
@@ -233,6 +240,7 @@ fi
 
 ST=$(job_state "$JOB2")
 if [ "$ST" == "NONE" ] || [ "$ST" == "CREATING" ] || [ "$ST" == "STARTING" ]; then
+  demote_job "$JOB2"
   start_job "$JOB2" || true
 else
   echo "  Continuous job already in state: $ST"
