@@ -158,10 +158,10 @@ if $DMS connection-profiles describe "$SRC_PROFILE" --region="$REGION" >/dev/nul
 else
   $DMS connection-profiles create mysql "$SRC_PROFILE" \
     --region="$REGION" \
-    --mysql-host="$EXTERNAL_IP" \
-    --mysql-port=3306 \
-    --mysql-username=admin \
-    --mysql-password=changeme \
+    --host="$EXTERNAL_IP" \
+    --port=3306 \
+    --username=admin \
+    --password=changeme \
     --display-name="MySQL Source (external IP)" --quiet
   echo -e "${GREEN}  [OK] Created source connection profile: $SRC_PROFILE${NC}"
 fi
@@ -221,7 +221,7 @@ if $DMS migration-jobs describe "$JOB2" --region="$REGION" >/dev/null 2>&1; then
 else
   if $DMS migration-jobs create "$JOB2" \
       --region="$REGION" --source="$SRC_PROFILE" --destination="$DST2_PROFILE" \
-      --type=CONTINUOUS --peer-vpc="$VPC_NAME" \
+      --type=CONTINUOUS --peer-vpc="projects/$PROJECT_ID/global/networks/$VPC_NAME" \
       --display-name="Continuous migration to $DST2" --quiet; then
     echo -e "${GREEN}  [OK] Created continuous migration job: $JOB2 (VPC peering: $VPC_NAME)${NC}"
   else
