@@ -1,0 +1,656 @@
+{
+  "fetchedAt": "2026-08-03T04:55:14.532Z",
+  "badges": [
+    {
+      "title": "Analyze and Reason on Multimodal Data with Gemini",
+      "level": "intermediate",
+      "duration": "30 minutes",
+      "description": "Complete the intermediate Analyze and Reason on Multimodal Data with Gemini skill badge course to demonstrate skills in the following: analyzing text, image, audio, and video data using Gemini, and reasoning about this combined information to draw conclusions and extract insights.",
+      "path": "/course_templates/1240?catalog_rank=%7B%22rank%22%3A41%2C%22num_filters%22%3A1%2C%22has_search%22%3Afalse%7D"
+    },
+    {
+      "title": "Analyze BigQuery Data in Connected Sheets",
+      "level": "introductory",
+      "duration": "30 minutes",
+      "description": "Complete the Analyze BigQuery Data in Connected Sheets skill badge to demonstrate that you can use Connected Sheets to access, analyze, visualize, and share billions of rows of BigQuery data from your Google Sheets spreadsheet.",
+      "path": "/course_templates/632?catalog_rank=%7B%22rank%22%3A81%2C%22num_filters%22%3A1%2C%22has_search%22%3Afalse%7D"
+    },
+    {
+      "title": "Analyze Images with the Cloud Vision API",
+      "level": "introductory",
+      "duration": "15 minutes",
+      "description": "Earn a skill badge by completing the Analyze Images with the Cloud Vision API quest, where you discover how to leverage the Cloud Vision API for various tasks, including extracting text from images.",
+      "path": "/course_templates/633?catalog_rank=%7B%22rank%22%3A22%2C%22num_filters%22%3A1%2C%22has_search%22%3Afalse%7D"
+    },
+    {
+      "title": "Analyze Sentiment with Natural Language API",
+      "level": "introductory",
+      "duration": "30 minutes",
+      "description": "Earn a skill badge by completing the Analyze Sentiment with Natural Language API quest, where you learn how the API derives sentiment from text.",
+      "path": "/course_templates/667?catalog_rank=%7B%22rank%22%3A16%2C%22num_filters%22%3A1%2C%22has_search%22%3Afalse%7D"
+    },
+    {
+      "title": "Analyze Speech and Language with Google APIs",
+      "level": "introductory",
+      "duration": "15 minutes",
+      "description": "Earn a skill badge by completing the Analyze Speech and Language with Google APIs quest, where you learn how to use the Natural Language and Speech APIs in real-world settings.",
+      "path": "/course_templates/634?catalog_rank=%7B%22rank%22%3A26%2C%22num_filters%22%3A1%2C%22has_search%22%3Afalse%7D"
+    },
+    {
+      "title": "App Building with AppSheet",
+      "level": "introductory",
+      "duration": "15 minutes",
+      "description": "Earn a skill badge by completing the App Building with AppSheet course, where you learn how to build, configure, and publish apps using AppSheet.",
+      "path": "/course_templates/635?catalog_rank=%7B%22rank%22%3A79%2C%22num_filters%22%3A1%2C%22has_search%22%3Afalse%7D"
+    },
+    {
+      "title": "Automate Data Capture at Scale with Document AI",
+      "level": "introductory",
+      "duration": "30 minutes",
+      "description": "Earn the introductory skill badge by completing the Automate Data Capture at Scale with Document AI course. In this course, you learn how to extract, process, and capture data using Document AI.",
+      "path": "/course_templates/674?catalog_rank=%7B%22rank%22%3A91%2C%22num_filters%22%3A1%2C%22has_search%22%3Afalse%7D"
+    },
+    {
+      "title": "Build a Data Mesh with Knowledge Catalog",
+      "level": "introductory",
+      "duration": "1 hour",
+      "description": "Complete the introductory Build a Data Mesh with Knowledge Catalog skill badge to demonstrate skills in the following: building a data mesh with Knowledge Catalog to facilitate data security, governance, and discovery on Google Cloud. You practice and test your skills in tagging assets, assigning IAM roles, and assessing data quality in Knowledge Catalog.",
+      "path": "/course_templates/681?catalog_rank=%7B%22rank%22%3A15%2C%22num_filters%22%3A1%2C%22has_search%22%3Afalse%7D"
+    },
+    {
+      "title": "Build a Data Warehouse with BigQuery",
+      "level": "intermediate",
+      "duration": "1 hour 15 minutes",
+      "description": "Complete the intermediate Build a Data Warehouse with BigQuery skill badge course to demonstrate skills in the following: joining data to create new tables, troubleshooting joins, appending data with unions, creating date-partitioned tables, and working with JSON, arrays, and structs in BigQuery.",
+      "path": "/course_templates/624?catalog_rank=%7B%22rank%22%3A60%2C%22num_filters%22%3A1%2C%22has_search%22%3Afalse%7D"
+    },
+    {
+      "title": "Build a Secure Google Cloud Network",
+      "level": "intermediate",
+      "duration": "1 hour 15 minutes",
+      "description": "Earn a skill badge by completing the Build a Secure Google Cloud Network skill badge course, where you will learn about multiple networking-related resources to build, scale, and secure your applications on Google Cloud.",
+      "path": "/course_templates/654?catalog_rank=%7B%22rank%22%3A65%2C%22num_filters%22%3A1%2C%22has_search%22%3Afalse%7D"
+    },
+    {
+      "title": "Build a Smart Cloud Application with Vibe Coding and MCP",
+      "level": "intermediate",
+      "duration": "1 hour 45 minutes",
+      "description": "Earn a skill badge by completing the Build a Smart Cloud Application with Vibe Coding and MCP course, where you will learn to leverage the power of Google's AI coding assistant and MCP servers",
+      "path": "/course_templates/1459?catalog_rank=%7B%22rank%22%3A34%2C%22num_filters%22%3A1%2C%22has_search%22%3Afalse%7D"
+    },
+    {
+      "title": "Build a Website on Google Cloud",
+      "level": "introductory",
+      "duration": "30 minutes",
+      "description": "Earn the introductory skill badge by completing the Build a Website on Google Cloud skill badge course. This course is based on the Get Cooking in Cloud series and covers`:`Deploying a website on Cloud RunHosting a web app on Compute EngineCreating, deploying, and scaling your website on Google Kubernetes EngineMigrating from a monolithic application to a microservices architecture using Cloud Build",
+      "path": "/course_templates/638?catalog_rank=%7B%22rank%22%3A67%2C%22num_filters%22%3A1%2C%22has_search%22%3Afalse%7D"
+    },
+    {
+      "title": "Build Event-Driven Applications with Eventarc",
+      "level": "introductory",
+      "duration": "15 minutes",
+      "description": "Earn a Skill Badge by completing the Build Event-Driven Applications with Eventarc course. In this course, you use Eventarc to create event triggers for different resources, including Pub/Sub topics and Cloud Storage buckets.",
+      "path": "/course_templates/727?catalog_rank=%7B%22rank%22%3A28%2C%22num_filters%22%3A1%2C%22has_search%22%3Afalse%7D"
+    },
+    {
+      "title": "Build Global and Regional Load Balancing Solutions",
+      "level": "intermediate",
+      "duration": "1 hour 30 minutes",
+      "description": "Complete the intermediate Build Global and Regional Load Balancing Solutions skill badge course to demonstrate skills in the following: deploy and utilize an internal client VM within the same VPC network and test traffic distribution, backend infrastructure suitable for a global external application Load Balancer, and backend VM instances and load balancer components using startup scripts and network tags to host a web application service.",
+      "path": "/course_templates/1558?catalog_rank=%7B%22rank%22%3A32%2C%22num_filters%22%3A1%2C%22has_search%22%3Afalse%7D"
+    },
+    {
+      "title": "Build Google Cloud Infrastructure for AWS Professionals",
+      "level": "intermediate",
+      "duration": "30 minutes",
+      "description": "Earn a skill badge by completing the Build Google Cloud Infrastructure for AWS Professionals course, where you learn how to configure IAM permission, orchestrate workloads using Kubernetes, host a web application using compute engine, and configure load balancing.",
+      "path": "/course_templates/687?catalog_rank=%7B%22rank%22%3A84%2C%22num_filters%22%3A1%2C%22has_search%22%3Afalse%7D"
+    },
+    {
+      "title": "Build Infrastructure with Terraform on Google Cloud",
+      "level": "intermediate",
+      "duration": "1 hour 45 minutes",
+      "description": "Complete the intermediate Build Infrastructure with Terraform on Google Cloud skill badge to demonstrate skills in the following: Infrastructure as Code (IaC) principles using Terraform, provisioning and managing Google Cloud resources with Terraform configurations, effective state management (local and remote), and modularizing Terraform code for reusability and organization.",
+      "path": "/course_templates/636?catalog_rank=%7B%22rank%22%3A89%2C%22num_filters%22%3A1%2C%22has_search%22%3Afalse%7D"
+    },
+    {
+      "title": "Build LookML Objects in Looker",
+      "level": "introductory",
+      "duration": "30 minutes",
+      "description": "Complete the introductory Build LookML Objects in Looker skill badge course to demonstrate skills in the following: building new dimensions and measures, views, and derived tables; setting measure filters and types based on requirements; updating dimensions and measures; building and refining Explores; joining views to existing Explores; and deciding which LookML objects to create based on business requirements.",
+      "path": "/course_templates/639?catalog_rank=%7B%22rank%22%3A52%2C%22num_filters%22%3A1%2C%22has_search%22%3Afalse%7D"
+    },
+    {
+      "title": "Build Real World AI Applications with Gemini and Imagen",
+      "level": null,
+      "duration": "1 hour",
+      "description": "Complete the introductory Build Real World AI Applications with Gemini and Imagen skill badge to demonstrate skills in the following: image recognition, natural language processing, image generation using Google's powerful Gemini and Imagen models, deploying applications on the Google Cloud Agent Platform.",
+      "path": "/course_templates/1076?catalog_rank=%7B%22rank%22%3A49%2C%22num_filters%22%3A1%2C%22has_search%22%3Afalse%7D"
+    },
+    {
+      "title": "Build Serverless Applications with Cloud Run Functions",
+      "level": "introductory",
+      "duration": "30 minutes",
+      "description": "Earn a Introductory skill badge by completing the Build Serverless Applications with Cloud Run Functions course, where you learn how to use Cloud Run functions through the Google Cloud console and on the command line.",
+      "path": "/course_templates/696?catalog_rank=%7B%22rank%22%3A76%2C%22num_filters%22%3A1%2C%22has_search%22%3Afalse%7D"
+    },
+    {
+      "title": "Cloud Architecture: Design, Implement, and Manage",
+      "level": "intermediate",
+      "duration": "2 hours 15 minutes",
+      "description": "Earn a skill badge by completing the Cloud Architecture: Design, Implement, and Manage to demonstrate skills in the following: deploy a publicly accessible website using Apache web servers, configure a Compute Engine VM using startup scripts, configure secure RDP using a Windows Bastion host and firewall rules, build and deploy a Docker image to a Kubernetes cluster and then update it, and create a CloudSQL instance and import a MySQL database.   This skill badge is a great resource for understanding topics that will appear in the Google Cloud Certified Professional Cloud Architect certification exam.",
+      "path": "/course_templates/640?catalog_rank=%7B%22rank%22%3A66%2C%22num_filters%22%3A1%2C%22has_search%22%3Afalse%7D"
+    },
+    {
+      "title": "Configure Service Accounts and IAM Roles for Google Cloud",
+      "level": "introductory",
+      "duration": "1 hour",
+      "description": "Earn the Introductory skill badge by completing the Configure Service Accounts and IAM Roles for Google Cloud course, where you learn about service accounts, custom roles, and how to set permissions using gcloud .",
+      "path": "/course_templates/702?catalog_rank=%7B%22rank%22%3A12%2C%22num_filters%22%3A1%2C%22has_search%22%3Afalse%7D"
+    },
+    {
+      "title": "Connecting Cloud Networks with NCC",
+      "level": "intermediate",
+      "duration": "2 hours 15 minutes",
+      "description": "Earn the intermediate Skill Badge by completing the Connecting Cloud Networks with NCC where you will learn how to use the Network Connectivity Center to connect your on-premises, cloud enterprise networks, and hybrid networks, and manage them as spokes through a single, centralized hub on Google Cloud.    A skill badge is an exclusive digital badge issued by Google Cloud in recognition of your proficiency with Google Cloud products and services and tests your ability to apply your knowledge in an interactive hands-on environment. Complete this Skill Badge and the final assessment challenge lab, to receive a digital badge that you can share with your network.",
+      "path": "/course_templates/1364?catalog_rank=%7B%22rank%22%3A38%2C%22num_filters%22%3A1%2C%22has_search%22%3Afalse%7D"
+    },
+    {
+      "title": "Create a Secure Data Lake on Cloud Storage",
+      "level": "introductory",
+      "duration": "30 minutes",
+      "description": "Complete the introductory Create a Secure Data Lake on Cloud Storage skill badge course to demonstrate skills in the following: securing and configuring a Cloud Storage bucket, using Gemini for text generation, managing IAM access control, and establishing a Knowledge Catalog lake for data governance.",
+      "path": "/course_templates/704?catalog_rank=%7B%22rank%22%3A25%2C%22num_filters%22%3A1%2C%22has_search%22%3Afalse%7D"
+    },
+    {
+      "title": "Create a Streaming Data Lake on Cloud Storage",
+      "level": "introductory",
+      "duration": "1 hour 30 minutes",
+      "description": "Earn a skill badge by completing the Create a Streaming Data Lake on Cloud Storage course, where you use Pub/Sub, Dataflow, and Cloud Storage together to create a streaming data lake on Google Cloud.   A skill badge is an exclusive digital badge issued by Google Cloud in recognition of your proficiency with Google Cloud products and services and tests your ability to apply your knowledge in an interactive hands-on environment. Complete this Skill Badge, and the final assessment challenge lab, to receive a digital badge that you can share with your network.",
+      "path": "/course_templates/705?catalog_rank=%7B%22rank%22%3A75%2C%22num_filters%22%3A1%2C%22has_search%22%3Afalse%7D"
+    },
+    {
+      "title": "Create and Manage AlloyDB Instances",
+      "level": "introductory",
+      "duration": "45 minutes",
+      "description": "Complete the introductory Create and Manage AlloyDB Instances skill badge to demonstrate skills in the following: performing core AlloyDB operations and tasks, migrating to AlloyDB from PostgreSQL, administering an AlloyDB database, and accelerating analytical queries using the AlloyDB Columnar Engine.",
+      "path": "/course_templates/642?catalog_rank=%7B%22rank%22%3A48%2C%22num_filters%22%3A1%2C%22has_search%22%3Afalse%7D"
+    },
+    {
+      "title": "Create and Manage Bigtable Instances",
+      "level": "introductory",
+      "duration": "30 minutes",
+      "description": "Complete the introductory Create and Manage Bigtable Instances skill badge to demonstrate skills in the following: creating instances, designing schemas, querying data, and performing administrative tasks in Bigtable including monitoring performance and configuring node autoscaling and replication.",
+      "path": "/course_templates/650?catalog_rank=%7B%22rank%22%3A85%2C%22num_filters%22%3A1%2C%22has_search%22%3Afalse%7D"
+    },
+    {
+      "title": "Create and Manage Cloud Spanner Instances",
+      "level": "introductory",
+      "duration": "30 minutes",
+      "description": "Complete the introductory Create and Manage Cloud Spanner Instances skill badge to demonstrate skills in the following: creating and interacting with Cloud Spanner instances and databases; loading Cloud Spanner databases using various techniques; backing up Cloud Spanner databases; defining schemas and understanding query plans; and deploying a Modern Web App connected to a Cloud Spanner instance.",
+      "path": "/course_templates/643?catalog_rank=%7B%22rank%22%3A88%2C%22num_filters%22%3A1%2C%22has_search%22%3Afalse%7D"
+    },
+    {
+      "title": "Create and Manage Cloud SQL for PostgreSQL Instances",
+      "level": "introductory",
+      "duration": "1 hour 15 minutes",
+      "description": "Complete the introductory Create and Manage Cloud SQL for PostgreSQL Instances skill badge to demonstrate skills in the following: migrating, configuring, and managing Cloud SQL for PostgreSQL instances and databases.",
+      "path": "/course_templates/652?catalog_rank=%7B%22rank%22%3A53%2C%22num_filters%22%3A1%2C%22has_search%22%3Afalse%7D"
+    },
+    {
+      "title": "Create ML Models with BigQuery ML",
+      "level": "intermediate",
+      "duration": "30 minutes",
+      "description": "Complete the intermediate Create ML Models with BigQuery ML skill badge to demonstrate skills in creating and evaluating machine learning models with BigQuery ML to make data predictions.",
+      "path": "/course_templates/626?catalog_rank=%7B%22rank%22%3A61%2C%22num_filters%22%3A1%2C%22has_search%22%3Afalse%7D"
+    },
+    {
+      "title": "Create Your First Gemini Enterprise Application",
+      "level": "introductory",
+      "duration": "1 hour",
+      "description": "Create your first Gemini Enterprise application to earn a skill badge! Connect diverse data sources to your application to build a powerful, unified search and analysis engine. Master advanced capabilities like deep research agents, multi-agent ideation, and Gemini Notebook for focused analysis.",
+      "path": "/course_templates/1586?catalog_rank=%7B%22rank%22%3A30%2C%22num_filters%22%3A1%2C%22has_search%22%3Afalse%7D"
+    },
+    {
+      "title": "Deploy and Manage Apigee X",
+      "level": "introductory",
+      "duration": "1 hour",
+      "description": "Earn a skill badge by completing the Deploy and Manage Apigee X skill badge course, where you learn about the Apigee X architecture, how to provision an Apigee X organization within a Google Cloud project, the management of Apigee X using the Apigee API and UI, and the use of Cloud Armor and Apigee threat protection policies to protect your APIs.",
+      "path": "/course_templates/661?catalog_rank=%7B%22rank%22%3A54%2C%22num_filters%22%3A1%2C%22has_search%22%3Afalse%7D"
+    },
+    {
+      "title": "Deploy and Manage Applications on Google App Engine",
+      "level": "introductory",
+      "duration": "30 minutes",
+      "description": "Earn a Skill Badge by completing the Deploy and Manage Applications on Google App Engine course, where you learn how to use App Engine with Python, Go, and PHP.",
+      "path": "/course_templates/671?catalog_rank=%7B%22rank%22%3A73%2C%22num_filters%22%3A1%2C%22has_search%22%3Afalse%7D"
+    },
+    {
+      "title": "Deploy and Secure Serverless APIs with API Gateway",
+      "level": "introductory",
+      "duration": "30 minutes",
+      "description": "Earn a skill badge by completing the Deploy and Secure Serverless APIs with API Gateway skill badge course, where you learn how to use API Gateway to deploy, secure, and manage APIs with a fully managed gateway.",
+      "path": "/course_templates/662?catalog_rank=%7B%22rank%22%3A78%2C%22num_filters%22%3A1%2C%22has_search%22%3Afalse%7D"
+    },
+    {
+      "title": "Deploy Kubernetes Applications on Google Cloud",
+      "level": "intermediate",
+      "duration": "1 hour 45 minutes",
+      "description": "Complete the intermediate Deploy Kubernetes Applications on Google Cloud skill badge course to demonstrate skills in the following: Configuring and building Docker container images.Creating and managing Google Kubernetes Engine (GKE) clusters.Utilizing kubectl for efficient cluster management.Deploying Kubernetes applications with robust continuous delivery (CD) practices.",
+      "path": "/course_templates/663?catalog_rank=%7B%22rank%22%3A72%2C%22num_filters%22%3A1%2C%22has_search%22%3Afalse%7D"
+    },
+    {
+      "title": "Deploy Multi-Agent Architectures",
+      "level": "advanced",
+      "duration": "2 hours 15 minutes",
+      "description": "Complete the advanced Deploy Multi-Agent Architectures skill badge to demonstrate skills in the following: building multi-agent systems with ADK, connecting agents with the Agent-to-Agent (A2A) protocol, integrating external tools using the Model Context Protocol (MCP), and deploying a complete multi-agent solution to Agent Engine.",
+      "path": "/course_templates/1445?catalog_rank=%7B%22rank%22%3A35%2C%22num_filters%22%3A1%2C%22has_search%22%3Afalse%7D"
+    },
+    {
+      "title": "Derive Insights from BigQuery Data",
+      "level": "introductory",
+      "duration": "45 minutes",
+      "description": "Complete the introductory Derive Insights from BigQuery Data skill badge course to demonstrate skills in the following: Write SQL queries.Query public tables.Load sample data into BigQuery.Troubleshoot common syntax errors with the query validator in BigQuery.Create reports in Data Studio by connecting to BigQuery data.",
+      "path": "/course_templates/623?catalog_rank=%7B%22rank%22%3A2%2C%22num_filters%22%3A1%2C%22has_search%22%3Afalse%7D"
+    },
+    {
+      "title": "Develop AI-Powered Prototypes in Google AI Studio",
+      "level": "introductory",
+      "duration": "45 minutes",
+      "description": "Complete the introductory Develop AI-Powered Prototypes in Google AI Studio skill badge to demonstrate skills in the following: crafting effective prompts, leveraging multimodal capabilities for image and video analysis, prototyping functional AI-driven applications from templates and text prompts, and utilizing API keys to build and deploy custom AI solutions.",
+      "path": "/course_templates/1426?catalog_rank=%7B%22rank%22%3A36%2C%22num_filters%22%3A1%2C%22has_search%22%3Afalse%7D"
+    },
+    {
+      "title": "Develop and Secure APIs with Apigee X",
+      "level": "intermediate",
+      "duration": "45 minutes",
+      "description": "Earn a skill badge by completing the Develop and Secure APIs with Apigee X skill badge course, where you learn how to modernize your APIs, use service accounts and Google Authentication to securely access backend services from Apigee API proxies, productize APIs using API products and developer portals, secure APIs using features like API keys, OAuth, private variables and fault handling, integrate Apigee with Google Cloud services like Pub/Sub and Cloud Logging, and call Google Cloud APIs like the Natural Language API and the Geocoding API.",
+      "path": "/course_templates/714?catalog_rank=%7B%22rank%22%3A93%2C%22num_filters%22%3A1%2C%22has_search%22%3Afalse%7D"
+    },
+    {
+      "title": "Develop Gen AI Apps with Gemini and Streamlit",
+      "level": "intermediate",
+      "duration": "1 hour",
+      "description": "Complete the intermediate Develop Gen AI Apps with Gemini and Streamlit skill badge course to demonstrate skills in text generation, applying function calls with the Python SDK and Gemini API, and deploying a Streamlit application with Cloud Run. In this course, you learn Gemini prompting, test Streamlit apps in Cloud Shell, and deploy them as Docker containers in Cloud Run.",
+      "path": "/course_templates/978?catalog_rank=%7B%22rank%22%3A51%2C%22num_filters%22%3A1%2C%22has_search%22%3Afalse%7D"
+    },
+    {
+      "title": "Develop Serverless Applications on Cloud Run",
+      "level": "intermediate",
+      "duration": "1 hour 15 minutes",
+      "description": "Complete the intermediate Develop Serverless Applications on Cloud Run skill badge course to demonstrate skills in the following: integrating Cloud Run with Cloud Storage for data management, architecting resilient asynchronous systems using Cloud Run and Pub/Sub, constructing REST API gateways powered by Cloud Run, and building and deploying services on Cloud Run.",
+      "path": "/course_templates/741?catalog_rank=%7B%22rank%22%3A58%2C%22num_filters%22%3A1%2C%22has_search%22%3Afalse%7D"
+    },
+    {
+      "title": "Develop Serverless Apps with Firebase",
+      "level": "intermediate",
+      "duration": "1 hour 15 minutes",
+      "description": "Complete the intermediate Develop Serverless Apps with Firebase skill badge course to demonstrate skills in the following: architecting and building serverless web applications with Firebase, utilizing Firestore for database management, automating deployment processes using Cloud Build, and integrating Google Assistant functionality into your applications.",
+      "path": "/course_templates/649?catalog_rank=%7B%22rank%22%3A57%2C%22num_filters%22%3A1%2C%22has_search%22%3Afalse%7D"
+    },
+    {
+      "title": "Develop with Apps Script and AppSheet",
+      "level": "introductory",
+      "duration": "45 minutes",
+      "description": "Earn a skill badge by completing the Develop with Apps Script and AppSheet skill badge course, where you learn how to build chat bots and how to use the script editor in any document.",
+      "path": "/course_templates/715?catalog_rank=%7B%22rank%22%3A17%2C%22num_filters%22%3A1%2C%22has_search%22%3Afalse%7D"
+    },
+    {
+      "title": "Develop Your Google Cloud Network",
+      "level": "intermediate",
+      "duration": "1 hour 15 minutes",
+      "description": "Earn a skill badge by completing the Develop your Google Cloud Network skill badge course, where you learn multiple ways to deploy and monitor applications including how to: explore IAM roles and add/remove project access, create VPC networks, deploy and monitor Compute Engine VMs, write SQL queries, deploy and monitor VMs in Compute Engine, and deploy applications using Kubernetes with multiple deployment approaches.",
+      "path": "/course_templates/625?catalog_rank=%7B%22rank%22%3A69%2C%22num_filters%22%3A1%2C%22has_search%22%3Afalse%7D"
+    },
+    {
+      "title": "Discover and Protect Sensitive Data Across Your Ecosystem",
+      "level": "intermediate",
+      "duration": "45 minutes",
+      "description": "Complete the intermediate Discover and Protect Sensitive Data Across Your Ecosystem skill badge to demonstrate skills in the following: using Sensitive Data Protection services (including the Cloud Data Loss Prevention (DLP) API) to discover, inspect, redact, and de-identify sensitive data across your Google Cloud ecosystem including Cloud Storage files, BigQuery data, and Gen AI model responses.",
+      "path": "/course_templates/1177?catalog_rank=%7B%22rank%22%3A44%2C%22num_filters%22%3A1%2C%22has_search%22%3Afalse%7D"
+    },
+    {
+      "title": "Engineer AI Agents with Agent Development Kit (ADK)",
+      "level": "intermediate",
+      "duration": "1 hour 45 minutes",
+      "description": "Complete the intermediate Engineer AI Agents with Agent Development Kit (ADK) skill badge by completing this course to demonstrate skills in the following: formulating real-world language model research problems; building a simple tokenizer; preparing a dataset for training a transformer language model; running the training loop of a small language model.",
+      "path": "/course_templates/1596?catalog_rank=%7B%22rank%22%3A31%2C%22num_filters%22%3A1%2C%22has_search%22%3Afalse%7D"
+    },
+    {
+      "title": "Engineer Data for Predictive Modeling with BigQuery ML",
+      "level": "intermediate",
+      "duration": "30 minutes",
+      "description": "Complete the intermediate Engineer Data for Predictive Modeling with BigQuery ML skill badge to demonstrate skills in the following: building data transformation pipelines to BigQuery using Dataprep by Trifacta; using Cloud Storage, Dataflow, and BigQuery to build extract, transform, and load (ETL) workflows; and building machine learning models using BigQuery ML.",
+      "path": "/course_templates/627?catalog_rank=%7B%22rank%22%3A64%2C%22num_filters%22%3A1%2C%22has_search%22%3Afalse%7D"
+    },
+    {
+      "title": "Enhance Gemini Model Capabilities",
+      "level": "intermediate",
+      "duration": "45 minutes",
+      "description": "Complete the intermediate Enhance Gemini Model Capabilities skill badge to demonstrate skills in the following: leveraging advanced features of Gemini models, including code generation and execution, grounding, controlled content generation, and synthetic data creation, to build more powerful and sophisticated AI applications.",
+      "path": "/course_templates/1241?catalog_rank=%7B%22rank%22%3A40%2C%22num_filters%22%3A1%2C%22has_search%22%3Afalse%7D"
+    },
+    {
+      "title": "Enrich Metadata and Discovery of Lakehouse Data",
+      "level": "introductory",
+      "duration": "1 hour",
+      "description": "Complete the Enrich Metadata and Discovery of Lakehouse Data skill badge course to demonstrate skills in BigQuery, Lakehouse, and Knowledge Catalog. You create Lakehouse tables and enrich metadata management and discovery of the table data.",
+      "path": "/course_templates/753?catalog_rank=%7B%22rank%22%3A24%2C%22num_filters%22%3A1%2C%22has_search%22%3Afalse%7D"
+    },
+    {
+      "title": "Explore Generative AI in Agent Platform",
+      "level": "intermediate",
+      "duration": "30 minutes",
+      "description": "Complete the intermediate Explore Generative AI in Agent Platform skill badge to demonstrate skills in text generation, image and video analysis for enhanced content creation, and applying function calling techniques within the Gemini API. Discover how to leverage sophisticated Gemini techniques, explore multimodal content generation, and expand the capabilities of your AI-powered projects.",
+      "path": "/course_templates/959?catalog_rank=%7B%22rank%22%3A11%2C%22num_filters%22%3A1%2C%22has_search%22%3Afalse%7D"
+    },
+    {
+      "title": "Get Started with Sensitive Data Protection",
+      "level": "introductory",
+      "duration": "30 minutes",
+      "description": "Complete the introductory Get Started with Sensitive Data Protection skill badge course to demonstrate skills in the following: using Sensitive Data Protection services (including the Cloud Data Loss Prevention API) to inspect, redact, and de-identify sensitive data in Google Cloud.",
+      "path": "/course_templates/750?catalog_rank=%7B%22rank%22%3A21%2C%22num_filters%22%3A1%2C%22has_search%22%3Afalse%7D"
+    },
+    {
+      "title": "Google DeepMind: Train A Small Language Model",
+      "level": "advanced",
+      "duration": "1 hour 45 minutes",
+      "description": "Complete the advanced Google DeepMind: Train A Small Language Model skill badge by completing this course to demonstrate skills in the following: formulating real-world language model research problems; building a simple tokenizer; preparing a dataset for training a transformer language model; running the training loop of a small language model. Access this lab at no-cost by signing up for the no-cost subscription. Receive 35 free credits each month!",
+      "path": "/course_templates/1453?catalog_rank=%7B%22rank%22%3A33%2C%22num_filters%22%3A1%2C%22has_search%22%3Afalse%7D"
+    },
+    {
+      "title": "Implement CI/CD Pipelines on Google Cloud",
+      "level": "intermediate",
+      "duration": "30 minutes",
+      "description": "Earn the intermediate skill badge by completing the Implement CI/CD Pipelines on Google Cloud skill badge course where you learn how to use Artifact Registry, Cloud Build, and Cloud Deploy. You interact with the Google Cloud console, Google Cloud CLI, Cloud Run, and GKE. This course teaches you how to build continuous integration pipelines, store and secure artifacts, scan for vulnerabilities, attest to the validity of approved releases. Additionally, you get hands-on experience deploying applications to both GKE and Cloud Run.",
+      "path": "/course_templates/691?catalog_rank=%7B%22rank%22%3A86%2C%22num_filters%22%3A1%2C%22has_search%22%3Afalse%7D"
+    },
+    {
+      "title": "Implement Cloud Collaboration and Productivity Workflows",
+      "level": "introductory",
+      "duration": "30 minutes",
+      "description": "Earn an introductory skill badge by completing the Implement Cloud Collaboration and Productivity Workflows course, where you will get introduced to Google's collaborative platform and learn to use Gmail, Calendar, Meet, Drive, Sheets, and AppSheet.",
+      "path": "/course_templates/676?catalog_rank=%7B%22rank%22%3A4%2C%22num_filters%22%3A1%2C%22has_search%22%3Afalse%7D"
+    },
+    {
+      "title": "Implement Cloud Security Fundamentals on Google Cloud",
+      "level": "intermediate",
+      "duration": "1 hour 45 minutes",
+      "description": "Complete the intermediate Implement Cloud Security Fundamentals on Google Cloud skill badge course to demonstrate skills in the following: creating and assigning roles with Identity and Access Management (IAM); creating and managing service accounts; enabling private connectivity across virtual private cloud (VPC) networks; restricting application access using Identity-Aware Proxy; managing keys and encrypted data using Cloud Key Management Service (KMS); and creating a private Kubernetes cluster.",
+      "path": "/course_templates/645?catalog_rank=%7B%22rank%22%3A59%2C%22num_filters%22%3A1%2C%22has_search%22%3Afalse%7D"
+    },
+    {
+      "title": "Implement Cloud Storage and Data Protection Solutions",
+      "level": "introductory",
+      "duration": "30 minutes",
+      "description": "Earn a Skill Badge by completing the Implement Cloud Storage and Data Protection Solutions course. Learn to create a Cloud Storage bucket, use the command line, and protect objects with Bucket Lock.",
+      "path": "/course_templates/725?catalog_rank=%7B%22rank%22%3A74%2C%22num_filters%22%3A1%2C%22has_search%22%3Afalse%7D"
+    },
+    {
+      "title": "Implement DevOps Workflows in Google Cloud",
+      "level": "intermediate",
+      "duration": "1 hour",
+      "description": "Complete the intermediate Implement DevOps Workflows in Google Cloud skill badge to demonstrate skills in the following: creating git repositories with Cloud Source Repositories, launching, managing, and scaling deployments on Google Kubernetes Engine (GKE), and architecting CI/CD pipelines that automate container image builds and deployments to GKE.",
+      "path": "/course_templates/716?catalog_rank=%7B%22rank%22%3A63%2C%22num_filters%22%3A1%2C%22has_search%22%3Afalse%7D"
+    },
+    {
+      "title": "Implement Event-Driven Messaging and Automation Workflows",
+      "level": "introductory",
+      "duration": "1 hour 15 minutes",
+      "description": "Earn a skill badge by completing the Implement Event-Driven Messaging and Automation Workflows skill badge course, where you learn how to use Pub/Sub through the Cloud console, how Cloud Scheduler jobs can save you effort, and when Pub/Sub Lite can save you money on high-volume event ingestion.",
+      "path": "/course_templates/728?catalog_rank=%7B%22rank%22%3A45%2C%22num_filters%22%3A1%2C%22has_search%22%3Afalse%7D"
+    },
+    {
+      "title": "Implement Multimodal Vector Search with BigQuery",
+      "level": "intermediate",
+      "duration": "30 minutes",
+      "description": "Complete the intermediate Implement Multimodal Vector Search with BigQuery skill badge to demonstrate skills in the following: using Gemini in BigQuery to generate and debug SQL, conduct sentiment analysis, summarize text and identify keywords, generate embeddings, create a Retrieval Augmented Generation (RAG) pipeline, and implement multimodal vector search.",
+      "path": "/course_templates/1232?catalog_rank=%7B%22rank%22%3A42%2C%22num_filters%22%3A1%2C%22has_search%22%3Afalse%7D"
+    },
+    {
+      "title": "Implement Speech and Language Solutions with Pre-trained APIs",
+      "level": "introductory",
+      "duration": "30 minutes",
+      "description": "Earn the Introductory Skill Badge by completing the Implement Speech and Language Solutions with Pre-trained APIs course, where you learn how to use speech related API tools to synthesise and transcribe speech.",
+      "path": "/course_templates/700?catalog_rank=%7B%22rank%22%3A14%2C%22num_filters%22%3A1%2C%22has_search%22%3Afalse%7D"
+    },
+    {
+      "title": "Implementing Cloud Load Balancing for Compute Engine",
+      "level": "introductory",
+      "duration": "30 minutes",
+      "description": "Complete the introductory Implementing Cloud Load Balancing for Compute Engine skill badge to demonstrate skills in the following: creating and deploying virtual machines in Compute Engine and configuring network and application load balancers.",
+      "path": "/course_templates/648?catalog_rank=%7B%22rank%22%3A68%2C%22num_filters%22%3A1%2C%22has_search%22%3Afalse%7D"
+    },
+    {
+      "title": "Inspect Rich Documents with Gemini Multimodality and Multimodal RAG",
+      "level": "intermediate",
+      "duration": "45 minutes",
+      "description": "Complete the intermediate Inspect Rich Documents with Gemini Multimodality and Multimodal RAG skill badge course to demonstrate skills in the following: using multimodal prompts to extract information from text and visual data, generating a video description, and retrieving extra information beyond the video using multimodality with Gemini; building metadata of documents containing text and images, getting all relevant text chunks, and printing citations by using Multimodal Retrieval Augmented Generation (RAG) with Gemini.",
+      "path": "/course_templates/981?catalog_rank=%7B%22rank%22%3A50%2C%22num_filters%22%3A1%2C%22has_search%22%3Afalse%7D"
+    },
+    {
+      "title": "Integrate BigQuery Data and Google Workspace using Apps Script",
+      "level": "introductory",
+      "duration": "30 minutes",
+      "description": "Complete the introductory Integrate BigQuery Data and Google Workspace using Apps Script skill badge course to demonstrate skills in connecting Workspace products with BigQuery via AppSheet.",
+      "path": "/course_templates/737?catalog_rank=%7B%22rank%22%3A13%2C%22num_filters%22%3A1%2C%22has_search%22%3Afalse%7D"
+    },
+    {
+      "title": "Kickstarting Application Development with Gemini Code Assist",
+      "level": "intermediate",
+      "duration": "1 hour 15 minutes",
+      "description": "Earn a skill badge by completing the Kickstarting Application Development with Gemini Code Assist course, where you will learn to leverage the power of Google's AI coding assistant and multiple development tech",
+      "path": "/course_templates/1399?catalog_rank=%7B%22rank%22%3A37%2C%22num_filters%22%3A1%2C%22has_search%22%3Afalse%7D"
+    },
+    {
+      "title": "Manage Data Models in Looker",
+      "level": "intermediate",
+      "duration": "45 minutes",
+      "description": "Complete the intermediate Manage Data Models in Looker skill badge course to demonstrate skills in the following: maintaining LookML project health; utilizing SQL runner for data validation; employing LookML best practices; optimizing queries and reports for performance; and implementing persistent derived tables and caching policies.",
+      "path": "/course_templates/651?catalog_rank=%7B%22rank%22%3A92%2C%22num_filters%22%3A1%2C%22has_search%22%3Afalse%7D"
+    },
+    {
+      "title": "Manage Kubernetes in Google Cloud",
+      "level": "intermediate",
+      "duration": "30 minutes",
+      "description": "Complete the intermediate Manage Kubernetes in Google Cloud skill badge course to demonstrate skills in the following: managing deployments with kubectl, monitoring and debugging applications on Google Kubernetes Engine (GKE), and continuous delivery techniques.",
+      "path": "/course_templates/783?catalog_rank=%7B%22rank%22%3A1%2C%22num_filters%22%3A1%2C%22has_search%22%3Afalse%7D"
+    },
+    {
+      "title": "Migrate MySQL Data to Cloud SQL Using Database Migration Service",
+      "level": "introductory",
+      "duration": "1 hour 15 minutes",
+      "description": "Complete the introductory Migrate MySQL Data to Cloud SQL Using Database Migration Service skill badge course to demonstrate skills in the following: migrating MySQL data to Cloud SQL using different job types and connectivity options available in Database Migration Service and migrating MySQL user data when running Database Migration Service jobs.",
+      "path": "/course_templates/629?catalog_rank=%7B%22rank%22%3A5%2C%22num_filters%22%3A1%2C%22has_search%22%3Afalse%7D"
+    },
+    {
+      "title": "Mitigate Threats and Vulnerabilities with Security Command Center",
+      "level": "intermediate",
+      "duration": "30 minutes",
+      "description": "Complete the intermediate Mitigate Threats and Vulnerabilities with Security Command Center skill badge course to demonstrate skills in the following: preventing and managing environment threats, identifying and mitigating application vulnerabilities, and responding to security anomalies.",
+      "path": "/course_templates/759?catalog_rank=%7B%22rank%22%3A7%2C%22num_filters%22%3A1%2C%22has_search%22%3Afalse%7D"
+    },
+    {
+      "title": "Monitor and Log with Google Cloud Observability",
+      "level": "introductory",
+      "duration": "1 hour 15 minutes",
+      "description": "Complete the introductory Monitor and Log with Google Cloud Observability skill badge course to demonstrate skills in the following: monitoring virtual machines in Compute Engine, utilizing Cloud Monitoring for multi-project oversight, extending monitoring and logging capabilities to Cloud Functions, creating and sending custom application metrics, and configuring Cloud Monitoring alerts based on custom metrics.",
+      "path": "/course_templates/749?catalog_rank=%7B%22rank%22%3A62%2C%22num_filters%22%3A1%2C%22has_search%22%3Afalse%7D"
+    },
+    {
+      "title": "Monitor and Manage Google Cloud Resources",
+      "level": "introductory",
+      "duration": "1 hour 15 minutes",
+      "description": "Complete the introductory Monitor and Manage Google Cloud Resources skill badge to demonstrate skills in the following: granting and revoking IAM permissions; installing monitoring and logging agents; creating, deploying, and testing an event-driven Cloud Run function.",
+      "path": "/course_templates/653?catalog_rank=%7B%22rank%22%3A82%2C%22num_filters%22%3A1%2C%22has_search%22%3Afalse%7D"
+    },
+    {
+      "title": "Monitor Environments with Google Cloud Managed Service for Prometheus",
+      "level": "introductory",
+      "duration": "30 minutes",
+      "description": "Earn a skill badge by completing the Monitor Environments with Google Cloud Managed Service for Prometheus skill badge course, where you learn Kubernetes Monitoring with Google Cloud Managed Service for Prometheus.",
+      "path": "/course_templates/761?catalog_rank=%7B%22rank%22%3A8%2C%22num_filters%22%3A1%2C%22has_search%22%3Afalse%7D"
+    },
+    {
+      "title": "Monitoring in Google Cloud",
+      "level": "introductory",
+      "duration": "1 hour",
+      "description": "Complete the introductory Monitoring in Google Cloud skill badge course to demonstrate skills in the following: using Cloud Monitoring tools to monitor resources on Google Cloud.",
+      "path": "/course_templates/747?catalog_rank=%7B%22rank%22%3A27%2C%22num_filters%22%3A1%2C%22has_search%22%3Afalse%7D"
+    },
+    {
+      "title": "Optimize Costs for Google Kubernetes Engine",
+      "level": "intermediate",
+      "duration": "45 minutes",
+      "description": "Complete the intermediate Optimize Costs for Google Kubernetes Engine skill badge course to demonstrate skills in the following: creating and managing multi-tenant clusters, monitoring resource usage by namespace, configuring cluster and pod autoscaling for efficiency, setting up load balancing for optimal resource distribution, and implementing liveness and readiness probes to ensure application health and cost-effectiveness.",
+      "path": "/course_templates/655?catalog_rank=%7B%22rank%22%3A56%2C%22num_filters%22%3A1%2C%22has_search%22%3Afalse%7D"
+    },
+    {
+      "title": "Orchestrate Multi-agent Workflows with Gemini Enterprise",
+      "level": "introductory",
+      "duration": "1 hour",
+      "description": "Complete the introductory Orchestrate Multi-Agent Workflows with Gemini Enterprise skill badge to demonstrate skills in the following: using agentic assistants powered by Gemini Enterprise to unify data across first- and third-party sources, develop multimedia marketing materials, and automate business actions across systems.\n\nSkill badges validate your practical knowledge on specific products through hands-on labs and challenge assessments. Earn a badge by completing a course or jump straight into the challenge lab to get your badge today. Badges prove your proficiency, enhance your professional profile, and ultimately lead to increased career opportunities. Visit your profile to track badges you’ve earned.",
+      "path": "/course_templates/1682?catalog_rank=%7B%22rank%22%3A29%2C%22num_filters%22%3A1%2C%22has_search%22%3Afalse%7D"
+    },
+    {
+      "title": "Organize and Govern Data with Knowledge Catalog",
+      "level": "introductory",
+      "duration": "30 minutes",
+      "description": "Complete the introductory Organize and Govern Data with Knowledge Catalog skill badge to demonstrate skills in the following: creating Knowledge Catalog assets, creating aspect types, and applying aspects to entries in Knowledge Catalog.",
+      "path": "/course_templates/726?catalog_rank=%7B%22rank%22%3A9%2C%22num_filters%22%3A1%2C%22has_search%22%3Afalse%7D"
+    },
+    {
+      "title": "Perform Predictive Data Analysis in BigQuery",
+      "level": "intermediate",
+      "duration": "30 minutes",
+      "description": "Complete the intermediate Perform Predictive Data Analysis in BigQuery skill badge course to demonstrate skills in the following: creating datasets in BigQuery by importing CSV and JSON files; harnessing the power of BigQuery with sophisticated SQL analytical concepts, including using BigQuery ML to train an expected goals model on soccer event data and evaluate the impressiveness of World Cup goals.",
+      "path": "/course_templates/656?catalog_rank=%7B%22rank%22%3A90%2C%22num_filters%22%3A1%2C%22has_search%22%3Afalse%7D"
+    },
+    {
+      "title": "Prepare Data for Looker Dashboards and Reports",
+      "level": "introductory",
+      "duration": "1 hour 15 minutes",
+      "description": "Complete the introductory Prepare Data for Looker Dashboards and Reports skill badge course to demonstrate skills in the following: filtering, sorting, and pivoting data; merging results from different Looker Explores; and using functions and operators to build Looker dashboards and reports for data analysis and visualization.",
+      "path": "/course_templates/628?catalog_rank=%7B%22rank%22%3A55%2C%22num_filters%22%3A1%2C%22has_search%22%3Afalse%7D"
+    },
+    {
+      "title": "Prepare Data for ML APIs on Google Cloud",
+      "level": "introductory",
+      "duration": "45 minutes",
+      "description": "Complete the introductory Prepare Data for ML APIs on Google Cloud skill badge to demonstrate skills in the following: cleaning data with Dataprep by Trifacta, running data pipelines in Dataflow, creating clusters and running Apache Spark jobs in Managed Service for Apache Spark, and calling ML APIs including the Cloud Natural Language API, Google Cloud Speech-to-Text API, and Video Intelligence API.",
+      "path": "/course_templates/631?catalog_rank=%7B%22rank%22%3A71%2C%22num_filters%22%3A1%2C%22has_search%22%3Afalse%7D"
+    },
+    {
+      "title": "Privileged Access with IAM",
+      "level": "intermediate",
+      "duration": "30 minutes",
+      "description": "Complete the intermediate Privileged Access with IAM skill badge to demonstrate skills in the following: custom roles using Identity and Access Management (IAM), the principle of least privilege, Just-in-Time (JIT) temporary elevated access, and security for web applications using Identity-Aware Proxy (IAP).",
+      "path": "/course_templates/1337?catalog_rank=%7B%22rank%22%3A39%2C%22num_filters%22%3A1%2C%22has_search%22%3Afalse%7D"
+    },
+    {
+      "title": "Prompt Design in Agent Platform",
+      "level": "introductory",
+      "duration": "1 hour",
+      "description": "Complete the introductory Prompt Design in Agent Platform skill badge to demonstrate skills in the following: prompt engineering, image analysis, and multimodal generative techniques, within Agent Platform. Discover how to craft effective prompts, guide generative AI output, and apply Gemini models to real-world marketing scenarios.",
+      "path": "/course_templates/976?catalog_rank=%7B%22rank%22%3A10%2C%22num_filters%22%3A1%2C%22has_search%22%3Afalse%7D"
+    },
+    {
+      "title": "Protect Cloud Traffic with Chrome Enterprise Premium Security",
+      "level": "intermediate",
+      "duration": "30 minutes",
+      "description": "Earn a skill badge by completing the Protect Cloud Traffic with Chrome Enterprise Premium Security skill badge course, where you learn how to leverage Chrome Enterprise Premium to provide secure access to critical apps and services, improve your security posture with a modern Zero Trust platform, securely provide access to resources using identity and context-aware access control, and support hybrid cloud workloads using Client Connector.",
+      "path": "/course_templates/784?catalog_rank=%7B%22rank%22%3A43%2C%22num_filters%22%3A1%2C%22has_search%22%3Afalse%7D"
+    },
+    {
+      "title": "Secure Lakehouse Data",
+      "level": "introductory",
+      "duration": "15 minutes",
+      "description": "Complete the introductory Secure Lakehouse Data skill badge course to demonstrate skills with IAM, BigQuery, Lakehouse, and Knowledge Catalog to create and secure Lakehouse tables.",
+      "path": "/course_templates/751?catalog_rank=%7B%22rank%22%3A23%2C%22num_filters%22%3A1%2C%22has_search%22%3Afalse%7D"
+    },
+    {
+      "title": "Secure Software Delivery",
+      "level": "intermediate",
+      "duration": "30 minutes",
+      "description": "Complete the intermediate Secure Software Delivery skill badge to demonstrate your proficiency in proactively integrating security into the software development lifecycle (SDLC) with DevSecOps principles. You'll learn how to utilize Google Kubernetes Engine (GKE) and Cloud Run for secure container image deployment, implement automated vulnerability scanning to proactively identify risks, and streamline application development with Artifact Registry while maintaining a focus on security. Additionally, you'll gain skills in integrating Cloud Build for robust development processes and implementing Admission Control Policies for fine-grained control over your environment.",
+      "path": "/course_templates/1164?catalog_rank=%7B%22rank%22%3A46%2C%22num_filters%22%3A1%2C%22has_search%22%3Afalse%7D"
+    },
+    {
+      "title": "Set Up a Google Cloud Network",
+      "level": "introductory",
+      "duration": "30 minutes",
+      "description": "Earn a skill badge by completing the Set Up a Google Cloud Network skill badge course, where you will learn how to perform basic networking tasks on Google Cloud Platform - create a custom network, add subnets firewall rules, then create VMs and test the latency when they communicate with each other.",
+      "path": "/course_templates/641?catalog_rank=%7B%22rank%22%3A47%2C%22num_filters%22%3A1%2C%22has_search%22%3Afalse%7D"
+    },
+    {
+      "title": "Set Up an App Dev Environment on Google Cloud",
+      "level": "introductory",
+      "duration": "1 hour 15 minutes",
+      "description": "Earn a skill badge by completing the Set Up an App Dev Environment on Google Cloud skill badge course, where you learn how to build and connect storage-centric cloud infrastructure using the basic capabilities of the following technologies: Cloud Storage, Identity and Access Management, Cloud Functions, and Pub/Sub.",
+      "path": "/course_templates/637?catalog_rank=%7B%22rank%22%3A70%2C%22num_filters%22%3A1%2C%22has_search%22%3Afalse%7D"
+    },
+    {
+      "title": "Share Data Using Google Data Cloud",
+      "level": "introductory",
+      "duration": "30 minutes",
+      "description": "Earn a skill badge by completing the Share Data Using Google Data Cloud skill badge course, where you will gain practical experience with Google Cloud Data Sharing Partners, which have proprietary datasets that customers can use for their analytics use cases. Customers subscribe to this data, query it within their own platform, then augment it with their own datasets and use their visualization tools for their customer facing dashboards.",
+      "path": "/course_templates/657?catalog_rank=%7B%22rank%22%3A3%2C%22num_filters%22%3A1%2C%22has_search%22%3Afalse%7D"
+    },
+    {
+      "title": "Store, Process, and Manage Data on Google Cloud - Command Line",
+      "level": "introductory",
+      "duration": "1 hour",
+      "description": "Cloud Storage, Cloud Functions, and Cloud Pub/Sub are all Google Cloud Platform services that can be used to store, process, and manage data. All three services can be used together to create a variety of data-driven applications. In this skill badge you use Cloud Storage to store images, Cloud Functions to process the images, and Cloud Pub/Sub to send the images to another application.",
+      "path": "/course_templates/659?catalog_rank=%7B%22rank%22%3A83%2C%22num_filters%22%3A1%2C%22has_search%22%3Afalse%7D"
+    },
+    {
+      "title": "Store, Process, and Manage Data on Google Cloud - Console",
+      "level": "introductory",
+      "duration": "1 hour",
+      "description": "Cloud Storage, Cloud Functions, and Cloud Pub/Sub are all Google Cloud Platform services that can be used to store, process, and manage data. All three services can be used together to create a variety of data-driven applications. In this skill badge you use Cloud Storage to store images, Cloud Functions to process the images, and Cloud Pub/Sub to send the images to another application.",
+      "path": "/course_templates/658?catalog_rank=%7B%22rank%22%3A80%2C%22num_filters%22%3A1%2C%22has_search%22%3Afalse%7D"
+    },
+    {
+      "title": "Streaming Analytics into BigQuery",
+      "level": "introductory",
+      "duration": "1 hour",
+      "description": "Earn a skill badge by completing the Streaming Analytics into BigQuery skill badge course, where you use Pub/Sub, Dataflow and BigQuery together to stream data for analytics.",
+      "path": "/course_templates/752?catalog_rank=%7B%22rank%22%3A77%2C%22num_filters%22%3A1%2C%22has_search%22%3Afalse%7D"
+    },
+    {
+      "title": "The Basics of Google Cloud Compute",
+      "level": "introductory",
+      "duration": "1 hour",
+      "description": "Earn a skill badge by completing the The Basics of Google Cloud Compute skill badge course, where you learn how to work with virtual machines (VMs), persistent disks, and web servers using Compute Engine.",
+      "path": "/course_templates/754?catalog_rank=%7B%22rank%22%3A20%2C%22num_filters%22%3A1%2C%22has_search%22%3Afalse%7D"
+    },
+    {
+      "title": "Use APIs to Work with Cloud Storage",
+      "level": "introductory",
+      "duration": "15 minutes",
+      "description": "Complete the introductory Use APIs to Work with Cloud Storage skill badge to demonstrate skills in the following: using APIs to work with Cloud Storage resources, including the Cloud Storage API.",
+      "path": "/course_templates/755?catalog_rank=%7B%22rank%22%3A19%2C%22num_filters%22%3A1%2C%22has_search%22%3Afalse%7D"
+    },
+    {
+      "title": "Use Functions, Formulas, and Charts in Google Sheets",
+      "level": "intermediate",
+      "duration": "45 minutes",
+      "description": "Complete the intermediate Use Functions, Formulas and Charts in Google Sheets skill badge course to demonstrate skills in the following: analyzing data with functions; visualizing data using charts; and searching, validating, formatting, and displaying data.",
+      "path": "/course_templates/776?catalog_rank=%7B%22rank%22%3A87%2C%22num_filters%22%3A1%2C%22has_search%22%3Afalse%7D"
+    },
+    {
+      "title": "Use Machine Learning APIs on Google Cloud",
+      "level": "intermediate",
+      "duration": "30 minutes",
+      "description": "Earn the advanced skill badge by completing the Use Machine Learning APIs on Google Cloud course, where you learn the basic features for the following machine learning and AI technologies: Cloud Vision API, Cloud Translation API, and Cloud Natural Language API. ",
+      "path": "/course_templates/630?catalog_rank=%7B%22rank%22%3A6%2C%22num_filters%22%3A1%2C%22has_search%22%3Afalse%7D"
+    },
+    {
+      "title": "Using the Google Cloud Speech API",
+      "level": "introductory",
+      "duration": "15 minutes",
+      "description": "Earn a skill badge by completing the Using the Google Cloud Speech API skill badge course, where you learn how create a Speech-to-Text API request, transcribe audio speech to text, and transcribe speech.",
+      "path": "/course_templates/756?catalog_rank=%7B%22rank%22%3A18%2C%22num_filters%22%3A1%2C%22has_search%22%3Afalse%7D"
+    }
+  ]
+}

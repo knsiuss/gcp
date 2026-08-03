@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "vite",
     "generate": "node scripts/generate-catalog.mjs",
+    "skills:fetch": "node scripts/fetch-skills-badges.mjs",
     "profile:fetch": "node scripts/fetch-profile.mjs",
     "predev": "node scripts/generate-catalog.mjs",
     "build": "npm run generate && tsc -b && vite build",
