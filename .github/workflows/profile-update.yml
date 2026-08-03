@@ -1,0 +1,42 @@
+name: Update profile data
+
+on:
+  schedule:
+    - cron: '0 3,15 * * *'
+  workflow_dispatch:
+    inputs:
+      profileUrl:
+        description: 'Cloud Skills Boost public profile URL or ID (optional, overrides profile-source.json)'
+        required: false
+  push:
+    branches: [main]
+    paths:
+      - 'web/public/profile-source.json'
+
+permissions:
+  contents: write
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Fetch profile badges
+        run: node web/scripts/fetch-profile.mjs "${{ github.event.inputs.profileUrl || '' }}"
+
+      - name: Commit updated profile data
+        run: |
+          if git diff --quiet web/public/profile-data.json; then
+            echo "No changes"
+          else
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git add web/public/profile-data.json
+            git commit -m "chore(web): refresh profile data"
+            git push
+          fi

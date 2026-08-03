@@ -245,6 +245,30 @@ Each lab is organized into its own folder. Simply open **Google Cloud Shell** in
     ```
     *Creates the source connection profile (external IP), the one-time migration job to `mysql-fin-2rv`, the continuous migration job to `mysql-fin-2rv-cont` (VPC peering), tests replication, and promotes the destination. Region/zone are derived automatically (defaults `us-east1` / `us-east1-d`).*
 
+---
+
+## Web Portal (TypeScript)
+
+There is a static web portal built with **Vite + React + TypeScript** in the `web/` folder.
+It lists every lab, embeds the solver scripts, extracts prompted inputs, connects your public
+Google Cloud Skills Boost profile to mark earned badges, tracks your **Arcade 2026** quota,
+and provides copy-ready Cloud Shell commands.
+
+It auto-updates from this repo via GitHub Actions:
+- **`deploy.yml`** — rebuilds & deploys to GitHub Pages on every push to `web/**`.
+- **`profile-update.yml`** — refreshes your profile badges every 12 hours (reads
+  `web/public/profile-source.json`).
+
+```bash
+cd web
+npm install
+npm run dev        # dev server
+npm run build      # static build → web/dist/
+```
+
+Setup badge auto-update: edit `web/public/profile-source.json` with your public profile
+URL, then push. See [`web/README.md`](web/README.md) for details.
+
 
 
 
