@@ -32,14 +32,17 @@ jobs:
       - name: Fetch skill badge catalog
         run: node web/scripts/fetch-skills-badges.mjs
 
+      - name: Fetch silabus data
+        run: node web/scripts/fetch-silabus.mjs
+
       - name: Commit updated data
         run: |
-          if git diff --quiet web/public/profile-data.json web/public/skills-badges.json; then
+          if git diff --quiet web/public/profile-data.json web/public/skills-badges.json web/public/silabus.json; then
             echo "No changes"
           else
             git config user.name "github-actions[bot]"
             git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-            git add web/public/profile-data.json web/public/skills-badges.json
-            git commit -m "chore(web): refresh profile & skill badge catalog"
+            git add web/public/profile-data.json web/public/skills-badges.json web/public/silabus.json
+            git commit -m "chore(web): refresh profile, skill badge catalog & silabus"
             git push
           fi

@@ -1,0 +1,377 @@
+{
+  "fetchedAt": "2026-08-03T05:29:22.774Z",
+  "source": "https://rsvp.withgoogle.com/events/arcade-fasilitator-id/silabus",
+  "intro": [
+    "Silabus\nMeskipun Anda dapat menemukan semua game langsung di situs Website Google Skills Arcade Global, kami juga menyediakan salinannya di sini agar lebih mudah bagi Anda untuk menemukan dan menyelesaikan badge yang tersedia, sehingga Anda bisa mendapatkan Poin Arcade. (Lihat sistem poin untuk detail lebih lanjut).\nRekomendasi:\nSebaiknya selesaikan Arcade Games terlebih dahulu karena games ini memiliki batas waktu (deadline) pada setiap bulannya. Setelah itu, selesaikan sebanyak mungkin badge keahlian untuk mendapatkan lebih banyak \"Arcade Points\".",
+    "Arcade Games\nSetiap bulan, kami merilis 6 Arcade Games baru yang bisa Anda selesaikan untuk mendapatkan Poin Arcade. Rinciannya:\nArcade Basecamp\nArcade Adventure\nArcade Voyage\nArcade Trail\nArcade Special Game\nNew Arcade Game (Coming Soon)\nOleh karena itu, dalam satu kohort selama 2 bulan di bawah Program Fasilitator dari Juli - September, Anda bisa mendapatkan total 18 lencana (badge) game. Lihat game yang sedang aktif untuk bulan ini di bawah. Kami akan memperbarui daftar ini saat game baru dirilis pada bulan-bulan berikutnya. Catatan: Game memiliki kuota tempat yang terbatas, jadi silakan mendaftar (enrol) dan selesaikan secepatnya.\nCatatan: Meskipun total ada 6 game yang dirilis setiap bulan dan Anda dapat menyelesaikan total 18 game selama 2 bulan program fasilitator, penyelesaian 12 game apa pun sudah cukup untuk dihitung menuju pencapaian utama (ultimate milestone).",
+    "Access code: \n1q-lowcode-92316"
+  ],
+  "games": [
+    {
+      "name": "Arcade Adventure",
+      "url": "https://www.skills.google/games/7314?utm_source=gcaf-site&utm_medium=website&utm_campaign=arcade-facilitator26",
+      "accessCode": "1q-lowcode-92316",
+      "status": "active"
+    },
+    {
+      "name": "Arcade Voyage",
+      "url": "https://www.skills.google/games/7315?utm_source=gcaf-site&utm_medium=website&utm_campaign=arcade-facilitator26",
+      "accessCode": "1q-bucket-58231",
+      "status": "active"
+    },
+    {
+      "name": "Arcade Trail",
+      "url": "https://www.skills.google/games/7316?utm_source=gcaf-site&utm_medium=website&utm_campaign=arcade-facilitator26",
+      "accessCode": null,
+      "status": "closed"
+    },
+    {
+      "name": "Arcade Basecamp",
+      "url": "https://www.skills.google/games/7313?utm_source=gcaf-site&utm_medium=website&utm_campaign=arcade-facilitator26",
+      "accessCode": "1q-basecamp-07511",
+      "status": "active"
+    },
+    {
+      "name": "Arcade Special Game",
+      "url": "https://www.skills.google/games/7318?utm_source=gcaf-site&utm_medium=website&utm_campaign=arcade-facilitator26",
+      "accessCode": "1q-security-19110",
+      "status": "active"
+    },
+    {
+      "name": "New Arcade Game (Coming Soon)",
+      "url": "https://www.skills.google/games/7317?utm_source=gcaf-site&utm_medium=website&utm_campaign=arcade-facilitator26",
+      "accessCode": "1q-datamesh-16451",
+      "status": "coming-soon"
+    }
+  ],
+  "levels": [
+    {
+      "level": "beginner",
+      "title": "Beginner: Memulai Google Cloud (17 Badge Keahlian)",
+      "count": 17,
+      "badges": [
+        {
+          "title": "Membuat Aplikasi Gemini Enterprise Pertama Anda",
+          "url": "https://www.skills.google/paths/3546/course_templates/1586?utm_source=gcaf-site&utm_medium=website&utm_campaign=arcade-facilitator26",
+          "labs": 1,
+          "credits": 0
+        },
+        {
+          "title": "Mengembangkan Prototipe Berteknologi AI di Google AI Studio",
+          "url": "https://www.skills.google/course_templates/1426?utm_source=gcaf-site&utm_medium=website&utm_campaign=arcade-facilitator26",
+          "labs": 4,
+          "credits": 0
+        },
+        {
+          "title": "Dasar-Dasar Google Cloud Compute",
+          "url": "https://www.skills.google/course_templates/754?utm_source=gcaf-site&utm_medium=website&utm_campaign=arcade-facilitator26",
+          "labs": 4,
+          "credits": 4
+        },
+        {
+          "title": "Mengimplementasikan Alur Kerja Olahpesan dan Otomatisasi Berbasis Peristiwa",
+          "url": "https://www.skills.google/course_templates/728?utm_source=gcaf-site&utm_medium=website&utm_campaign=arcade-facilitator26",
+          "labs": 3,
+          "credits": 2
+        },
+        {
+          "title": "Menerapkan Solusi Cloud Storage dan Perlindungan Data",
+          "url": "https://www.skills.google/course_templates/725?utm_source=gcaf-site&utm_medium=website&utm_campaign=arcade-facilitator26",
+          "labs": 4,
+          "credits": 4
+        },
+        {
+          "title": "Membuat Data Lake Streaming di Cloud Storage",
+          "url": "https://www.skills.google/course_templates/705?utm_source=gcaf-site&utm_medium=website&utm_campaign=arcade-facilitator26",
+          "labs": 4,
+          "credits": 3
+        },
+        {
+          "title": "Men-deploy dan Mengelola Aplikasi di Google App Engine",
+          "url": "https://www.skills.google/course_templates/671?utm_source=gcaf-site&utm_medium=website&utm_campaign=arcade-facilitator26",
+          "labs": 4,
+          "credits": 4
+        },
+        {
+          "title": "Implement Speech and Language Solutions with Pre-trained APIs",
+          "url": "https://www.skills.google/course_templates/700",
+          "labs": 4,
+          "credits": 4
+        },
+        {
+          "title": "Menggunakan Google Cloud Speech API",
+          "url": "https://www.skills.google/course_templates/756?utm_source=gcaf-site&utm_medium=website&utm_campaign=arcade-facilitator26",
+          "labs": 4,
+          "credits": 4
+        },
+        {
+          "title": "Menganalisis Ucapan dan Bahasa dengan Google API",
+          "url": "https://www.skills.google/course_templates/634?utm_source=gcaf-site&utm_medium=website&utm_campaign=arcade-facilitator26",
+          "labs": 4,
+          "credits": 8
+        },
+        {
+          "title": "Menyimpan, Memproses, dan Mengelola Data di Google Cloud - Console",
+          "url": "https://www.skills.google/course_templates/658?utm_source=gcaf-site&utm_medium=website&utm_campaign=arcade-facilitator26",
+          "labs": 4,
+          "credits": 3
+        },
+        {
+          "title": "Menyimpan, Memproses, dan Mengelola Data di Google Cloud - Command Line",
+          "url": "https://www.skills.google/course_templates/659?utm_source=gcaf-site&utm_medium=website&utm_campaign=arcade-facilitator26",
+          "labs": 4,
+          "credits": 3
+        },
+        {
+          "title": "Memigrasikan Data MySQL ke Cloud SQL Menggunakan Database Migration Service",
+          "url": "https://www.skills.google/course_templates/629?utm_source=gcaf-site&utm_medium=website&utm_campaign=arcade-facilitator26",
+          "labs": 5,
+          "credits": 5
+        },
+        {
+          "title": "Mulai Menggunakan Sensitive Data Protection",
+          "url": "https://www.skills.google/course_templates/750?utm_source=gcaf-site&utm_medium=website&utm_campaign=arcade-facilitator26",
+          "labs": 4,
+          "credits": 4
+        },
+        {
+          "title": "Menganalisis Gambar dengan Cloud Vision API",
+          "url": "https://www.skills.google/course_templates/633?utm_source=gcaf-site&utm_medium=website&utm_campaign=arcade-facilitator26",
+          "labs": 4,
+          "credits": 12
+        },
+        {
+          "title": "Membangun Aplikasi Berbasis Peristiwa dengan Eventarc",
+          "url": "https://www.skills.google/course_templates/727?utm_source=gcaf-site&utm_medium=website&utm_campaign=arcade-facilitator26",
+          "labs": 4,
+          "credits": 3
+        },
+        {
+          "title": "Mengonfigurasi Akun Layanan dan Peran IAM untuk Google Cloud",
+          "url": "https://www.skills.google/course_templates/702?utm_source=gcaf-site&utm_medium=website&utm_campaign=arcade-facilitator26",
+          "labs": 4,
+          "credits": 4
+        }
+      ]
+    },
+    {
+      "level": "intermediate",
+      "title": "Intermediate: Mendalami Google Cloud Lebih Jauh (17 Badge Keahlian)",
+      "count": 17,
+      "badges": [
+        {
+          "title": "Merekayasa Agen AI dengan Agent Development Kit (ADK)",
+          "url": "https://www.skills.google/course_templates/1596?utm_source=gcaf-site&utm_medium=website&utm_campaign=arcade-facilitator26",
+          "labs": 1,
+          "credits": 5
+        },
+        {
+          "title": "Membangun Aplikasi AI yang Bermanfaat dengan Gemini dan Imagen",
+          "url": "https://www.skills.google/course_templates/1076?utm_source=gcaf-site&utm_medium=website&utm_campaign=arcade-facilitator26",
+          "labs": 4,
+          "credits": 0
+        },
+        {
+          "title": "Membangun Aplikasi Cloud Cerdas dengan Vibe Coding dan MCP",
+          "url": "https://www.skills.google/course_templates/1459?utm_source=gcaf-site&utm_medium=website&utm_campaign=arcade-facilitator26",
+          "labs": 4,
+          "credits": 4
+        },
+        {
+          "title": "Mengimplementasikan Alur Kerja Kolaborasi dan Produktivitas Cloud",
+          "url": "https://www.skills.google/course_templates/676?utm_source=gcaf-site&utm_medium=website&utm_campaign=arcade-facilitator26",
+          "labs": 7,
+          "credits": 0
+        },
+        {
+          "title": "Menganalisis Data BigQuery di Spreadsheet yang Terhubung",
+          "url": "https://www.skills.google/course_templates/632?utm_source=gcaf-site&utm_medium=website&utm_campaign=arcade-facilitator26",
+          "labs": 4,
+          "credits": 0
+        },
+        {
+          "title": "Men-streaming Analytics ke BigQuery",
+          "url": "https://www.skills.google/course_templates/752?utm_source=gcaf-site&utm_medium=website&utm_campaign=arcade-facilitator26",
+          "labs": 4,
+          "credits": 2
+        },
+        {
+          "title": "Membuat Data Lake Aman di Cloud Storage",
+          "url": "https://www.skills.google/course_templates/704?utm_source=gcaf-site&utm_medium=website&utm_campaign=arcade-facilitator26",
+          "labs": 4,
+          "credits": 4
+        },
+        {
+          "title": "Mengamankan Data Lakehouse",
+          "url": "https://www.skills.google/course_templates/751?utm_source=gcaf-site&utm_medium=website&utm_campaign=arcade-facilitator26",
+          "labs": 4,
+          "credits": 4
+        },
+        {
+          "title": "Memperkaya Metadata dan Penemuan Data Lakehouse",
+          "url": "https://www.skills.google/course_templates/753?utm_source=gcaf-site&utm_medium=website&utm_campaign=arcade-facilitator26",
+          "labs": 4,
+          "credits": 3
+        },
+        {
+          "title": "Memantau dan Mengelola Resource Google Cloud",
+          "url": "https://www.skills.google/course_templates/653?utm_source=gcaf-site&utm_medium=website&utm_campaign=arcade-facilitator26",
+          "labs": 4,
+          "credits": 4
+        },
+        {
+          "title": "Memantau dan Membuat Log dengan Google Cloud Observability",
+          "url": "https://www.skills.google/course_templates/749?utm_source=gcaf-site&utm_medium=website&utm_campaign=arcade-facilitator26",
+          "labs": 5,
+          "credits": 9
+        },
+        {
+          "title": "Menyiapkan Jaringan Google Cloud",
+          "url": "https://www.skills.google/course_templates/641?utm_source=gcaf-site&utm_medium=website&utm_campaign=arcade-facilitator26",
+          "labs": 4,
+          "credits": 8
+        },
+        {
+          "title": "Mengintegrasikan Data BigQuery dan Google Workspace Menggunakan Apps Script",
+          "url": "https://www.skills.google/course_templates/737?utm_source=gcaf-site&utm_medium=website&utm_campaign=arcade-facilitator26",
+          "labs": 4,
+          "credits": 2
+        },
+        {
+          "title": "Rekayasa Data untuk Pembuatan Model Prediktif dengan BigQuery ML",
+          "url": "https://www.skills.google/course_templates/627?utm_source=gcaf-site&utm_medium=website&utm_campaign=arcade-facilitator26",
+          "labs": 4,
+          "credits": 15
+        },
+        {
+          "title": "Mengimplementasikan Alur Kerja DevOps di Google Cloud",
+          "url": "https://www.skills.google/course_templates/716?utm_source=gcaf-site&utm_medium=website&utm_campaign=arcade-facilitator26",
+          "labs": 4,
+          "credits": 16
+        },
+        {
+          "title": "Membuat Model ML dengan BigQuery ML",
+          "url": "https://www.skills.google/course_templates/626?utm_source=gcaf-site&utm_medium=website&utm_campaign=arcade-facilitator26",
+          "labs": 5,
+          "credits": 11
+        },
+        {
+          "title": "Membangun Situs di Google Cloud",
+          "url": "https://www.skills.google/course_templates/638?utm_source=gcaf-site&utm_medium=website&utm_campaign=arcade-facilitator26",
+          "labs": 5,
+          "credits": 13
+        }
+      ]
+    },
+    {
+      "level": "advanced",
+      "title": "Advanced: Tingkatkan Skill Google Cloud Kamu ke Level Selanjutnya (17 Badge Keahlian)",
+      "count": 17,
+      "badges": [
+        {
+          "title": "Mempelajari AI Generatif di Agent Platform",
+          "url": "https://www.skills.google/course_templates/959?utm_source=gcaf-site&utm_medium=website&utm_campaign=arcade-facilitator26",
+          "labs": 4,
+          "credits": 16
+        },
+        {
+          "title": "Mengimplementasikan Cloud Load Balancing untuk Compute Engine",
+          "url": "https://www.skills.google/course_templates/648?utm_source=gcaf-site&utm_medium=website&utm_campaign=arcade-facilitator26",
+          "labs": 4,
+          "credits": 4
+        },
+        {
+          "title": "Desain Perintah dalam Agent Platform",
+          "url": "https://www.skills.google/course_templates/976?utm_source=gcaf-site&utm_medium=website&utm_campaign=arcade-facilitator26",
+          "labs": 4,
+          "credits": 4
+        },
+        {
+          "title": "Menginspeksi Dokumen Multimedia dengan Multimodalitas Gemini dan RAG Multimodal",
+          "url": "https://www.skills.google/course_templates/981?utm_source=gcaf-site&utm_medium=website&utm_campaign=arcade-facilitator26",
+          "labs": 4,
+          "credits": 20
+        },
+        {
+          "title": "Mengembangkan Aplikasi GenAI dengan Gemini dan Streamlit",
+          "url": "https://www.skills.google/course_templates/978?utm_source=gcaf-site&utm_medium=website&utm_campaign=arcade-facilitator26",
+          "labs": 5,
+          "credits": 20
+        },
+        {
+          "title": "Menyiapkan Lingkungan Pengembangan Aplikasi di Google Cloud",
+          "url": "https://www.skills.google/course_templates/637?utm_source=gcaf-site&utm_medium=website&utm_campaign=arcade-facilitator26",
+          "labs": 10,
+          "credits": 8
+        },
+        {
+          "title": "Mengembangkan Jaringan Google Cloud Anda",
+          "url": "https://www.skills.google/course_templates/625?utm_source=gcaf-site&utm_medium=website&utm_campaign=arcade-facilitator26",
+          "labs": 6,
+          "credits": 18
+        },
+        {
+          "title": "Membangun Jaringan Google Cloud yang Aman",
+          "url": "https://www.skills.google/course_templates/654?utm_source=gcaf-site&utm_medium=website&utm_campaign=arcade-facilitator26",
+          "labs": 6,
+          "credits": 30
+        },
+        {
+          "title": "Men-deploy Aplikasi Kubernetes di Google Cloud",
+          "url": "https://www.skills.google/course_templates/663?utm_source=gcaf-site&utm_medium=website&utm_campaign=arcade-facilitator26",
+          "labs": 4,
+          "credits": 12
+        },
+        {
+          "title": "Mendapatkan Insight dari Data BigQuery",
+          "url": "https://www.skills.google/course_templates/623?utm_source=gcaf-site&utm_medium=website&utm_campaign=arcade-facilitator26",
+          "labs": 7,
+          "credits": 6
+        },
+        {
+          "title": "Membangun Objek LookML di Looker",
+          "url": "https://www.skills.google/course_templates/639?utm_source=gcaf-site&utm_medium=website&utm_campaign=arcade-facilitator26",
+          "labs": 5,
+          "credits": 0
+        },
+        {
+          "title": "Mengelola Model Data di Looker",
+          "url": "https://www.skills.google/course_templates/651?utm_source=gcaf-site&utm_medium=website&utm_campaign=arcade-facilitator26",
+          "labs": 6,
+          "credits": 0
+        },
+        {
+          "title": "Menyiapkan Data untuk Dasbor dan Laporan Looker",
+          "url": "https://www.skills.google/course_templates/628?utm_source=gcaf-site&utm_medium=website&utm_campaign=arcade-facilitator26",
+          "labs": 5,
+          "credits": 0
+        },
+        {
+          "title": "Mengembangkan Aplikasi Serverless dengan Firebase",
+          "url": "https://www.skills.google/course_templates/649?utm_source=gcaf-site&utm_medium=website&utm_campaign=arcade-facilitator26",
+          "labs": 4,
+          "credits": 16
+        },
+        {
+          "title": "Arsitektur Cloud: Merancang, Mengimplementasikan, dan Mengelola",
+          "url": "https://www.skills.google/course_templates/640?utm_source=gcaf-site&utm_medium=website&utm_campaign=arcade-facilitator26",
+          "labs": 6,
+          "credits": 32
+        },
+        {
+          "title": "Build Global and Regional Load Balancing Solutions",
+          "url": "https://www.skills.google/course_templates/1558?utm_source=gcaf-site&utm_medium=website&utm_campaign=arcade-facilitator26",
+          "labs": 4,
+          "credits": 20
+        },
+        {
+          "title": "Google DeepMind: Train A Small Language Model",
+          "url": "https://www.skills.google/course_templates/1453?utm_source=gcaf-site&utm_medium=website&utm_campaign=arcade-facilitator26",
+          "labs": 1,
+          "credits": 5
+        }
+      ]
+    }
+  ],
+  "totalBadges": 51
+}

@@ -33,7 +33,7 @@ export function normalizeBadgeTitle(s: string): string {
     .trim()
 }
 
-export function isBadgeEarned(badge: SkillsBadge, earnedNames: Set<string>): boolean {
+export function isBadgeEarned(badge: { title: string }, earnedNames: Set<string>): boolean {
   const title = normalizeBadgeTitle(badge.title)
   for (const name of earnedNames) {
     if (normalizeBadgeTitle(name) === title) return true
