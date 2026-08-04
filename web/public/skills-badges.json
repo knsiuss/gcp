@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-08-03T17:06:44.123Z",
+  "fetchedAt": "2026-08-04T05:42:25.457Z",
   "badges": [
     {
       "title": "Analyze and Reason on Multimodal Data with Gemini",
@@ -345,13 +345,6 @@
       "path": "/course_templates/959?catalog_rank=%7B%22rank%22%3A11%2C%22num_filters%22%3A1%2C%22has_search%22%3Afalse%7D"
     },
     {
-      "title": "Get Started with Sensitive Data Protection",
-      "level": "introductory",
-      "duration": "30 minutes",
-      "description": "Complete the introductory Get Started with Sensitive Data Protection skill badge course to demonstrate skills in the following: using Sensitive Data Protection services (including the Cloud Data Loss Prevention API) to inspect, redact, and de-identify sensitive data in Google Cloud.",
-      "path": "/course_templates/750?catalog_rank=%7B%22rank%22%3A21%2C%22num_filters%22%3A1%2C%22has_search%22%3Afalse%7D"
-    },
-    {
       "title": "Google DeepMind: Train A Small Language Model",
       "level": "advanced",
       "duration": "1 hour 45 minutes",
@@ -406,6 +399,13 @@
       "duration": "30 minutes",
       "description": "Complete the intermediate Implement Multimodal Vector Search with BigQuery skill badge to demonstrate skills in the following: using Gemini in BigQuery to generate and debug SQL, conduct sentiment analysis, summarize text and identify keywords, generate embeddings, create a Retrieval Augmented Generation (RAG) pipeline, and implement multimodal vector search.",
       "path": "/course_templates/1232?catalog_rank=%7B%22rank%22%3A42%2C%22num_filters%22%3A1%2C%22has_search%22%3Afalse%7D"
+    },
+    {
+      "title": "Implement Sensitive Data Protection on Google Cloud",
+      "level": "introductory",
+      "duration": "30 minutes",
+      "description": "Complete the Implement Sensitive Data Protection on Google Cloud Skill Badge course to demonstrate skills in the following: using Sensitive Data Protection services (including the Cloud Data Loss Prevention API) to inspect, redact, and de-identify sensitive data in Google Cloud.",
+      "path": "/course_templates/750?catalog_rank=%7B%22rank%22%3A21%2C%22num_filters%22%3A1%2C%22has_search%22%3Afalse%7D"
     },
     {
       "title": "Implement Speech and Language Solutions with Pre-trained APIs",
