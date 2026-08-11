@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-GSP1145 - Dataplex 2.0 Aspect Attacher (Resolves Data Catalog Deprecation Error)
+GSP1145 - Dataplex 2.0 Aspect Attacher (Strict Key Format Fix)
 """
 
 import os
@@ -89,37 +89,23 @@ def main():
 
     columns = ["zip", "state", "last_name", "country", "email", "latitude", "first_name", "city", "longitude"]
 
-    # Build aspects map
-    aspects_payload = {}
-
+    # Build aspects map using strict "project.location.aspectType" format
     for aspect_id in ["protected_data_aspect", "protected-data-aspect"]:
         aspect_type_full = f"projects/{project_id}/locations/{region}/aspectTypes/{aspect_id}"
-        prefix_key = f"{project_id}.{region}.{aspect_id}"
+        full_key = f"{project_id}.{region}.{aspect_id}"
 
-        # Table level aspect
-        aspects_payload[aspect_id] = {
-            "aspectType": aspect_type_full,
-            "data": {
-                "protected_data_flag": "Yes"
-            }
-        }
-        aspects_payload[prefix_key] = {
-            "aspectType": aspect_type_full,
-            "data": {
-                "protected_data_flag": "Yes"
+        aspects_payload = {
+            full_key: {
+                "aspectType": aspect_type_full,
+                "data": {
+                    "protected_data_flag": "Yes"
+                }
             }
         }
 
         # Column level aspects
         for col in columns:
-            aspects_payload[f"{aspect_id}@{col}"] = {
-                "aspectType": aspect_type_full,
-                "path": col,
-                "data": {
-                    "protected_data_flag": "Yes"
-                }
-            }
-            aspects_payload[f"{prefix_key}@{col}"] = {
+            aspects_payload[f"{full_key}@{col}"] = {
                 "aspectType": aspect_type_full,
                 "path": col,
                 "data": {
@@ -127,12 +113,12 @@ def main():
                 }
             }
 
-    patch_payload = {
-        "aspects": aspects_payload
-    }
+        patch_payload = {
+            "aspects": aspects_payload
+        }
 
-    token, _, _ = run_cmd("gcloud auth print-access-token")
-    api_request(entry_url, method="PATCH", data=patch_payload, token=token)
+        token, _, _ = run_cmd("gcloud auth print-access-token")
+        api_request(entry_url, method="PATCH", data=patch_payload, token=token)
 
     print("\n======================================================================")
     print("  DATAPLEX ASPECT ATTACHMENT COMPLETED SUCCESSFULLY!")
