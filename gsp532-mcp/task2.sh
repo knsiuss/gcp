@@ -1,6 +1,6 @@
 #!/bin/bash
 # ============================================================================
-# GSP532 - Task 2 Only: Perform IAM Policy Bindings
+# GSP532 - Task 2 Fix: Safe IAM Policy Bindings
 # ============================================================================
 
 set -e
@@ -30,37 +30,42 @@ echo -e "${CYAN}[*] User Email:     ${USER_EMAIL}${NC}"
 echo -e "${CYAN}[*] Project ID:     ${PROJECT_ID}${NC}"
 echo -e "${CYAN}[*] Project Number: ${PROJECT_NUMBER}${NC}"
 
-echo -e "\n${YELLOW}[Step 1] Binding IAM roles for User: ${USER_EMAIL}...${NC}"
+echo -e "\n${YELLOW}[Step 1] Binding Cloud Run Admin & SA User roles for User...${NC}"
 gcloud projects add-iam-policy-binding "$PROJECT_ID" \
     --member="user:${USER_EMAIL}" \
-    --role="roles/run.admin" --quiet
-
-gcloud projects add-iam-policy-binding "$PROJECT_ID" \
-    --member="user:${USER_EMAIL}" \
-    --role="roles/agentplatform.user" --quiet
+    --role="roles/run.admin" --quiet 2>/dev/null || true
 
 gcloud projects add-iam-policy-binding "$PROJECT_ID" \
     --member="user:${USER_EMAIL}" \
-    --role="roles/iam.serviceAccountUser" --quiet
+    --role="roles/iam.serviceAccountUser" --quiet 2>/dev/null || true
 
-echo -e "\n${YELLOW}[Step 2] Binding IAM roles for Compute SA: ${COMPUTE_SA}...${NC}"
+echo -e "\n${YELLOW}[Step 2] Binding AI Platform / Cloud Companion User roles...${NC}"
 gcloud projects add-iam-policy-binding "$PROJECT_ID" \
-    --member="serviceAccount:${COMPUTE_SA}" \
-    --role="roles/run.admin" --quiet
-
-gcloud projects add-iam-policy-binding "$PROJECT_ID" \
-    --member="serviceAccount:${COMPUTE_SA}" \
-    --role="roles/run.invoker" --quiet
+    --member="user:${USER_EMAIL}" \
+    --role="roles/aiplatform.user" --quiet 2>/dev/null || true
 
 gcloud projects add-iam-policy-binding "$PROJECT_ID" \
+    --member="user:${USER_EMAIL}" \
+    --role="roles/cloudaicompanion.user" --quiet 2>/dev/null || true
+
+echo -e "\n${YELLOW}[Step 3] Binding IAM roles for Compute SA...${NC}"
+gcloud projects add-iam-policy-binding "$PROJECT_ID" \
     --member="serviceAccount:${COMPUTE_SA}" \
-    --role="roles/agentplatform.user" --quiet
+    --role="roles/run.admin" --quiet 2>/dev/null || true
 
 gcloud projects add-iam-policy-binding "$PROJECT_ID" \
     --member="serviceAccount:${COMPUTE_SA}" \
-    --role="roles/storage.objectViewer" --quiet
+    --role="roles/run.invoker" --quiet 2>/dev/null || true
 
-echo -e "\n${YELLOW}[Step 3] Binding IAM roles for Cloud Build SA: ${CLOUDBUILD_SA}...${NC}"
+gcloud projects add-iam-policy-binding "$PROJECT_ID" \
+    --member="serviceAccount:${COMPUTE_SA}" \
+    --role="roles/aiplatform.user" --quiet 2>/dev/null || true
+
+gcloud projects add-iam-policy-binding "$PROJECT_ID" \
+    --member="serviceAccount:${COMPUTE_SA}" \
+    --role="roles/storage.objectViewer" --quiet 2>/dev/null || true
+
+echo -e "\n${YELLOW}[Step 4] Binding IAM roles for Cloud Build SA...${NC}"
 gcloud projects add-iam-policy-binding "$PROJECT_ID" \
     --member="serviceAccount:${CLOUDBUILD_SA}" \
     --role="roles/run.admin" --quiet 2>/dev/null || true

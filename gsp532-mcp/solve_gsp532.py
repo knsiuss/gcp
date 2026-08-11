@@ -71,23 +71,24 @@ GOOGLE_CLOUD_LOCATION=us-central1
         "compute.googleapis.com",
         "cloudbuild.googleapis.com",
         "run.googleapis.com",
-        "agentplatform.googleapis.com"
+        "aiplatform.googleapis.com"
     ]
     print("Enabling required Google Cloud APIs...")
     for api in apis:
         run_cmd(f"gcloud services enable {api} --quiet")
 
     # =========================================================================
-    # TASK 2: Comprehensive IAM Policy Bindings
+    # TASK 2: IAM Policy Bindings
     # =========================================================================
     print("\n[Task 2] Granting IAM Roles...")
     run_cmd(f"gcloud projects add-iam-policy-binding {project_id} --member='user:{user_email}' --role='roles/run.admin' --quiet")
-    run_cmd(f"gcloud projects add-iam-policy-binding {project_id} --member='user:{user_email}' --role='roles/agentplatform.user' --quiet")
     run_cmd(f"gcloud projects add-iam-policy-binding {project_id} --member='user:{user_email}' --role='roles/iam.serviceAccountUser' --quiet")
+    run_cmd(f"gcloud projects add-iam-policy-binding {project_id} --member='user:{user_email}' --role='roles/aiplatform.user' --quiet")
+    run_cmd(f"gcloud projects add-iam-policy-binding {project_id} --member='user:{user_email}' --role='roles/cloudaicompanion.user' --quiet")
 
     run_cmd(f"gcloud projects add-iam-policy-binding {project_id} --member='serviceAccount:{compute_sa}' --role='roles/run.admin' --quiet")
     run_cmd(f"gcloud projects add-iam-policy-binding {project_id} --member='serviceAccount:{compute_sa}' --role='roles/run.invoker' --quiet")
-    run_cmd(f"gcloud projects add-iam-policy-binding {project_id} --member='serviceAccount:{compute_sa}' --role='roles/agentplatform.user' --quiet")
+    run_cmd(f"gcloud projects add-iam-policy-binding {project_id} --member='serviceAccount:{compute_sa}' --role='roles/aiplatform.user' --quiet")
     run_cmd(f"gcloud projects add-iam-policy-binding {project_id} --member='serviceAccount:{compute_sa}' --role='roles/storage.objectViewer' --quiet")
 
     run_cmd(f"gcloud projects add-iam-policy-binding {project_id} --member='serviceAccount:{cloudbuild_sa}' --role='roles/run.admin' --quiet")
