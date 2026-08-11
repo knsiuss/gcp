@@ -1,6 +1,6 @@
 #!/bin/bash
 # ============================================================================
-# GSP532 - Task 1 Only: Set up Environment & Enable APIs
+# GSP532 - Task 1 Robust API & Environment Setup
 # ============================================================================
 
 set -e
@@ -11,20 +11,25 @@ CYAN='\033[0;36m'
 NC='\033[0m'
 BOLD='\033[1m'
 
-# Auto-detect project and project number
+ACTIVE_ACCOUNT=$(gcloud auth list --format="value(account)" 2>/dev/null | head -1)
+if [ -n "$ACTIVE_ACCOUNT" ]; then
+    gcloud config set account "$ACTIVE_ACCOUNT" --quiet 2>/dev/null || true
+fi
+
 PROJECT_ID=$(gcloud config get-value project 2>/dev/null)
 if [ -z "$PROJECT_ID" ]; then
     PROJECT_ID="$DEVSHELL_PROJECT_ID"
-    gcloud config set project "$PROJECT_ID" --quiet
 fi
+gcloud config set project "$PROJECT_ID" --quiet
 
 PROJECT_NUMBER=$(gcloud projects describe "$PROJECT_ID" --format="value(projectNumber)")
 SERVICE_ACCOUNT="${PROJECT_NUMBER}-compute@developer.gserviceaccount.com"
 MCP_SERVER_URL="https://vibe-co-zoo-mcp-server-${PROJECT_NUMBER}.us-central1.run.app/mcp/"
 
 echo -e "${BOLD}======================================================================${NC}"
-echo -e "${BOLD}  GSP532 - Task 1: Enable APIs & Setup Environment${NC}"
+echo -e "${BOLD}  GSP532 - Task 1 Fix & Verification${NC}"
 echo -e "${BOLD}======================================================================${NC}"
+echo -e "${CYAN}[*] Active Account: ${ACTIVE_ACCOUNT}${NC}"
 echo -e "${CYAN}[*] Project ID:     ${PROJECT_ID}${NC}"
 echo -e "${CYAN}[*] Project Number: ${PROJECT_NUMBER}${NC}"
 
@@ -47,14 +52,20 @@ PROJECT_NUMBER="${PROJECT_NUMBER}"
 GOOGLE_CLOUD_LOCATION="us-central1"
 EOF
 
-# Enable APIs individually (ignoring agentplatform if pre-managed)
+# Enable APIs
 echo -e "\n${YELLOW}[Step 3] Enabling Google Cloud APIs...${NC}"
-for api in artifactregistry.googleapis.com compute.googleapis.com cloudbuild.googleapis.com run.googleapis.com agentplatform.googleapis.com; do
-    echo "Enabling $api..."
-    gcloud services enable $api --quiet 2>/dev/null || true
-done
+gcloud services enable \
+  artifactregistry.googleapis.com \
+  compute.googleapis.com \
+  cloudbuild.googleapis.com \
+  run.googleapis.com \
+  aiplatform.googleapis.com \
+  cloudaicompanion.googleapis.com \
+  --project="$PROJECT_ID" --quiet || true
+
+gcloud services enable agentplatform.googleapis.com --project="$PROJECT_ID" --quiet || true
 
 echo -e "\n${GREEN}======================================================================${NC}"
-echo -e "${GREEN}  TASK 1 COMPLETED SUCCESSFULLY!${NC}"
+echo -e "${GREEN}  TASK 1 SETUP COMPLETED!${NC}"
 echo -e "${GREEN}======================================================================${NC}"
 echo -e "${YELLOW}Now click 'Check my progress' on Task 1 in Qwiklabs!${NC}"
