@@ -72,6 +72,11 @@ const FALLBACK = {
     description: 'Automated solution for the Network Connectivity Center challenge lab.',
     category: 'Networking',
   },
+  'nl-api-gsp097': {
+    name: 'Cloud Natural Language API: Qwik Start (GSP097)',
+    description: 'Creates a Natural Language service account + API key and runs an entity analysis request.',
+    category: 'AI & ML',
+  },
   'secure-datalake-arc119': {
     name: 'Secure Data Lake (ARC119)',
     description: 'Automates secure data lake configuration with service accounts, KMS, and access controls.',

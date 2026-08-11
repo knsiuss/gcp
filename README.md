@@ -245,6 +245,18 @@ Each lab is organized into its own folder. Simply open **Google Cloud Shell** in
     ```
     *Creates the source connection profile (external IP), the one-time migration job to `mysql-fin-2rv`, the continuous migration job to `mysql-fin-2rv-cont` (VPC peering), tests replication, and promotes the destination. Region/zone are derived automatically (defaults `us-east1` / `us-east1-d`).*
 
+### 22. Cloud Natural Language API: Qwik Start (GSP097)
+*   **Folder**: `nl-api-gsp097/`
+*   **Script**: `solve_gsp097.sh`
+*   **Execution**:
+    ```bash
+    git clone https://github.com/knsiuss/gcp.git gcp-labs
+    cd gcp-labs/nl-api-gsp097
+    chmod +x solve_gsp097.sh
+    ./solve_gsp097.sh
+    ```
+    *Creates the Natural Language service account + API key (Task 1) and runs the entity analysis request, saving the response to `result.json` (Task 2).*
+
 ---
 
 ## Web Portal (TypeScript)
