@@ -295,6 +295,18 @@ Each lab is organized into its own folder. Simply open **Google Cloud Shell** in
     ```
     *Prompts for the zone, then creates the bootcamp cluster, downloads `gs://spls/gsp053/kubernetes` sample code, and automates: deployment + service + scaling (Task 2), rolling update + pause/resume/rollback (Task 3), canary (Task 4), and blue-green (Task 5).*
 
+### 26. Data Publishing on BigQuery using Authorized Views (GSP1041)
+*   **Folder**: `bq-authorized-views-gsp1041/`
+*   **Script**: `solve_gsp1041.sh`
+*   **Execution**:
+    ```bash
+    git clone https://github.com/knsiuss/gcp.git gcp-labs
+    cd gcp-labs/bq-authorized-views-gsp1041
+    chmod +x solve_gsp1041.sh
+    ./solve_gsp1041.sh
+    ```
+    *Prompts for the Data Sharing Partner project ID + both customer project IDs + customer usernames, then automates all 4 tasks: creates `authorized_view_a` (TX) / `authorized_view_b` (CA) in `demo_dataset`, authorizes both views on the dataset, grants scoped BigQuery Data Viewer on each view to its customer user, and verifies from both customer projects (read view, save as table, join with `customer_info`, expect Access Denied on the other view).*
+
 ---
 
 ## Web Portal (TypeScript)

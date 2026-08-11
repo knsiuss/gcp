@@ -11,6 +11,11 @@ const SCRIPT_EXTS = new Set(['.sh', '.py', '.tf', '.yaml', '.yml', '.json'])
 const CONFIG_NAMES = new Set(['Dockerfile', 'cloudbuild.yaml', 'cloudbuild.yml', 'variables.tf', 'main.tf'])
 
 const FALLBACK = {
+  'bq-authorized-views-gsp1041': {
+    name: 'Data Publishing on BigQuery using Authorized Views (GSP1041)',
+    description: 'Creates authorized views (TX/CA) in demo_dataset, authorizes them, grants scoped BigQuery Data Viewer to each customer, and verifies from both customer projects (asks for partner + customer project IDs and usernames).',
+    category: 'BigQuery',
+  },
   'adk-gsp540': {
     name: 'Agent Development Kit (ADK) Challenge Lab',
     description: 'Python inspector, patcher, and solver scripts for the GSP540 ADK challenge lab.',
