@@ -11,6 +11,11 @@ const SCRIPT_EXTS = new Set(['.sh', '.py', '.tf', '.yaml', '.yml', '.json'])
 const CONFIG_NAMES = new Set(['Dockerfile', 'cloudbuild.yaml', 'cloudbuild.yml', 'variables.tf', 'main.tf'])
 
 const FALLBACK = {
+  'bq-analytics-gsp1042': {
+    name: 'Analytics as a Service for Data Sharing Partners (GSP1042)',
+    description: 'Creates authorized views (TX/CA), authorizes them on demo_dataset, grants scoped BigQuery Data Viewer to each customer, runs the customer-side joins and saves result tables, and prints Data Studio dashboard steps (asks for partner + customer project IDs and usernames).',
+    category: 'BigQuery',
+  },
   'bq-authorized-views-gsp1041': {
     name: 'Data Publishing on BigQuery using Authorized Views (GSP1041)',
     description: 'Creates authorized views (TX/CA) in demo_dataset, authorizes them, grants scoped BigQuery Data Viewer to each customer, and verifies from both customer projects (asks for partner + customer project IDs and usernames).',

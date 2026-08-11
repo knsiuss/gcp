@@ -307,6 +307,18 @@ Each lab is organized into its own folder. Simply open **Google Cloud Shell** in
     ```
     *Prompts for the Data Sharing Partner project ID + both customer project IDs + customer usernames, then automates all 4 tasks: creates `authorized_view_a` (TX) / `authorized_view_b` (CA) in `demo_dataset`, authorizes both views on the dataset, grants scoped BigQuery Data Viewer on each view to its customer user, and verifies from both customer projects (read view, save as table, join with `customer_info`, expect Access Denied on the other view).*
 
+### 27. Analytics as a Service for Data Sharing Partners (GSP1042)
+*   **Folder**: `bq-analytics-gsp1042/`
+*   **Script**: `solve_gsp1042.sh`
+*   **Execution**:
+    ```bash
+    git clone https://github.com/knsiuss/gcp.git gcp-labs
+    cd gcp-labs/bq-analytics-gsp1042
+    chmod +x solve_gsp1042.sh
+    ./solve_gsp1042.sh
+    ```
+    *Prompts for the Data Sharing Partner project ID + both customer project IDs + customer usernames. Automates Tasks 1-3 (create authorized views TX/CA, authorize on `demo_dataset`, grant scoped BigQuery Data Viewer) plus the customer-side joins + saving `customer_a_table`/`customer_b_table` (Tasks 4-5). The two Data Studio/Looker Studio dashboards + report-link security verification remain manual browser steps, printed as copyable instructions by the script.*
+
 ---
 
 ## Web Portal (TypeScript)
