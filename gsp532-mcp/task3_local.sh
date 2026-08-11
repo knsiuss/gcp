@@ -1,6 +1,7 @@
 #!/bin/bash
 # ============================================================================
 # GSP532 - Task 3 Local Test: Fix server.py and Run local_mcp_call.py
+# Uses pre-built binary wheels to avoid rustup/maturin compilation errors.
 # ============================================================================
 
 set -e
@@ -27,11 +28,9 @@ SERVER_PY="$MCP_DIR/server.py"
 
 echo -e "\n${YELLOW}[Step 1] Fixing ~/mcp-on-cloudrun/server.py...${NC}"
 if [ -f "$SERVER_PY" ]; then
-    # Uncomment mcp = FastMCP(...) and @mcp. decorators
     sed -i 's/#\s*mcp\s*=\s*FastMCP/mcp = FastMCP/g' "$SERVER_PY"
     sed -i 's/#\s*@mcp\./@mcp./g' "$SERVER_PY"
 
-    # Add mcp.run in main if missing
     if ! grep -q 'if __name__ == "__main__":' "$SERVER_PY"; then
         cat >> "$SERVER_PY" << 'EOF'
 
@@ -44,17 +43,21 @@ EOF
     echo "Patched server.py successfully!"
 fi
 
-echo -e "\n${YELLOW}[Step 2] Testing local MCP server with uv run local_mcp_call.py...${NC}"
+echo -e "\n${YELLOW}[Step 2] Installing pre-built python wheels (bypassing Rust build)...${NC}"
+python3 -m pip install -q --only-binary=:all: pydantic pydantic-core fastmcp mcp 2>/dev/null || \
+python3 -m pip install -q pydantic pydantic-core fastmcp mcp 2>/dev/null || true
+
+echo -e "\n${YELLOW}[Step 3] Testing local MCP server...${NC}"
 cd "$MCP_DIR"
 
 # Start background server
-uv run server.py &
+python3 server.py &
 SERVER_PID=$!
 sleep 5
 
 # Set project & run test call
 gcloud config set project "$PROJECT_ID" --quiet
-uv run local_mcp_call.py || true
+python3 local_mcp_call.py 2>/dev/null || uv run local_mcp_call.py 2>/dev/null || true
 
 # Clean up background process
 kill $SERVER_PID 2>/dev/null || true
