@@ -48,7 +48,6 @@ def main():
     run_cmd(f"gcloud storage cp gs://{bucket_name}/labs_code.zip . 2>/dev/null || gsutil cp gs://{bucket_name}/labs_code.zip .")
     run_cmd("unzip -o labs_code.zip 2>/dev/null || true")
 
-    # Determine service names (vibe-co-zoo vs vibe-zoo)
     mcp_service_name = "vibe-co-zoo-mcp-server"
     adk_service_name = "vibe-co-zoo-tour-guide"
     mcp_url = f"https://{mcp_service_name}-{project_number}.us-central1.run.app/mcp/"
@@ -68,31 +67,29 @@ GOOGLE_CLOUD_LOCATION=us-central1
         f.write(env_content)
 
     apis = [
-        "agentplatform.googleapis.com",
         "artifactregistry.googleapis.com",
         "compute.googleapis.com",
         "cloudbuild.googleapis.com",
-        "run.googleapis.com"
+        "run.googleapis.com",
+        "agentplatform.googleapis.com"
     ]
     print("Enabling required Google Cloud APIs...")
-    run_cmd(f"gcloud services enable {' '.join(apis)} --quiet")
+    for api in apis:
+        run_cmd(f"gcloud services enable {api} --quiet")
 
     # =========================================================================
     # TASK 2: Comprehensive IAM Policy Bindings
     # =========================================================================
     print("\n[Task 2] Granting IAM Roles...")
-    # User bindings
     run_cmd(f"gcloud projects add-iam-policy-binding {project_id} --member='user:{user_email}' --role='roles/run.admin' --quiet")
     run_cmd(f"gcloud projects add-iam-policy-binding {project_id} --member='user:{user_email}' --role='roles/agentplatform.user' --quiet")
     run_cmd(f"gcloud projects add-iam-policy-binding {project_id} --member='user:{user_email}' --role='roles/iam.serviceAccountUser' --quiet")
 
-    # Compute SA bindings
     run_cmd(f"gcloud projects add-iam-policy-binding {project_id} --member='serviceAccount:{compute_sa}' --role='roles/run.admin' --quiet")
     run_cmd(f"gcloud projects add-iam-policy-binding {project_id} --member='serviceAccount:{compute_sa}' --role='roles/run.invoker' --quiet")
     run_cmd(f"gcloud projects add-iam-policy-binding {project_id} --member='serviceAccount:{compute_sa}' --role='roles/agentplatform.user' --quiet")
     run_cmd(f"gcloud projects add-iam-policy-binding {project_id} --member='serviceAccount:{compute_sa}' --role='roles/storage.objectViewer' --quiet")
 
-    # Cloud Build SA bindings
     run_cmd(f"gcloud projects add-iam-policy-binding {project_id} --member='serviceAccount:{cloudbuild_sa}' --role='roles/run.admin' --quiet")
     run_cmd(f"gcloud projects add-iam-policy-binding {project_id} --member='serviceAccount:{cloudbuild_sa}' --role='roles/iam.serviceAccountUser' --quiet")
 
@@ -125,7 +122,6 @@ if __name__ == "__main__":
 
     os.chdir(mcp_dir)
 
-    # Test local_mcp_call.py with local server process
     proc = subprocess.Popen(["uv", "run", "server.py"], cwd=mcp_dir)
     import time
     time.sleep(5)
@@ -140,7 +136,6 @@ if __name__ == "__main__":
     except:
         proc.kill()
 
-    # Deploy to both naming conventions to guarantee compatibility
     for s_name in ["vibe-co-zoo-mcp-server", "vibe-zoo-mcp-server"]:
         print(f"Deploying {s_name} to Cloud Run...")
         run_cmd(f"""gcloud run deploy {s_name} \

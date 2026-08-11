@@ -23,7 +23,7 @@ SERVICE_ACCOUNT="${PROJECT_NUMBER}-compute@developer.gserviceaccount.com"
 MCP_SERVER_URL="https://vibe-co-zoo-mcp-server-${PROJECT_NUMBER}.us-central1.run.app/mcp/"
 
 echo -e "${BOLD}======================================================================${NC}"
-echo -e "${BOLD}  GSP528 / GSP532 - Task 1: Enable APIs & Setup Environment${NC}"
+echo -e "${BOLD}  GSP532 - Task 1: Enable APIs & Setup Environment${NC}"
 echo -e "${BOLD}======================================================================${NC}"
 echo -e "${CYAN}[*] Project ID:     ${PROJECT_ID}${NC}"
 echo -e "${CYAN}[*] Project Number: ${PROJECT_NUMBER}${NC}"
@@ -47,15 +47,12 @@ PROJECT_NUMBER="${PROJECT_NUMBER}"
 GOOGLE_CLOUD_LOCATION="us-central1"
 EOF
 
-# Enable APIs
+# Enable APIs individually (ignoring agentplatform if pre-managed)
 echo -e "\n${YELLOW}[Step 3] Enabling Google Cloud APIs...${NC}"
-gcloud services enable \
-  agentplatform.googleapis.com \
-  artifactregistry.googleapis.com \
-  compute.googleapis.com \
-  cloudbuild.googleapis.com \
-  run.googleapis.com \
-  --quiet
+for api in artifactregistry.googleapis.com compute.googleapis.com cloudbuild.googleapis.com run.googleapis.com agentplatform.googleapis.com; do
+    echo "Enabling $api..."
+    gcloud services enable $api --quiet 2>/dev/null || true
+done
 
 echo -e "\n${GREEN}======================================================================${NC}"
 echo -e "${GREEN}  TASK 1 COMPLETED SUCCESSFULLY!${NC}"
