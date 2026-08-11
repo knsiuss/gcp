@@ -23,11 +23,11 @@ ID_TOKEN=$(gcloud auth print-identity-token 2>/dev/null || echo "")
 MCP_URL="https://vibe-co-zoo-mcp-server-${PROJECT_NUMBER}.us-central1.run.app/mcp/"
 
 echo -e "${BOLD}======================================================================${NC}"
-echo -e "${BOLD}  GSP532 - Task 4: Configure Gemini MCP & Verify Logs${NC}"
+echo -e "${BOLD}  GSP532 - Task 4: Configure Gemini MCP Settings & Verify Logs${NC}"
 echo -e "${BOLD}======================================================================${NC}"
 echo -e "${CYAN}[*] Project ID:     ${PROJECT_ID}${NC}"
 echo -e "${CYAN}[*] Project Number: ${PROJECT_NUMBER}${NC}"
-echo -e "${CYAN}[*] MCP URL:        ${MCP_URL}${NC}"
+echo -e "${CYAN}[*] MCP Server URL: ${MCP_URL}${NC}"
 
 echo -e "\n${YELLOW}[Step 1] Creating/Updating ~/.gemini/settings.json...${NC}"
 mkdir -p ~/.gemini
@@ -49,11 +49,11 @@ EOF
 
 echo "Configured ~/.gemini/settings.json successfully!"
 
-echo -e "\n${YELLOW}[Step 2] Verifying server logs for vibe-co-zoo-mcp-server...${NC}"
+echo -e "\n${YELLOW}[Step 2] Reading Cloud Run server logs (Task 4 verification requirement)...${NC}"
 gcloud run services logs read vibe-co-zoo-mcp-server --region us-central1 --limit=5 --project="$PROJECT_ID" 2>/dev/null || \
 gcloud run services logs read vibe-zoo-mcp-server --region us-central1 --limit=5 --project="$PROJECT_ID" 2>/dev/null || true
 
 echo -e "\n${GREEN}======================================================================${NC}"
-echo -e "${GREEN}  TASK 4 CONFIGURATION COMPLETED!${NC}"
+echo -e "${GREEN}  TASK 4 COMPLETED!${NC}"
 echo -e "${GREEN}======================================================================${NC}"
-echo -e "${YELLOW}Now click 'Check my progress' on Task 4 in Qwiklabs!${NC}"
+echo -e "${YELLOW}Now click 'Check my progress' on 'Update the agent to use MCP' in Qwiklabs!${NC}"
