@@ -1,6 +1,6 @@
 #!/bin/bash
 # ============================================================================
-# ARC117 Task 3 Ultimate Fixer Execution Script
+# ARC117 Task 3 Comprehensive Aspect Execution Script
 # ============================================================================
 
 set -e
@@ -18,14 +18,14 @@ if [ -z "$PROJECT_ID" ]; then
 fi
 
 echo -e "${BOLD}======================================================================${NC}"
-echo -e "${BOLD}  ARC117 - Task 3 Ultimate Fixer${NC}"
+echo -e "${BOLD}  ARC117 - Task 3 Comprehensive Aspect Fixer${NC}"
 echo -e "${BOLD}======================================================================${NC}"
 echo -e "${CYAN}[*] Project ID: ${PROJECT_ID}${NC}"
 
-cp ~/gcp-labs/arc117-challenge-lab/task3_arc117_ultimate.py . 2>/dev/null || true
-python3 task3_arc117_ultimate.py || python3 ~/gcp-labs/arc117-challenge-lab/task3_arc117_ultimate.py
+cp ~/gcp-labs/arc117-challenge-lab/solve_all_arc117_aspects.py . 2>/dev/null || true
+python3 solve_all_arc117_aspects.py || python3 ~/gcp-labs/arc117-challenge-lab/solve_all_arc117_aspects.py
 
 echo -e "\n${GREEN}======================================================================${NC}"
-echo -e "${GREEN}  TASK 3 ULTIMATE FIX COMPLETED!${NC}"
+echo -e "${GREEN}  TASK 3 COMPREHENSIVE ASPECT FIX COMPLETED!${NC}"
 echo -e "${GREEN}======================================================================${NC}"
 echo -e "${YELLOW}Now click 'Check my progress' on Task 3 in Qwiklabs!${NC}"
