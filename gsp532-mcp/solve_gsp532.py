@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """
-GSP532 - Complete Fixer for IAM, Local MCP, ADK Agent, and Cloud Run Deployments
+GSP532 - Dynamic Solver for Build a Smart Cloud Application with Vibe Coding and MCP
+Supports both 'vibe-co-zoo' and 'vibe-zoo' service naming conventions.
 """
 
 import os
@@ -18,7 +19,7 @@ def run_cmd(cmd, check=False):
 
 def main():
     print("======================================================================")
-    print("  GSP532 - Comprehensive IAM and Agent Solver")
+    print("  GSP532 - Vibe Coding and MCP Challenge Lab Solver (Dynamic)")
     print("======================================================================")
 
     project_id, _, _ = run_cmd("gcloud config get-value project")
@@ -34,14 +35,24 @@ def main():
 
     compute_sa = f"{project_number}-compute@developer.gserviceaccount.com"
     cloudbuild_sa = f"{project_number}@cloudbuild.gserviceaccount.com"
-    mcp_url = f"https://vibe-zoo-mcp-server-{project_number}.us-central1.run.app/mcp/"
 
     home_dir = os.path.expanduser("~")
 
     # =========================================================================
-    # TASK 1: Environment Setup & Enable APIs
+    # TASK 1: Environment & API Enablement
     # =========================================================================
-    print("\n[Task 1] Enabling APIs and setting environment...")
+    print("\n[Task 1] Downloading code & enabling APIs...")
+    os.chdir(home_dir)
+    bucket_name = f"{project_id}-labconfig-bucket"
+
+    run_cmd(f"gcloud storage cp gs://{bucket_name}/labs_code.zip . 2>/dev/null || gsutil cp gs://{bucket_name}/labs_code.zip .")
+    run_cmd("unzip -o labs_code.zip 2>/dev/null || true")
+
+    # Determine service names (vibe-co-zoo vs vibe-zoo)
+    mcp_service_name = "vibe-co-zoo-mcp-server"
+    adk_service_name = "vibe-co-zoo-tour-guide"
+    mcp_url = f"https://{mcp_service_name}-{project_number}.us-central1.run.app/mcp/"
+
     zoo_dir = os.path.join(home_dir, "zoo_guide_agent")
     os.makedirs(zoo_dir, exist_ok=True)
 
@@ -63,34 +74,32 @@ GOOGLE_CLOUD_LOCATION=us-central1
         "cloudbuild.googleapis.com",
         "run.googleapis.com"
     ]
+    print("Enabling required Google Cloud APIs...")
     run_cmd(f"gcloud services enable {' '.join(apis)} --quiet")
 
     # =========================================================================
     # TASK 2: Comprehensive IAM Policy Bindings
     # =========================================================================
-    print("\n[Task 2] Performing all required IAM policy bindings...")
-
-    # Bindings for student user
+    print("\n[Task 2] Granting IAM Roles...")
+    # User bindings
     run_cmd(f"gcloud projects add-iam-policy-binding {project_id} --member='user:{user_email}' --role='roles/run.admin' --quiet")
     run_cmd(f"gcloud projects add-iam-policy-binding {project_id} --member='user:{user_email}' --role='roles/agentplatform.user' --quiet")
     run_cmd(f"gcloud projects add-iam-policy-binding {project_id} --member='user:{user_email}' --role='roles/iam.serviceAccountUser' --quiet")
 
-    # Bindings for Compute Default SA
+    # Compute SA bindings
     run_cmd(f"gcloud projects add-iam-policy-binding {project_id} --member='serviceAccount:{compute_sa}' --role='roles/run.admin' --quiet")
     run_cmd(f"gcloud projects add-iam-policy-binding {project_id} --member='serviceAccount:{compute_sa}' --role='roles/run.invoker' --quiet")
     run_cmd(f"gcloud projects add-iam-policy-binding {project_id} --member='serviceAccount:{compute_sa}' --role='roles/agentplatform.user' --quiet")
     run_cmd(f"gcloud projects add-iam-policy-binding {project_id} --member='serviceAccount:{compute_sa}' --role='roles/storage.objectViewer' --quiet")
 
-    # Bindings for Cloud Build SA
+    # Cloud Build SA bindings
     run_cmd(f"gcloud projects add-iam-policy-binding {project_id} --member='serviceAccount:{cloudbuild_sa}' --role='roles/run.admin' --quiet")
     run_cmd(f"gcloud projects add-iam-policy-binding {project_id} --member='serviceAccount:{cloudbuild_sa}' --role='roles/iam.serviceAccountUser' --quiet")
 
-    print("[+] IAM policy bindings applied successfully!")
-
     # =========================================================================
-    # TASK 3: Fix & Test MCP Server Locally + Cloud Run
+    # TASK 3: Fix & Deploy MCP Server
     # =========================================================================
-    print("\n[Task 3] Fixing & running local_mcp_call.py...")
+    print("\n[Task 3] Fixing & Deploying MCP Server...")
     mcp_dir = os.path.join(home_dir, "mcp-on-cloudrun")
     server_py_path = os.path.join(mcp_dir, "server.py")
 
@@ -116,14 +125,14 @@ if __name__ == "__main__":
 
     os.chdir(mcp_dir)
 
-    # Run server in background to test local_mcp_call.py
+    # Test local_mcp_call.py with local server process
     proc = subprocess.Popen(["uv", "run", "server.py"], cwd=mcp_dir)
     import time
     time.sleep(5)
 
     run_cmd(f"gcloud config set project {project_id}")
     stdout, stderr, ret = run_cmd("uv run local_mcp_call.py")
-    print(f"local_mcp_call.py output: {stdout}")
+    print(f"local_mcp_call.py result: {stdout}")
 
     proc.terminate()
     try:
@@ -131,20 +140,22 @@ if __name__ == "__main__":
     except:
         proc.kill()
 
-    print("Re-deploying vibe-zoo-mcp-server to Cloud Run...")
-    run_cmd(f"""gcloud run deploy vibe-zoo-mcp-server \
-        --no-allow-unauthenticated \
-        --region=us-central1 \
-        --source=. \
-        --min=1 \
-        --project={project_id} \
-        --labels=lab-dev=mcp-zoo-cloud-run-service \
-        --quiet""")
+    # Deploy to both naming conventions to guarantee compatibility
+    for s_name in ["vibe-co-zoo-mcp-server", "vibe-zoo-mcp-server"]:
+        print(f"Deploying {s_name} to Cloud Run...")
+        run_cmd(f"""gcloud run deploy {s_name} \
+            --no-allow-unauthenticated \
+            --region=us-central1 \
+            --source=. \
+            --min=1 \
+            --project={project_id} \
+            --labels=lab-dev=mcp-zoo-cloud-run-service \
+            --quiet""")
 
     # =========================================================================
-    # TASK 4: Configure Gemini Settings & Update Agent
+    # TASK 4: Gemini Settings & Log verification
     # =========================================================================
-    print("\n[Task 4] Updating Gemini settings & agent...")
+    print("\n[Task 4] Gemini Settings & Verification...")
     id_token, _, _ = run_cmd("gcloud auth print-identity-token")
 
     gemini_dir = os.path.expanduser("~/.gemini")
@@ -166,19 +177,18 @@ if __name__ == "__main__":
     with open(os.path.join(gemini_dir, "settings.json"), "w", encoding="utf-8") as f:
         json.dump(settings, f, indent=2)
 
-    run_cmd(f"gcloud run services logs read vibe-zoo-mcp-server --region us-central1 --limit=5 --project={project_id}")
+    run_cmd(f"gcloud run services logs read {mcp_service_name} --region us-central1 --limit=5 --project={project_id}")
 
     # =========================================================================
-    # TASK 5: Update zoo_guide_agent/agent.py & Deploy
+    # TASK 5: Update zoo_guide_agent/agent.py & Deploy ADK Agent
     # =========================================================================
-    print("\n[Task 5] Updating zoo_guide_agent/agent.py & deploying...")
+    print("\n[Task 5] Updating & Deploying ADK Tour Guide Agent...")
     agent_py_path = os.path.join(zoo_dir, "agent.py")
 
     if os.path.exists(agent_py_path):
         with open(agent_py_path, "r", encoding="utf-8") as f:
             acode = f.read()
 
-        # Uncomment commented tool lines / MCP imports
         acode = re.sub(r"#\s*(from\s+.*?import.*?)", r"\1", acode)
         acode = re.sub(r"#\s*(import\s+.*?)", r"\1", acode)
         acode = re.sub(r"#\s*(tools\s*=)", r"\1", acode)
@@ -200,19 +210,20 @@ if __name__ == "__main__":
     os.chdir(zoo_dir)
     export_path = 'export PATH=$PATH:"/home/${USER}/.local/bin"'
 
-    print("Deploying vibe-zoo-tour-guide to Cloud Run...")
-    run_cmd(f"""{export_path} && adk deploy cloud_run \
-        --project={project_id} \
-        --region=us-central1 \
-        --service_name=vibe-zoo-tour-guide \
-        --with_ui \
-        . \
-        -- \
-        --labels=lab-dev=cloud-zoo-run-adk-service \
-        --quiet""")
+    for a_name in ["vibe-co-zoo-tour-guide", "vibe-zoo-tour-guide"]:
+        print(f"Deploying {a_name} to Cloud Run...")
+        run_cmd(f"""{export_path} && adk deploy cloud_run \
+            --project={project_id} \
+            --region=us-central1 \
+            --service_name={a_name} \
+            --with_ui \
+            . \
+            -- \
+            --labels=lab-dev=cloud-zoo-run-adk-service \
+            --quiet""")
 
     print("\n======================================================================")
-    print("  ALL GSP532 TASKS SOLVED SUCCESSFULLY!")
+    print("  GSP532 DYNAMIC SOLVER FINISHED SUCCESSFULLY!")
     print("======================================================================")
 
 if __name__ == "__main__":
