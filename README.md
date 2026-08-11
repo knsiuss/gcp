@@ -257,6 +257,19 @@ Each lab is organized into its own folder. Simply open **Google Cloud Shell** in
     ```
     *Creates the Natural Language service account + API key (Task 1) and runs the entity analysis request, saving the response to `result.json` (Task 2).*
 
+### 23. Using the Natural Language API from Google Docs (GSP126)
+*   **Folder**: `nl-docs-gsp126/`
+*   **Script**: `solve_gsp126.sh`
+*   **Execution**:
+    ```bash
+    git clone https://github.com/knsiuss/gcp.git gcp-labs
+    cd gcp-labs/nl-docs-gsp126
+    chmod +x solve_gsp126.sh
+    ./solve_gsp126.sh
+    ```
+    *Automates Task 1 (enable the Natural Language API) and Task 2 (create a restricted API key). Tasks 3 & 4 are manual in Google Docs — use the ready-to-paste `code.gs` Apps Script.*
+    *The API key is saved to `api_key.txt`.*
+
 ---
 
 ## Web Portal (TypeScript)

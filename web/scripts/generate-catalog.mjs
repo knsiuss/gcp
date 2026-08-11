@@ -77,6 +77,11 @@ const FALLBACK = {
     description: 'Creates a Natural Language service account + API key and runs an entity analysis request.',
     category: 'AI & ML',
   },
+  'nl-docs-gsp126': {
+    name: 'Using the Natural Language API from Google Docs (GSP126)',
+    description: 'Enables the Natural Language API, creates a restricted API key, and provides the complete Apps Script (code.gs) for sentiment highlighting in Google Docs.',
+    category: 'AI & ML',
+  },
   'secure-datalake-arc119': {
     name: 'Secure Data Lake (ARC119)',
     description: 'Automates secure data lake configuration with service accounts, KMS, and access controls.',
