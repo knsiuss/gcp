@@ -1,6 +1,6 @@
 #!/bin/bash
 # ============================================================================
-# GSP1145 - Task 3 Direct REST API Solver for Data Catalog Tags/Aspects
+# GSP1145 - Task 3 Dataplex 2.0 Aspect Attacher (Bypasses Data Catalog Deprecation)
 # ============================================================================
 
 set -e
@@ -18,13 +18,14 @@ if [ -z "$PROJECT_ID" ]; then
 fi
 
 echo -e "${BOLD}======================================================================${NC}"
-echo -e "${BOLD}  GSP1145 - Task 3 Direct REST API Fixer${NC}"
+echo -e "${BOLD}  GSP1145 - Task 3 Dataplex 2.0 Aspect Attacher${NC}"
 echo -e "${BOLD}======================================================================${NC}"
 echo -e "${CYAN}[*] Project ID: ${PROJECT_ID}${NC}"
 
-python3 debug_and_solve_gsp1145.py || python3 ~/gcp-labs/gsp1145-aspects/debug_and_solve_gsp1145.py
+cp ~/gcp-labs/gsp1145-aspects/solve_dataplex_aspects.py . 2>/dev/null || true
+python3 solve_dataplex_aspects.py || python3 ~/gcp-labs/gsp1145-aspects/solve_dataplex_aspects.py
 
 echo -e "\n${GREEN}======================================================================${NC}"
-echo -e "${GREEN}  REST API TAG ATTACHMENT COMPLETED!${NC}"
+echo -e "${GREEN}  DATAPLEX ASPECT ATTACHMENT COMPLETED!${NC}"
 echo -e "${GREEN}======================================================================${NC}"
 echo -e "${YELLOW}Now click 'Check my progress' on Task 3 in Qwiklabs!${NC}"
