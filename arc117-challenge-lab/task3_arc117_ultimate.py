@@ -1,10 +1,6 @@
 #!/usr/bin/env python3
 """
-ARC117 Task 3 Ultimate Fixer
-1. Creates Data Catalog Entry Group '@dataplex' and 'dataplex' in us-east1 & global if missing
-2. Creates Aspect Type & Tag Template 'protected-raw-data-aspect'
-3. Creates Data Catalog Entry for the Zone if needed
-4. Attaches Tag & Aspect to Zone Entry
+ARC117 Task 3 Ultimate Fixer (Escaped Parentheses for gcloud data-catalog)
 """
 
 import os
@@ -32,7 +28,8 @@ def main():
     region = "us-east1"
     lake_id = "customer-engagements"
     zone_id = "raw-event-data"
-    aspect_type_id = "protected-raw-data-aspect"
+    asset_id = "raw-event-files"
+    bucket_id = project_id
 
     # Step 1: Create Entry Groups if missing
     print("\n[Step 1] Creating Entry Groups in us-east1 and global...")
@@ -40,7 +37,7 @@ def main():
         for eg in ["@dataplex", "dataplex", "default"]:
             run_cmd(f"gcloud data-catalog entry-groups create {eg} --location={loc} --project={project_id} --quiet 2>/dev/null || true")
 
-    # Step 2: Create Aspect Type & Tag Template
+    # Step 2: Create Aspect Type & Tag Template with escaped parentheses
     print("\n[Step 2] Creating Aspect Type & Tag Template...")
     aspect_def = "/tmp/aspect_def.json"
     with open(aspect_def, "w") as f:
@@ -58,8 +55,11 @@ def main():
 
     for loc in [region, "global"]:
         for a_id in ["protected-raw-data-aspect", "protected_raw_data_aspect"]:
-            run_cmd(f"gcloud dataplex aspect-types create {a_id} --location={loc} --display-name='Protected Raw Data Aspect' --metadata-template-file={aspect_def} --project={project_id} --quiet 2>/dev/null || true")
-            run_cmd(f"gcloud data-catalog tag-templates create {a_id} --location={loc} --display-name='Protected Raw Data Aspect' --field=id=protected_raw_data_flag,display-name='Protected Raw Data Flag',type=enum(Y|N),required=true --project={project_id} --quiet 2>/dev/null || true")
+            run_cmd(f'gcloud dataplex aspect-types create {a_id} --location={loc} --display-name="Protected Raw Data Aspect" --metadata-template-file={aspect_def} --project={project_id} --quiet 2>/dev/null || true')
+            
+            # Escaped field definition to prevent bash token error
+            field_def = 'id=protected_raw_data_flag,display-name="Protected Raw Data Flag",type="enum(Y|N)",required=true'
+            run_cmd(f'gcloud data-catalog tag-templates create {a_id} --location={loc} --display-name="Protected Raw Data Aspect" --field=\'{field_def}\' --project={project_id} --quiet 2>/dev/null || true')
 
     # Step 3: Zone Entry Resource Path
     zone_res_path = f"projects/{project_id}/locations/{region}/lakes/{lake_id}/zones/{zone_id}"
