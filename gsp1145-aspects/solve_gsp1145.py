@@ -13,6 +13,8 @@ import subprocess
 def run_cmd(cmd):
     print(f"Executing: {cmd}")
     res = subprocess.run(cmd, shell=True, capture_output=True, text=True)
+    if res.returncode != 0:
+        print(f"Stderr: {res.stderr.strip()}")
     return res.stdout.strip(), res.stderr.strip(), res.returncode
 
 def api_request(url, method="GET", data=None, token=None):
@@ -67,9 +69,9 @@ def main():
         --quiet""")
 
     # Wait for lake
-    for i in {1..20}:
+    for i in range(1, 21):
         state, _, _ = run_cmd(f"gcloud dataplex lakes describe orders-lake --location={region} --format='value(state)'")
-        print(f"Lake state: {state}")
+        print(f"Lake state: {state} (Attempt {i}/20)")
         if state == "ACTIVE":
             break
         time.sleep(5)
@@ -85,9 +87,9 @@ def main():
         --quiet""")
 
     # Wait for zone
-    for i in {1..20}:
+    for i in range(1, 21):
         state, _, _ = run_cmd(f"gcloud dataplex zones describe customer-curated-zone --location={region} --lake=orders-lake --format='value(state)'")
-        print(f"Zone state: {state}")
+        print(f"Zone state: {state} (Attempt {i}/20)")
         if state == "ACTIVE":
             break
         time.sleep(5)
@@ -175,11 +177,9 @@ def main():
         }
 
     if entry_name:
-        # Check if entry is in Dataplex Entry v1
         dataplex_entry_url = f"https://dataplex.googleapis.com/v1/{entry_name}?updateMask=aspects"
         api_request(dataplex_entry_url, method="PATCH", data={"aspects": aspects_dict}, token=token)
 
-    # Also try Data Catalog Tag Template attach fallback if needed
     print("\n======================================================================")
     print("  GSP1145 SOLVER FINISHED SUCCESSFULLY!")
     print("======================================================================")
