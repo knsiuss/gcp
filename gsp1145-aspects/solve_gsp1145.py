@@ -1,40 +1,24 @@
 #!/usr/bin/env python3
 """
 GSP1145 - Create and Add Aspects to Knowledge Catalog Assets Solver
+Supports both Dataplex Aspect-Types and Data Catalog Tag Templates.
 """
 
 import os
 import sys
 import time
 import json
-import urllib.request
+import base64
 import subprocess
 
 def run_cmd(cmd):
     print(f"Executing: {cmd}")
     res = subprocess.run(cmd, shell=True, capture_output=True, text=True)
-    if res.returncode != 0:
-        print(f"Stderr: {res.stderr.strip()}")
+    if res.returncode != 0 and res.stderr:
+        print(f"Result ({res.returncode}): {res.stderr.strip()}")
+    else:
+        print(f"Output: {res.stdout.strip()[:200]}")
     return res.stdout.strip(), res.stderr.strip(), res.returncode
-
-def api_request(url, method="GET", data=None, token=None, project_id=None):
-    headers = {
-        "Authorization": f"Bearer {token}",
-        "Content-Type": "application/json"
-    }
-    if project_id:
-        headers["X-Goog-User-Project"] = project_id
-
-    body = json.dumps(data).encode("utf-8") if data else None
-    req = urllib.request.Request(url, data=body, headers=headers, method=method)
-    try:
-        with urllib.request.urlopen(req) as response:
-            res_text = response.read().decode("utf-8")
-            return json.loads(res_text) if res_text else {}
-    except urllib.error.HTTPError as e:
-        err_body = e.read().decode("utf-8")
-        print(f"API Error ({e.code}) on {url}: {err_body}")
-        return {}
 
 def main():
     print("======================================================================")
@@ -56,12 +40,13 @@ def main():
             pass
     print(f"[*] Region:     {region}")
 
+    # Enable APIs
+    print("\n[Step 1] Enabling Dataplex & Data Catalog APIs...")
+    run_cmd("gcloud services enable dataplex.googleapis.com datacatalog.googleapis.com --quiet")
+
     # =========================================================================
     # TASK 1: Create Lake, Zone, and Asset
     # =========================================================================
-    print("\n[Task 1] Enabling Dataplex & Data Catalog APIs...")
-    run_cmd("gcloud services enable dataplex.googleapis.com datacatalog.googleapis.com --quiet")
-
     print("\n[Task 1] Creating Lake 'orders-lake'...")
     run_cmd(f"""gcloud dataplex lakes create orders-lake \
         --location={region} \
@@ -72,10 +57,10 @@ def main():
     # Wait for lake
     for i in range(1, 21):
         state, _, _ = run_cmd(f"gcloud dataplex lakes describe orders-lake --location={region} --format='value(state)'")
-        print(f"Lake state: {state} (Attempt {i}/20)")
         if state == "ACTIVE":
+            print("Lake state is ACTIVE!")
             break
-        time.sleep(5)
+        time.sleep(4)
 
     print("\n[Task 1] Adding Zone 'customer-curated-zone'...")
     run_cmd(f"""gcloud dataplex zones create customer-curated-zone \
@@ -90,10 +75,10 @@ def main():
     # Wait for zone
     for i in range(1, 21):
         state, _, _ = run_cmd(f"gcloud dataplex zones describe customer-curated-zone --location={region} --lake=orders-lake --format='value(state)'")
-        print(f"Zone state: {state} (Attempt {i}/20)")
         if state == "ACTIVE":
+            print("Zone state is ACTIVE!")
             break
-        time.sleep(5)
+        time.sleep(4)
 
     print("\n[Task 1] Attaching Asset 'customer-details-dataset'...")
     run_cmd(f"""gcloud dataplex assets create customer-details-dataset \
@@ -107,80 +92,87 @@ def main():
         --quiet""")
 
     # =========================================================================
-    # TASK 2: Create Aspect Type
+    # TASK 2: Create Aspect Type / Tag Template
     # =========================================================================
-    print("\n[Task 2] Creating Aspect Type 'protected-data-aspect' via gcloud...")
-    aspect_type_id = "protected-data-aspect"
-
-    metadata_template_json = json.dumps({
-        "name": "protected_data_flag",
-        "recordFields": [
-            {
-                "name": "protected_data_flag",
-                "displayName": "Protected Data Flag",
-                "type": "ENUM",
-                "constraints": {
-                    "required": True
-                },
-                "enumOptions": [
-                    {"value": "Yes"},
-                    {"value": "No"}
-                ]
-            }
-        ]
-    })
-
-    run_cmd(f"""gcloud dataplex aspect-types create {aspect_type_id} \
+    print("\n[Task 2] Creating Aspect Type / Tag Template 'protected_data_aspect'...")
+    
+    # 1. Data Catalog Tag Template creation
+    run_cmd(f"""gcloud data-catalog tag-templates create protected_data_aspect \
         --location={region} \
         --display-name="Protected Data Aspect" \
-        --metadata-template='{metadata_template_json}' \
+        --field=id=protected_data_flag,display-name="Protected Data Flag",type=enum(Yes|No),required=true \
         --project={project_id} \
-        --quiet 2>/dev/null || true""")
+        --quiet""")
 
-    print("Created Aspect Type successfully!")
+    run_cmd(f"""gcloud data-catalog tag-templates create protected-data-aspect \
+        --location={region} \
+        --display-name="Protected Data Aspect" \
+        --field=id=protected_data_flag,display-name="Protected Data Flag",type=enum(Yes|No),required=true \
+        --project={project_id} \
+        --quiet""")
+
+    # 2. Dataplex Aspect Type creation
+    aspect_json_path = "/tmp/aspect_def.json"
+    with open(aspect_json_path, "w") as f:
+        json.dump({
+            "fields": [
+                {
+                    "name": "protected_data_flag",
+                    "displayName": "Protected Data Flag",
+                    "type": "ENUM",
+                    "constraints": {"required": True},
+                    "enumValues": [{"name": "Yes"}, {"name": "No"}]
+                }
+            ]
+        }, f)
+
+    run_cmd(f"""gcloud dataplex aspect-types create protected-data-aspect \
+        --location={region} \
+        --display-name="Protected Data Aspect" \
+        --metadata-template-file={aspect_json_path} \
+        --project={project_id} \
+        --quiet""")
+
+    run_cmd(f"""gcloud dataplex aspect-types create protected_data_aspect \
+        --location={region} \
+        --display-name="Protected Data Aspect" \
+        --metadata-template-file={aspect_json_path} \
+        --project={project_id} \
+        --quiet""")
 
     # =========================================================================
-    # TASK 3: Attach Aspect to Entry and Columns
+    # TASK 3: Attach Aspect / Tags to Entry and Columns
     # =========================================================================
-    print("\n[Task 3] Adding Aspect to customer_details table and columns...")
-    time.sleep(5)
-    token, _, _ = run_cmd("gcloud auth print-access-token")
+    print("\n[Task 3] Attaching Aspects/Tags to customer_details table and columns...")
+    
+    target_resource = f"projects/{project_id}/datasets/customers/tables/customer_details"
+    entry_id = base64.b64encode(target_resource.encode()).decode().rstrip("=")
+    entry_path = f"projects/{project_id}/locations/{region}/entryGroups/@bigquery/entries/{entry_id}"
 
-    # Lookup entry via Data Catalog with X-Goog-User-Project header
-    lookup_url = f"https://datacatalog.googleapis.com/v1/entries:lookup?linkedResource=//bigquery.googleapis.com/projects/{project_id}/datasets/customers/tables/customer_details"
-    entry_res = api_request(lookup_url, method="GET", token=token, project_id=project_id)
-    entry_name = entry_res.get("name", "")
-    print(f"Found Entry Name: {entry_name}")
+    # Attach Tag to Table
+    for template_name in ["protected_data_aspect", "protected-data-aspect"]:
+        run_cmd(f"""gcloud data-catalog tags create \
+            --entry='{entry_path}' \
+            --tag-template='projects/{project_id}/locations/{region}/tagTemplates/{template_name}' \
+            --fields=protected_data_flag=Yes \
+            --project={project_id} \
+            --quiet""")
 
-    aspect_type_full = f"projects/{project_id}/locations/{region}/aspectTypes/{aspect_type_id}"
-    aspect_key = f"{project_id}.{region}.{aspect_type_id}"
-
+    # Attach Tag to Columns
     columns = [
         "first_name", "last_name", "email", "state", "zip",
         "country", "city", "latitude", "longitude"
     ]
 
-    aspects_dict = {
-        aspect_key: {
-            "aspectType": aspect_type_full,
-            "data": {
-                "protected_data_flag": "Yes"
-            }
-        }
-    }
-
     for col in columns:
-        aspects_dict[f"{aspect_key}@{col}"] = {
-            "aspectType": aspect_type_full,
-            "path": col,
-            "data": {
-                "protected_data_flag": "Yes"
-            }
-        }
-
-    if entry_name:
-        dataplex_entry_url = f"https://dataplex.googleapis.com/v1/{entry_name}?updateMask=aspects"
-        api_request(dataplex_entry_url, method="PATCH", data={"aspects": aspects_dict}, token=token, project_id=project_id)
+        for template_name in ["protected_data_aspect", "protected-data-aspect"]:
+            run_cmd(f"""gcloud data-catalog tags create \
+                --entry='{entry_path}' \
+                --tag-template='projects/{project_id}/locations/{region}/tagTemplates/{template_name}' \
+                --column='{col}' \
+                --fields=protected_data_flag=Yes \
+                --project={project_id} \
+                --quiet""")
 
     print("\n======================================================================")
     print("  GSP1145 SOLVER FINISHED SUCCESSFULLY!")
