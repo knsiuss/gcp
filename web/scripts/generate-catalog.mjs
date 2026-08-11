@@ -52,6 +52,11 @@ const FALLBACK = {
     description: 'Automates monitoring environments with Google Cloud Managed Service for Prometheus.',
     category: 'Observability',
   },
+  'gmp-exporters-gsp1026': {
+    name: 'Collect Metrics from Exporters (GSP1026)',
+    description: 'Deploys a GKE cluster, example app, PodMonitoring, and runs GMP prometheus binary + node exporter with config.yaml (asks for the zone).',
+    category: 'Observability',
+  },
   'gsp514-build-data-mesh-knowledge-catalog': {
     name: 'Build a Data Mesh with Knowledge Catalog (GSP514)',
     description: 'Automated solver for the Build a Data Mesh with Knowledge Catalog challenge lab.',

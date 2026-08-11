@@ -270,6 +270,19 @@ Each lab is organized into its own folder. Simply open **Google Cloud Shell** in
     *Automates Task 1 (enable the Natural Language API) and Task 2 (create a restricted API key). Tasks 3 & 4 are manual in Google Docs — use the ready-to-paste `code.gs` Apps Script.*
     *The API key is saved to `api_key.txt`.*
 
+### 24. Collect Metrics from Exporters using the Managed Service for Prometheus (GSP1026)
+*   **Folder**: `gmp-exporters-gsp1026/`
+*   **Script**: `solve_gsp1026.sh`
+*   **Execution**:
+    ```bash
+    git clone https://github.com/knsiuss/gcp.git gcp-labs
+    cd gcp-labs/gmp-exporters-gsp1026
+    chmod +x solve_gsp1026.sh
+    ./solve_gsp1026.sh
+    ```
+    *Prompts for the zone (input method), then automates all 7 tasks: GKE cluster, namespace, example app, PodMonitoring, prometheus binary, and node exporter + config.yaml upload.*
+    *Prometheus/node_exporter run in the background - to view metrics use Cloud Shell Web Preview on port 9090.*
+
 ---
 
 ## Web Portal (TypeScript)
