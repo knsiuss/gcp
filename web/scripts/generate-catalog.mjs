@@ -22,6 +22,11 @@ const FALLBACK = {
       'Automates creating the DMS source connection profile, the one-time migration job, the continuous migration job with VPC peering, testing replication, and promoting the destination.',
     category: 'Database',
   },
+  'gke-deployments-gsp053': {
+    name: 'Managing Deployments Using Kubernetes Engine (GSP053)',
+    description: 'Deploys fortune-app on a bootcamp cluster: create/scale deployment, rolling update, canary, and blue-green (asks for the zone).',
+    category: 'Kubernetes / GKE',
+  },
   'event-driven-messaging-arc113': {
     name: 'Event-Driven Messaging with Pub/Sub (ARC113)',
     description: 'Automates Pub/Sub topics, subscriptions, Cloud Functions, and event-driven resources for ARC113.',
