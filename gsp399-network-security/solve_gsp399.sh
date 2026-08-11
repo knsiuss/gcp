@@ -1,6 +1,6 @@
 #!/bin/bash
 # ============================================================================
-# GSP399 Task 1 Specialized Fixer Script
+# GSP399 Task 1 Target Secure Tags Fixer Execution Script
 # ============================================================================
 
 set -e
@@ -18,14 +18,14 @@ if [ -z "$PROJECT_ID" ]; then
 fi
 
 echo -e "${BOLD}======================================================================${NC}"
-echo -e "${BOLD}  GSP399 - Task 1 Global Network Firewall Policy Fixer${NC}"
+echo -e "${BOLD}  GSP399 - Task 1 Target Secure Tags Solver${NC}"
 echo -e "${BOLD}======================================================================${NC}"
 echo -e "${CYAN}[*] Project ID: ${PROJECT_ID}${NC}"
 
-cp ~/gcp-labs/gsp399-network-security/task1_gsp399_fix.py . 2>/dev/null || true
-python3 task1_gsp399_fix.py || python3 ~/gcp-labs/gsp399-network-security/task1_gsp399_fix.py
+cp ~/gcp-labs/gsp399-network-security/task1_iam_tags_fix.py . 2>/dev/null || true
+python3 task1_iam_tags_fix.py || python3 ~/gcp-labs/gsp399-network-security/task1_iam_tags_fix.py
 
 echo -e "\n${GREEN}======================================================================${NC}"
-echo -e "${GREEN}  TASK 1 FIREWALL MIGRATION COMPLETED!${NC}"
+echo -e "${GREEN}  TASK 1 TARGET SECURE TAGS MIGRATION COMPLETED!${NC}"
 echo -e "${GREEN}======================================================================${NC}"
 echo -e "${YELLOW}Now click 'Check my progress' on Task 1 in Qwiklabs!${NC}"
