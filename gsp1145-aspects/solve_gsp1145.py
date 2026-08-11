@@ -17,11 +17,14 @@ def run_cmd(cmd):
         print(f"Stderr: {res.stderr.strip()}")
     return res.stdout.strip(), res.stderr.strip(), res.returncode
 
-def api_request(url, method="GET", data=None, token=None):
+def api_request(url, method="GET", data=None, token=None, project_id=None):
     headers = {
         "Authorization": f"Bearer {token}",
         "Content-Type": "application/json"
     }
+    if project_id:
+        headers["X-Goog-User-Project"] = project_id
+
     body = json.dumps(data).encode("utf-8") if data else None
     req = urllib.request.Request(url, data=body, headers=headers, method=method)
     try:
@@ -52,8 +55,6 @@ def main():
         except Exception:
             pass
     print(f"[*] Region:     {region}")
-
-    token, _, _ = run_cmd("gcloud auth print-access-token")
 
     # =========================================================================
     # TASK 1: Create Lake, Zone, and Asset
@@ -108,33 +109,34 @@ def main():
     # =========================================================================
     # TASK 2: Create Aspect Type
     # =========================================================================
-    print("\n[Task 2] Creating Aspect Type 'protected-data-aspect'...")
+    print("\n[Task 2] Creating Aspect Type 'protected-data-aspect' via gcloud...")
     aspect_type_id = "protected-data-aspect"
-    aspect_url = f"https://dataplex.googleapis.com/v1/projects/{project_id}/locations/{region}/aspectTypes?aspectTypeId={aspect_type_id}"
-    
-    aspect_payload = {
-        "displayName": "Protected Data Aspect",
-        "metadataTemplate": {
-            "type": "record",
-            "fields": [
-                {
-                    "name": "protected_data_flag",
-                    "displayName": "Protected Data Flag",
-                    "type": "enum",
-                    "constraints": {
-                        "required": True
-                    },
-                    "enumOptions": [
-                        {"value": "Yes"},
-                        {"value": "No"}
-                    ]
-                }
-            ]
-        }
-    }
-    
-    token, _, _ = run_cmd("gcloud auth print-access-token")
-    api_request(aspect_url, method="POST", data=aspect_payload, token=token)
+
+    metadata_template_json = json.dumps({
+        "name": "protected_data_flag",
+        "recordFields": [
+            {
+                "name": "protected_data_flag",
+                "displayName": "Protected Data Flag",
+                "type": "ENUM",
+                "constraints": {
+                    "required": True
+                },
+                "enumOptions": [
+                    {"value": "Yes"},
+                    {"value": "No"}
+                ]
+            }
+        ]
+    })
+
+    run_cmd(f"""gcloud dataplex aspect-types create {aspect_type_id} \
+        --location={region} \
+        --display-name="Protected Data Aspect" \
+        --metadata-template='{metadata_template_json}' \
+        --project={project_id} \
+        --quiet 2>/dev/null || true""")
+
     print("Created Aspect Type successfully!")
 
     # =========================================================================
@@ -144,9 +146,9 @@ def main():
     time.sleep(5)
     token, _, _ = run_cmd("gcloud auth print-access-token")
 
-    # Lookup entry via Data Catalog
+    # Lookup entry via Data Catalog with X-Goog-User-Project header
     lookup_url = f"https://datacatalog.googleapis.com/v1/entries:lookup?linkedResource=//bigquery.googleapis.com/projects/{project_id}/datasets/customers/tables/customer_details"
-    entry_res = api_request(lookup_url, method="GET", token=token)
+    entry_res = api_request(lookup_url, method="GET", token=token, project_id=project_id)
     entry_name = entry_res.get("name", "")
     print(f"Found Entry Name: {entry_name}")
 
@@ -178,7 +180,7 @@ def main():
 
     if entry_name:
         dataplex_entry_url = f"https://dataplex.googleapis.com/v1/{entry_name}?updateMask=aspects"
-        api_request(dataplex_entry_url, method="PATCH", data={"aspects": aspects_dict}, token=token)
+        api_request(dataplex_entry_url, method="PATCH", data={"aspects": aspects_dict}, token=token, project_id=project_id)
 
     print("\n======================================================================")
     print("  GSP1145 SOLVER FINISHED SUCCESSFULLY!")
