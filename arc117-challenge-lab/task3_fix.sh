@@ -1,6 +1,6 @@
 #!/bin/bash
 # ============================================================================
-# ARC117 Task 3 Zone Entry Aspect Attacher (gcloud alpha dataplex)
+# ARC117 Task 3 Entry Group Discovery & Aspect Attacher
 # ============================================================================
 
 set -e
@@ -18,14 +18,14 @@ if [ -z "$PROJECT_ID" ]; then
 fi
 
 echo -e "${BOLD}======================================================================${NC}"
-echo -e "${BOLD}  ARC117 - Task 3 Zone Entry Aspect Attacher${NC}"
+echo -e "${BOLD}  ARC117 - Task 3 Entry Group Discovery & Aspect Attacher${NC}"
 echo -e "${BOLD}======================================================================${NC}"
 echo -e "${CYAN}[*] Project ID: ${PROJECT_ID}${NC}"
 
-cp ~/gcp-labs/arc117-challenge-lab/test_zone_entry.py . 2>/dev/null || true
-python3 test_zone_entry.py || python3 ~/gcp-labs/arc117-challenge-lab/test_zone_entry.py
+cp ~/gcp-labs/arc117-challenge-lab/find_entry_groups.py . 2>/dev/null || true
+python3 find_entry_groups.py || python3 ~/gcp-labs/arc117-challenge-lab/find_entry_groups.py
 
 echo -e "\n${GREEN}======================================================================${NC}"
-echo -e "${GREEN}  TASK 3 ZONE ASPECT COMPLETED!${NC}"
+echo -e "${GREEN}  TASK 3 ENTRY GROUP DISCOVERY SOLVED!${NC}"
 echo -e "${GREEN}======================================================================${NC}"
 echo -e "${YELLOW}Now click 'Check my progress' on Task 3 in Qwiklabs!${NC}"
