@@ -1,6 +1,6 @@
 #!/bin/bash
 # ============================================================================
-# GSP1145 - Task 3 Multi-location Dataplex Entry Aspect Attacher
+# GSP1145 - Task 3 Global Dataplex Aspect Attacher
 # ============================================================================
 
 set -e
@@ -18,14 +18,14 @@ if [ -z "$PROJECT_ID" ]; then
 fi
 
 echo -e "${BOLD}======================================================================${NC}"
-echo -e "${BOLD}  GSP1145 - Task 3 Dataplex Multi-location Aspect Attacher${NC}"
+echo -e "${BOLD}  GSP1145 - Task 3 Global Dataplex Aspect Attacher${NC}"
 echo -e "${BOLD}======================================================================${NC}"
 echo -e "${CYAN}[*] Project ID: ${PROJECT_ID}${NC}"
 
-cp ~/gcp-labs/gsp1145-aspects/find_and_patch_entry.py . 2>/dev/null || true
-python3 find_and_patch_entry.py || python3 ~/gcp-labs/gsp1145-aspects/find_and_patch_entry.py
+cp ~/gcp-labs/gsp1145-aspects/solve_global_aspects.py . 2>/dev/null || true
+python3 solve_global_aspects.py || python3 ~/gcp-labs/gsp1145-aspects/solve_global_aspects.py
 
 echo -e "\n${GREEN}======================================================================${NC}"
-echo -e "${GREEN}  DATAPLEX ASPECT ATTACHMENT COMPLETED!${NC}"
+echo -e "${GREEN}  GLOBAL DATAPLEX ASPECT ATTACHMENT COMPLETED!${NC}"
 echo -e "${GREEN}======================================================================${NC}"
 echo -e "${YELLOW}Now click 'Check my progress' on Task 3 in Qwiklabs!${NC}"
