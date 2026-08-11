@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-ARC117 Task 3 Fixer - Covers all entry variations, location variations, and API formats
+ARC117 Task 3 Fixer - Strictly formats map keys as "project.location.aspectType"
 """
 
 import os
@@ -34,7 +34,7 @@ def api_request(url, method="GET", data=None, token=None):
 
 def main():
     print("======================================================================")
-    print("  ARC117 Task 3 Complete Fixer (Aspect Creation & Zone/Asset Attach)")
+    print("  ARC117 Task 3 Complete Fixer (Strict Key Format)")
     print("======================================================================")
 
     project_id, _, _ = run_cmd("gcloud config get-value project")
@@ -114,16 +114,18 @@ def main():
         entries_to_patch.append(f"projects/{project_id}/locations/{loc}/entryGroups/@storage/entries/{bucket_b64_std}")
         entries_to_patch.append(f"projects/{project_id}/locations/{loc}/entryGroups/@storage/entries/{bucket_b64_url}")
 
-    # 3. Patch aspects to entries via Dataplex REST API
-    print("\n[Step 2] Attaching Aspect to entries via REST API...")
+    # 3. Patch aspects using STRICT "project.location.aspectType" key format
+    print("\n[Step 2] Attaching Aspect to entries via REST API with strict key format...")
 
     for a_id in ["protected-raw-data-aspect", "protected_raw_data_aspect"]:
         for loc in [region, "global"]:
             aspect_type_full = f"projects/{project_id}/locations/{loc}/aspectTypes/{a_id}"
 
-            for key_format in [a_id, f"{project_id}.{loc}.{a_id}", f"{project_number}.{loc}.{a_id}"]:
+            for key_prefix in [project_id, project_number]:
+                full_key = f"{key_prefix}.{loc}.{a_id}"
+
                 aspects_payload = {
-                    key_format: {
+                    full_key: {
                         "aspectType": aspect_type_full,
                         "data": {"protected_raw_data_flag": "Y"}
                     }
@@ -134,23 +136,6 @@ def main():
                 for entry_name in set(entries_to_patch):
                     patch_url = f"https://dataplex.googleapis.com/v1/{entry_name}?updateMask=aspects"
                     api_request(patch_url, method="PATCH", data=patch_data, token=token)
-
-    # 4. Attach Data Catalog Tags fallback
-    print("\n[Step 3] Attaching Data Catalog Tags fallback...")
-    for loc in [region, "global"]:
-        for t_id in ["protected-raw-data-aspect", "protected_raw_data_aspect"]:
-            tag_template_path = f"projects/{project_id}/locations/{loc}/tagTemplates/{t_id}"
-
-            for e_path in [
-                f"projects/{project_id}/locations/{loc}/entryGroups/@storage/entries/{bucket_b64_std}",
-                f"projects/{project_id}/locations/{loc}/entryGroups/@dataplex/entries/{zone_b64_std}"
-            ]:
-                run_cmd(f"""gcloud data-catalog tags create \
-                    --entry='{e_path}' \
-                    --tag-template='{tag_template_path}' \
-                    --fields=protected_raw_data_flag=Y \
-                    --project={project_id} \
-                    --quiet 2>/dev/null || true""")
 
     print("\n======================================================================")
     print("  ARC117 TASK 3 FIXER COMPLETED SUCCESSFULLY!")
