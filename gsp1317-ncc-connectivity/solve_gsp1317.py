@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 GSP1317 - Establish VPC to VPC Connectivity using NCC Python Solver
-Dynamically calculates IP address from subnet CIDR for PSC endpoint
+Fixes Step 6 shell escaping issue by transferring /tmp/run_psql.sh via SCP
 """
 
 import os
@@ -50,7 +50,7 @@ def main():
     print(f"[*] Subnet CIDR: {cidr}")
 
     net = ipaddress.ip_network(cidr)
-    target_ip = str(net[50]) # e.g. 10.2.2.50
+    target_ip = str(net[50])
     print(f"[*] Calculated Target IP: {target_ip}")
 
     # Reserve IP
@@ -81,15 +81,21 @@ def main():
     if dns_rec and reserved_ip:
         run_cmd(f"gcloud dns record-sets create '{dns_rec}' --project={project_id} --type=A --rrdatas={reserved_ip} --zone=cloudsql-dns --quiet 2>/dev/null || true")
 
-    # Step 6: Connect to Cloud SQL via SSH & Initialize Database
+    # Step 6: Connect to Cloud SQL via SCP + SSH
     print("\n[Step 6] Initializing PostgreSQL database on cloudsql-client...")
     if dns_rec:
-        psql_script = f"""PGPASSWORD=changeme psql -h {dns_rec} -U postgres -d postgres -c 'CREATE DATABASE company;' 2>/dev/null || true
-PGPASSWORD=changeme psql -h {dns_rec} -U postgres -d company -c 'CREATE TABLE employees (id SERIAL PRIMARY KEY, first VARCHAR(255) NOT NULL, last VARCHAR(255) NOT NULL, salary DECIMAL (10, 2));' 2>/dev/null || true
-PGPASSWORD=changeme psql -h {dns_rec} -U postgres -d company -c "INSERT INTO employees (first, last, salary) VALUES ('Max', 'Mustermann', 5000.00), ('Anna', 'Schmidt', 7000.00), ('Peter', 'Mayer', 6000.00);" 2>/dev/null || true
-PGPASSWORD=changeme psql -h {dns_rec} -U postgres -d company -c 'SELECT * FROM employees;'
-"""
-        run_cmd(f"gcloud compute ssh cloudsql-client --zone={zone} --tunnel-through-iap --project={project_id} --quiet --command=\"{psql_script}\" 2>/dev/null || true")
+        psql_script_path = "/tmp/run_psql.sh"
+        with open(psql_script_path, "w") as f:
+            f.write(f"""#!/bin/bash
+export PGPASSWORD=changeme
+psql -h {dns_rec} -U postgres -d postgres -c 'CREATE DATABASE company;' 2>/dev/null || true
+psql -h {dns_rec} -U postgres -d company -c 'CREATE TABLE employees (id SERIAL PRIMARY KEY, first VARCHAR(255) NOT NULL, last VARCHAR(255) NOT NULL, salary DECIMAL (10, 2));' 2>/dev/null || true
+psql -h {dns_rec} -U postgres -d company -c "INSERT INTO employees (first, last, salary) VALUES ('Max', 'Mustermann', 5000.00), ('Anna', 'Schmidt', 7000.00), ('Peter', 'Mayer', 6000.00);" 2>/dev/null || true
+psql -h {dns_rec} -U postgres -d company -c 'SELECT * FROM employees;'
+""")
+
+        run_cmd(f"gcloud compute scp {psql_script_path} cloudsql-client:/tmp/run_psql.sh --zone={zone} --tunnel-through-iap --project={project_id} --quiet 2>/dev/null || true")
+        run_cmd(f"gcloud compute ssh cloudsql-client --zone={zone} --tunnel-through-iap --project={project_id} --quiet --command='chmod +x /tmp/run_psql.sh && /tmp/run_psql.sh' 2>/dev/null || true")
 
     print("\n======================================================================")
     print("  GSP1317 SOLVER COMPLETED SUCCESSFULLY!")
