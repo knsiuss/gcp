@@ -20,8 +20,8 @@ if [ -n "$DEVSHELL_PROJECT_ID" ]; then
     gcloud config set project "$DEVSHELL_PROJECT_ID" --quiet 2>/dev/null || true
 fi
 
-PROJECT_ID=$(gcloud config get-value project 2>/dev/null)
-REGION="europe-west4"
+export PROJECT_ID=$(gcloud config get-value project 2>/dev/null)
+export REGION="europe-west4"
 
 gcloud config set compute/region $REGION --quiet
 gcloud config set deploy/region $REGION --quiet
@@ -114,6 +114,8 @@ done
 
 for CONTEXT in ${CONTEXTS[@]}; do
     envsubst < clouddeploy-config/target-$CONTEXT.yaml.template > clouddeploy-config/target-$CONTEXT.yaml
+    sed -i "s/{{project-id}}/$PROJECT_ID/g" clouddeploy-config/target-$CONTEXT.yaml
+    sed -i "s/\${PROJECT_ID}/$PROJECT_ID/g" clouddeploy-config/target-$CONTEXT.yaml
     gcloud beta deploy apply --file clouddeploy-config/target-$CONTEXT.yaml --quiet || gcloud deploy apply --file clouddeploy-config/target-$CONTEXT.yaml --quiet
 done
 
