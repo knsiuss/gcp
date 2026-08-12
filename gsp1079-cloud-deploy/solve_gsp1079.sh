@@ -58,9 +58,13 @@ gcloud artifacts repositories create web-app \
     --project=$PROJECT_ID --quiet 2>/dev/null || true
 
 # =========================================================================
-# TASK 4: Build container images with Skaffold & Cloud Build
+# TASK 4: Create CloudBuild Bucket & Build container images with Skaffold
 # =========================================================================
-echo -e "\n${YELLOW}[Task 4] Preparing web application codebase & building images...${NC}"
+echo -e "\n${YELLOW}[Task 4] Creating Cloud Build Storage Bucket & Building images...${NC}"
+gcloud storage buckets create gs://${PROJECT_ID}_cloudbuild --location=$REGION --project=$PROJECT_ID 2>/dev/null || \
+gcloud storage buckets create gs://${PROJECT_ID}_cloudbuild --project=$PROJECT_ID 2>/dev/null || \
+gsutil mb -l $REGION -p $PROJECT_ID gs://${PROJECT_ID}_cloudbuild 2>/dev/null || true
+
 cd ~
 rm -rf cloud-deploy-tutorials 2>/dev/null || true
 git clone https://github.com/GoogleCloudPlatform/cloud-deploy-tutorials.git
@@ -69,8 +73,6 @@ git checkout c3cae80 --quiet
 cd tutorials/base
 
 envsubst < clouddeploy-config/skaffold.yaml.template > web/skaffold.yaml
-
-gcloud storage buckets create -p $PROJECT_ID gs://${PROJECT_ID}_cloudbuild 2>/dev/null || true
 
 cd web
 skaffold build --interactive=false \
