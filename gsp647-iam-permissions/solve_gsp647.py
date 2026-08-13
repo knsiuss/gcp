@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """
 GSP647 - Configuring IAM Permissions with gcloud Master Solver
-Restores active_config to the owner profile containing student-04 credentials,
-creates config_user2 file, and executes all IAM bindings and VM creations.
+Dynamically detects Cloud Shell configuration name (e.g. cloudshell-17511),
+creates user2 profile, switches back to Cloud Shell active config, and runs all IAM/VM tasks.
 """
 
 import os
@@ -25,37 +25,17 @@ def main():
     print("  GSP647 - Configuring IAM Permissions with gcloud Master Solver")
     print("======================================================================")
 
-    user1 = "student-04-be1599954870@qwiklabs.net"
-    user2 = "student-01-bd78082f8847@qwiklabs.net"
+    # 1. Discover Initial Cloud Shell Configuration Name
+    configs_raw, _, _ = run_cmd("gcloud config configurations list --format='value(name)'")
+    configs = [c.strip() for c in configs_raw.splitlines() if c.strip()]
+    
+    owner_config = next((c for c in configs if c != "user2"), "default")
+    print(f"[*] Detected Owner gcloud configuration profile name: '{owner_config}'")
 
-    # Step 1: Force active_config back to the profile with Owner (user1) credentials
-    config_dir = os.path.expanduser("~/.config/gcloud/configurations")
-    active_config_file = os.path.expanduser("~/.config/gcloud/active_config")
+    # Activate Owner configuration profile
+    run_cmd(f"gcloud config configurations activate {owner_config} --quiet 2>/dev/null || true")
 
-    owner_config_name = "default"
-    if os.path.exists(config_dir):
-        for fname in os.listdir(config_dir):
-            if fname.startswith("config_") and fname != "config_user2":
-                fpath = os.path.join(config_dir, fname)
-                try:
-                    with open(fpath, "r") as f:
-                        content = f.read()
-                        if user1 in content or "student-04" in content or "account" in content:
-                            owner_config_name = fname.replace("config_", "")
-                            break
-                except Exception:
-                    pass
-
-    print(f"[*] Resetting active gcloud configuration to owner profile: {owner_config_name}")
-    try:
-        with open(active_config_file, "w") as f:
-            f.write(owner_config_name + "\n")
-    except Exception as e:
-        print(f"Active config write warning: {e}")
-
-    run_cmd(f"gcloud config configurations activate {owner_config_name} --quiet 2>/dev/null || true")
-
-    # Discover Projects using Owner credentials
+    # 2. Discover Projects using Owner credentials
     p_list_raw, _, _ = run_cmd("gcloud projects list --format='value(projectId)'")
     projects = [p.strip() for p in p_list_raw.splitlines() if p.strip()]
     print(f"Discovered Projects: {projects}")
@@ -70,29 +50,22 @@ def main():
     print(f"[*] Project 1: {project1}")
     print(f"[*] Project 2: {project2}")
 
-    # Set compute region and zone for owner profile
+    user1 = "student-04-be1599954870@qwiklabs.net"
+    user2 = "student-01-bd78082f8847@qwiklabs.net"
+
+    # Set compute region and zone on Owner profile
     run_cmd(f"gcloud config set compute/region us-east1 --quiet")
     run_cmd(f"gcloud config set compute/zone us-east1-b --quiet")
 
-    # Step 2: Directly write config_user2 file
-    os.makedirs(config_dir, exist_ok=True)
-    user2_config_file = os.path.join(config_dir, "config_user2")
+    # 3. Create user2 configuration profile via gcloud & set properties
+    run_cmd(f"gcloud config configurations create user2 --quiet 2>/dev/null || true")
+    run_cmd(f"gcloud config set account {user2} --configuration=user2 --quiet 2>/dev/null || true")
+    run_cmd(f"gcloud config set project {project2} --configuration=user2 --quiet 2>/dev/null || true")
+    run_cmd(f"gcloud config set compute/region us-east1 --configuration=user2 --quiet 2>/dev/null || true")
+    run_cmd(f"gcloud config set compute/zone us-east1-b --configuration=user2 --quiet 2>/dev/null || true")
 
-    user2_config_content = f"""[core]
-account = {user2}
-project = {project2}
-
-[compute]
-region = us-east1
-zone = us-east1-b
-"""
-    with open(user2_config_file, "w") as f:
-        f.write(user2_config_content)
-    print(f"[*] Created user2 gcloud configuration file: {user2_config_file}")
-
-    # Ensure active config remains owner profile
-    with open(active_config_file, "w") as f:
-        f.write(owner_config_name + "\n")
+    # Re-activate Owner profile immediately
+    run_cmd(f"gcloud config configurations activate {owner_config} --quiet")
 
     # =========================================================================
     # TASK 1: Create instance lab-1 in Project 1 & Update default zone
@@ -152,18 +125,13 @@ zone = us-east1-b
     vm_zone = vm_zone_out.strip() if vm_zone_out else "us-east1-c"
 
     remote_script = f"""#!/bin/bash
-mkdir -p ~/.config/gcloud/configurations
-cat <<'EOF' > ~/.config/gcloud/configurations/config_user2
-[core]
-account = {user2}
-project = {project2}
-
-[compute]
-region = us-east1
-zone = us-east1-b
-EOF
 gcloud config set compute/region us-east1 --quiet 2>/dev/null || true
 gcloud config set compute/zone us-east1-b --quiet 2>/dev/null || true
+gcloud config configurations create user2 --quiet 2>/dev/null || true
+gcloud config set account {user2} --configuration=user2 --quiet 2>/dev/null || true
+gcloud config set project {project2} --configuration=user2 --quiet 2>/dev/null || true
+gcloud config set compute/region us-east1 --configuration=user2 --quiet 2>/dev/null || true
+gcloud config set compute/zone us-east1-b --configuration=user2 --quiet 2>/dev/null || true
 """
     with open("/tmp/vm_setup.sh", "w") as f:
         f.write(remote_script)
