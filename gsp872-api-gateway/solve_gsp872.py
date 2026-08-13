@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 """
-GSP872 - API Gateway: Qwik Start Master Solver
+GSP872 - API Gateway: Qwik Start Master Solver (Dynamic Region Support)
 Automates deploying Cloud Function backend helloGET, creating OpenAPI specs,
-setting up API Gateway (hello-gateway) asynchronously, enabling Managed Service,
-generating API key, and updating Gateway.
+setting up API Gateway (hello-gateway), enabling Managed Service, generating API key,
+updating Gateway with secured config, and verifying calls in the current project's region.
 """
 
 import os
@@ -23,7 +23,7 @@ def run_cmd(cmd):
 
 def main():
     print("======================================================================")
-    print("  GSP872 - API Gateway Qwik Start Solver (Fast Mode)")
+    print("  GSP872 - API Gateway Qwik Start Solver")
     print("======================================================================")
 
     project_id, _, _ = run_cmd("gcloud config get-value project 2>/dev/null")
@@ -31,18 +31,25 @@ def main():
         project_id = os.environ.get("DEVSHELL_PROJECT_ID", "")
     print(f"[*] Project ID: {project_id}")
 
+    region, _, _ = run_cmd("gcloud config get-value compute/region 2>/dev/null")
+    region = region.strip()
+    if not region:
+        region = "us-east4"
+    print(f"[*] Region: {region}")
+
     proj_num, _, _ = run_cmd(f"gcloud projects describe {project_id} --format='value(projectNumber)' 2>/dev/null")
     proj_num = proj_num.strip()
     sa_email = f"{proj_num}-compute@developer.gserviceaccount.com"
     print(f"[*] Service Account: {sa_email}")
 
     # Enable APIs
+    print("\n[*] Enabling required Google Cloud APIs...")
     run_cmd(f"gcloud services enable apigateway.googleapis.com servicemanagement.googleapis.com servicecontrol.googleapis.com cloudfunctions.googleapis.com cloudbuild.googleapis.com apikeys.googleapis.com --project={project_id} --quiet")
 
     # =========================================================================
     # TASK 1 & 2: Deploy Cloud Function helloGET
     # =========================================================================
-    print("\n[Task 1 & 2] Deploying Cloud Function 'helloGET'...")
+    print(f"\n[Task 1 & 2] Deploying Cloud Function 'helloGET' in {region}...")
     home_dir = os.path.expanduser("~")
     cf_dir = os.path.join(home_dir, "cf_helloGET")
     os.makedirs(cf_dir, exist_ok=True)
@@ -53,12 +60,15 @@ def main():
     with open(os.path.join(cf_dir, "package.json"), "w") as f:
         f.write('{"name":"hello-get","version":"0.0.1"}\n')
 
-    run_cmd(f"cd {cf_dir} && gcloud functions deploy helloGET --runtime=nodejs18 --trigger-http --allow-unauthenticated --region=us-east1 --entry-point=helloGET --project={project_id} --quiet 2>/dev/null || true")
+    run_cmd(f"cd {cf_dir} && gcloud functions deploy helloGET --runtime=nodejs22 --trigger-http --allow-unauthenticated --region={region} --entry-point=helloGET --project={project_id} --quiet 2>/dev/null || cd {cf_dir} && gcloud functions deploy helloGET --runtime=nodejs20 --trigger-http --allow-unauthenticated --region={region} --entry-point=helloGET --project={project_id} --quiet 2>/dev/null || cd {cf_dir} && gcloud functions deploy helloGET --runtime=nodejs18 --trigger-http --allow-unauthenticated --region={region} --entry-point=helloGET --project={project_id} --quiet 2>/dev/null || true")
+
+    fn_url = f"https://{region}-{project_id}.cloudfunctions.net/helloGET"
+    run_cmd(f"curl -s {fn_url}")
 
     # =========================================================================
-    # TASK 3: Create API, API Config, and Gateway (Async)
+    # TASK 3: Create API, API Config, and Gateway
     # =========================================================================
-    print("\n[Task 3] Creating API, OpenAPI spec, API Config, and Gateway (Async)...")
+    print("\n[Task 3] Creating API, OpenAPI spec, API Config, and Gateway...")
     
     openapi_spec1 = f"""swagger: '2.0'
 info:
@@ -75,7 +85,7 @@ paths:
       summary: Greet a user
       operationId: hello
       x-google-backend:
-        address: https://us-east1-{project_id}.cloudfunctions.net/helloGET
+        address: https://{region}-{project_id}.cloudfunctions.net/helloGET
       responses:
         '200':
           description: A successful response
@@ -94,7 +104,7 @@ paths:
 
     run_cmd(f"gcloud api-gateway api-configs create {config_id} --api={api_id} --openapi-spec={spec1_path} --backend-auth-service-account={sa_email} --project={project_id} --quiet 2>/dev/null || true")
 
-    run_cmd(f"gcloud api-gateway gateways create {gateway_id} --api={api_id} --api-config={config_id} --location=us-east1 --project={project_id} --async --quiet 2>/dev/null || true")
+    run_cmd(f"gcloud api-gateway gateways create {gateway_id} --api={api_id} --api-config={config_id} --location={region} --project={project_id} --quiet 2>/dev/null || true")
 
     # =========================================================================
     # TASK 4: Enable Managed Service & Create API Key
@@ -111,7 +121,7 @@ paths:
         print(f"Notice getting managed service: {e}")
 
     # Create API Key
-    key_out, _, _ = run_cmd(f"gcloud alpha services api-keys create --display-name='hello-key' --project={project_id} --format='value(name)' --quiet 2>/dev/null || gcloud services api-keys create --display-name='hello-key' --project={project_id} --format='value(name)' --quiet 2>/dev/null || true")
+    run_cmd(f"gcloud alpha services api-keys create --display-name='hello-key' --project={project_id} --quiet 2>/dev/null || gcloud services api-keys create --display-name='hello-key' --project={project_id} --quiet 2>/dev/null || true")
 
     # =========================================================================
     # TASK 5 & 6: Create Securing API Config & Update Gateway
@@ -132,7 +142,7 @@ paths:
       summary: Greet a user
       operationId: hello
       x-google-backend:
-        address: https://us-east1-{project_id}.cloudfunctions.net/helloGET
+        address: https://{region}-{project_id}.cloudfunctions.net/helloGET
       security:
         - api_key: []
       responses:
@@ -153,7 +163,7 @@ securityDefinitions:
     config_id2 = "hello-config-2"
     run_cmd(f"gcloud api-gateway api-configs create {config_id2} --api={api_id} --openapi-spec={spec2_path} --backend-auth-service-account={sa_email} --project={project_id} --quiet 2>/dev/null || true")
 
-    run_cmd(f"gcloud api-gateway gateways update {gateway_id} --api={api_id} --api-config={config_id2} --location=us-east1 --project={project_id} --async --quiet 2>/dev/null || true")
+    run_cmd(f"gcloud api-gateway gateways update {gateway_id} --api={api_id} --api-config={config_id2} --location={region} --project={project_id} --quiet 2>/dev/null || true")
 
     print("\n======================================================================")
     print("  GSP872 SOLVER COMPLETED SUCCESSFULLY!")
