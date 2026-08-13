@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 GSP526 - Privileged Access with IAM: Challenge Lab Master Solver
-Corrected REST API JSON payload schema for GCP Privileged Access Manager v1 API.
+Fixes privilegedAccess.gcpIamAccess resourceType and resource fields in PAM API payload.
 """
 
 import os
@@ -90,6 +90,8 @@ def main():
         "maxRequestDuration": "36000s",
         "privilegedAccess": {
             "gcpIamAccess": {
+                "resourceType": "cloudresourcemanager.googleapis.com/Project",
+                "resource": f"//cloudresourcemanager.googleapis.com/projects/{project_id}",
                 "roleBindings": [
                     {"role": "roles/compute.admin"}
                 ]
