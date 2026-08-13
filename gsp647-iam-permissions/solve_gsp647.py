@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """
 GSP647 - Configuring IAM Permissions with gcloud Master Solver
-Executes all IAM role bindings, gcloud configuration profiles, and VM instance setups
-both locally in Cloud Shell and inside the centos-clean VM instance via SSH.
+Ensures commands execute under default configuration (Owner credentials)
+and properly configures user2 profile without credential errors.
 """
 
 import os
@@ -16,16 +16,19 @@ def run_cmd(cmd):
     res = subprocess.run(cmd, shell=True, capture_output=True, text=True)
     if res.stdout:
         print(f"Stdout: {res.stdout.strip()[:300]}")
-    if res.returncode != 0 and res.stderr:
+    if res.stderr and "already exists" not in res.stderr.lower():
         print(f"Stderr: {res.stderr.strip()[:300]}")
     return res.stdout.strip(), res.stderr.strip(), res.returncode
 
 def main():
     print("======================================================================")
-    print("  GSP647 - Configuring IAM Permissions with gcloud Solver")
+    print("  GSP647 - Configuring IAM Permissions with gcloud Master Solver")
     print("======================================================================")
 
-    # 1. Discover Projects
+    # Force activate default configuration first
+    run_cmd("gcloud config configurations activate default --quiet 2>/dev/null || true")
+
+    # Discover Projects
     p_list_raw, _, _ = run_cmd("gcloud projects list --format='value(projectId)'")
     projects = [p.strip() for p in p_list_raw.splitlines() if p.strip()]
     print(f"Discovered Projects: {projects}")
@@ -40,18 +43,20 @@ def main():
     print(f"[*] Project 1: {project1}")
     print(f"[*] Project 2: {project2}")
 
+    user1 = "student-04-be1599954870@qwiklabs.net"
     user2 = "student-01-bd78082f8847@qwiklabs.net"
+
+    # Set default configuration properties cleanly
+    run_cmd(f"gcloud config set project {project1} --configuration=default --quiet")
+    run_cmd(f"gcloud config set compute/region us-east1 --configuration=default --quiet")
+    run_cmd(f"gcloud config set compute/zone us-east1-b --configuration=default --quiet")
 
     # =========================================================================
     # TASK 1: Create instance lab-1 in Project 1 & Update default zone
     # =========================================================================
     print("\n[Task 1] Setting region/zone & creating VM lab-1 in Project 1...")
-    run_cmd(f"gcloud config set compute/region us-east1 --project={project1} --quiet")
-    run_cmd(f"gcloud config set compute/zone us-east1-c --project={project1} --quiet")
     run_cmd(f"gcloud compute instances create lab-1 --zone=us-east1-c --machine-type=e2-standard-2 --project={project1} --quiet 2>/dev/null || true")
-    
-    # Update default zone to us-east1-b to satisfy 'Update the default zone'
-    run_cmd(f"gcloud config set compute/zone us-east1-b --project={project1} --quiet")
+    run_cmd(f"gcloud config set compute/zone us-east1-b --quiet")
 
     # =========================================================================
     # TASK 2 & 3: Configure gcloud user2 configuration & Add viewer policy binding
@@ -63,8 +68,11 @@ def main():
     run_cmd(f"gcloud config set compute/region us-east1 --configuration=user2 --quiet 2>/dev/null || true")
     run_cmd(f"gcloud config set compute/zone us-east1-b --configuration=user2 --quiet 2>/dev/null || true")
 
+    # Re-activate default configuration so all IAM/compute commands use Owner credentials
+    run_cmd(f"gcloud config configurations activate default --quiet")
+
     # Grant viewer role to user2 on project2
-    run_cmd(f"gcloud projects add-iam-policy-binding {project2} --member=user:{user2} --role=roles/viewer --quiet 2>/dev/null || true")
+    run_cmd(f"gcloud projects add-iam-policy-binding {project2} --member=user:{user2} --role=roles/viewer --quiet")
 
     # =========================================================================
     # TASK 4: Create devops custom role & bind roles to user2
@@ -75,8 +83,8 @@ def main():
     run_cmd(f"gcloud iam roles create devops --project={project2} --title='devops' --permissions='{devops_perms}' --stage=GA --quiet 2>/dev/null || true")
 
     print("\n[Task 4] Binding iam.serviceAccountUser and devops role to user2 on Project 2...")
-    run_cmd(f"gcloud projects add-iam-policy-binding {project2} --member=user:{user2} --role=roles/iam.serviceAccountUser --quiet 2>/dev/null || true")
-    run_cmd(f"gcloud projects add-iam-policy-binding {project2} --member=user:{user2} --role=projects/{project2}/roles/devops --quiet 2>/dev/null || true")
+    run_cmd(f"gcloud projects add-iam-policy-binding {project2} --member=user:{user2} --role=roles/iam.serviceAccountUser --quiet")
+    run_cmd(f"gcloud projects add-iam-policy-binding {project2} --member=user:{user2} --role=projects/{project2}/roles/devops --quiet")
 
     print("\n[Task 4] Creating VM lab-2 in Project 2...")
     run_cmd(f"gcloud compute instances create lab-2 --zone=us-east1-d --machine-type=e2-standard-2 --project={project2} --quiet 2>/dev/null || true")
@@ -91,8 +99,8 @@ def main():
     print(f"[*] SA Email: {sa_email}")
 
     print("\n[Task 5 & 6] Binding roles to SA on Project 2...")
-    run_cmd(f"gcloud projects add-iam-policy-binding {project2} --member=serviceAccount:{sa_email} --role=roles/iam.serviceAccountUser --quiet 2>/dev/null || true")
-    run_cmd(f"gcloud projects add-iam-policy-binding {project2} --member=serviceAccount:{sa_email} --role=roles/compute.instanceAdmin --quiet 2>/dev/null || true")
+    run_cmd(f"gcloud projects add-iam-policy-binding {project2} --member=serviceAccount:{sa_email} --role=roles/iam.serviceAccountUser --quiet")
+    run_cmd(f"gcloud projects add-iam-policy-binding {project2} --member=serviceAccount:{sa_email} --role=roles/compute.instanceAdmin --quiet")
 
     print("\n[Task 6] Creating VM lab-3 in Project 2 with devops Service Account...")
     run_cmd(f"gcloud compute instances create lab-3 --zone=us-east1-d --machine-type=e2-standard-2 --service-account={sa_email} --scopes='https://www.googleapis.com/auth/compute' --project={project2} --quiet 2>/dev/null || true")
@@ -118,6 +126,7 @@ gcloud config set account {user2} --configuration=user2 --quiet 2>/dev/null || t
 gcloud config set project {project2} --configuration=user2 --quiet 2>/dev/null || true
 gcloud config set compute/region us-east1 --configuration=user2 --quiet 2>/dev/null || true
 gcloud config set compute/zone us-east1-b --configuration=user2 --quiet 2>/dev/null || true
+gcloud config configurations activate default --quiet 2>/dev/null || true
 """
     with open("/tmp/vm_setup.sh", "w") as f:
         f.write(remote_script)
