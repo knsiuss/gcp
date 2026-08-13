@@ -32,6 +32,18 @@ echo -e "${CYAN}[*] Active Account: ${ACTIVE_ACCOUNT}${NC}"
 echo -e "${CYAN}[*] Project ID:     ${PROJECT_ID}${NC}"
 
 # =========================================================================
+# TASK 1, 2, 3: View permissions, metadata, and grantable roles (Read-only)
+# =========================================================================
+echo -e "\n${YELLOW}[Task 1] Listing testable permissions...${NC}"
+gcloud iam list-testable-permissions //cloudresourcemanager.googleapis.com/projects/$PROJECT_ID --format="value(name)" | head -10 || true
+
+echo -e "\n${YELLOW}[Task 2] Getting role metadata for roles/viewer...${NC}"
+gcloud iam roles describe roles/viewer || true
+
+echo -e "\n${YELLOW}[Task 3] Listing grantable roles...${NC}"
+gcloud iam list-grantable-roles //cloudresourcemanager.googleapis.com/projects/$PROJECT_ID --format="value(name)" | head -10 || true
+
+# =========================================================================
 # TASK 4: Create a custom role using YAML file & using flags
 # =========================================================================
 echo -e "\n${YELLOW}[Task 4] Creating 'editor' custom role via YAML file...${NC}"
