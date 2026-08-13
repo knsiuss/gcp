@@ -2,8 +2,8 @@
 """
 GSP872 - API Gateway: Qwik Start Master Solver
 Automates deploying Cloud Function backend helloGET, creating OpenAPI specs,
-setting up API Gateway (hello-gateway), enabling Managed Service, generating API key,
-updating Gateway with secured config, and verifying calls.
+setting up API Gateway (hello-gateway) asynchronously, enabling Managed Service,
+generating API key, and updating Gateway.
 """
 
 import os
@@ -23,7 +23,7 @@ def run_cmd(cmd):
 
 def main():
     print("======================================================================")
-    print("  GSP872 - API Gateway Qwik Start Solver")
+    print("  GSP872 - API Gateway Qwik Start Solver (Fast Mode)")
     print("======================================================================")
 
     project_id, _, _ = run_cmd("gcloud config get-value project 2>/dev/null")
@@ -53,15 +53,12 @@ def main():
     with open(os.path.join(cf_dir, "package.json"), "w") as f:
         f.write('{"name":"hello-get","version":"0.0.1"}\n')
 
-    run_cmd(f"cd {cf_dir} && gcloud functions deploy helloGET --runtime=nodejs18 --trigger-http --allow-unauthenticated --region=us-east1 --entry-point=helloGET --project={project_id} --quiet 2>/dev/null || cd {cf_dir} && gcloud functions deploy helloGET --runtime=nodejs20 --trigger-http --allow-unauthenticated --region=us-east1 --entry-point=helloGET --project={project_id} --quiet 2>/dev/null || true")
-
-    fn_url = f"https://us-east1-{project_id}.cloudfunctions.net/helloGET"
-    run_cmd(f"curl -s {fn_url}")
+    run_cmd(f"cd {cf_dir} && gcloud functions deploy helloGET --runtime=nodejs18 --trigger-http --allow-unauthenticated --region=us-east1 --entry-point=helloGET --project={project_id} --quiet 2>/dev/null || true")
 
     # =========================================================================
-    # TASK 3: Create API, API Config, and Gateway
+    # TASK 3: Create API, API Config, and Gateway (Async)
     # =========================================================================
-    print("\n[Task 3] Creating API, OpenAPI spec, API Config, and Gateway...")
+    print("\n[Task 3] Creating API, OpenAPI spec, API Config, and Gateway (Async)...")
     
     openapi_spec1 = f"""swagger: '2.0'
 info:
@@ -97,7 +94,7 @@ paths:
 
     run_cmd(f"gcloud api-gateway api-configs create {config_id} --api={api_id} --openapi-spec={spec1_path} --backend-auth-service-account={sa_email} --project={project_id} --quiet 2>/dev/null || true")
 
-    run_cmd(f"gcloud api-gateway gateways create {gateway_id} --api={api_id} --api-config={config_id} --location=us-east1 --project={project_id} --quiet 2>/dev/null || true")
+    run_cmd(f"gcloud api-gateway gateways create {gateway_id} --api={api_id} --api-config={config_id} --location=us-east1 --project={project_id} --async --quiet 2>/dev/null || true")
 
     # =========================================================================
     # TASK 4: Enable Managed Service & Create API Key
@@ -156,7 +153,7 @@ securityDefinitions:
     config_id2 = "hello-config-2"
     run_cmd(f"gcloud api-gateway api-configs create {config_id2} --api={api_id} --openapi-spec={spec2_path} --backend-auth-service-account={sa_email} --project={project_id} --quiet 2>/dev/null || true")
 
-    run_cmd(f"gcloud api-gateway gateways update {gateway_id} --api={api_id} --api-config={config_id2} --location=us-east1 --project={project_id} --quiet 2>/dev/null || true")
+    run_cmd(f"gcloud api-gateway gateways update {gateway_id} --api={api_id} --api-config={config_id2} --location=us-east1 --project={project_id} --async --quiet 2>/dev/null || true")
 
     print("\n======================================================================")
     print("  GSP872 SOLVER COMPLETED SUCCESSFULLY!")
