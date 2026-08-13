@@ -1,8 +1,7 @@
 #!/usr/bin/env python3
 """
 GSP526 - Privileged Access with IAM: Challenge Lab Master Solver
-Automates PAM API activation, Service Agent IAM role assignment, Entitlement creation & updates,
-Grant request, approval, revocation, and Entitlement deletion.
+Corrected REST API JSON payload schema for GCP Privileged Access Manager v1 API.
 """
 
 import os
@@ -38,7 +37,7 @@ def curl_api(url, method="GET", data=None, token=None):
 
 def main():
     print("======================================================================")
-    print("  GSP526 - Privileged Access with IAM: Challenge Lab Solver")
+    print("  GSP526 - Privileged Access with IAM: Challenge Lab Master Solver")
     print("======================================================================")
 
     # Discover Project ID & Number
@@ -76,14 +75,13 @@ def main():
     
     entitlement_body = {
         "eligibleUsers": [
-            {"principal": f"user:{primary_user}"}
+            {"principals": [f"user:{primary_user}"]}
         ],
         "approvalWorkflow": {
             "manualApprovals": {
-                "requireApproverJustification": False,
                 "steps": [
                     {
-                        "approvers": [{"principal": f"user:{secondary_user}"}],
+                        "approvers": [{"principals": [f"user:{secondary_user}"]}],
                         "approvalsNeeded": 1
                     }
                 ]
@@ -98,7 +96,7 @@ def main():
             }
         },
         "requesterJustificationConfig": {
-            "notRequired": {}
+            "notMandatory": {}
         }
     }
 
@@ -140,13 +138,10 @@ def main():
         url_approve = f"{base_url}/pam-entitlement/grants/{grant_id}:approve"
         res_approve = curl_api(url_approve, method="POST", data={"reason": "Approved for testing"})
         print(f"Approve Grant Response: {res_approve}")
-    else:
-        print("[-] Warning: Grant creation did not return grant name immediately.")
 
-    # =========================================================================
-    # TASK 5: Revoke Grant
-    # =========================================================================
-    if grant_id:
+        # =========================================================================
+        # TASK 5: Revoke Grant
+        # =========================================================================
         print("\n[Task 5] Revoking Grant...")
         time.sleep(5)
         url_revoke = f"{base_url}/pam-entitlement/grants/{grant_id}:revoke"
