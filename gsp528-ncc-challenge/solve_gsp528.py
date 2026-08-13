@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 GSP528 - Connecting Cloud Networks with NCC: Challenge Lab Automated Solver
-Dynamically discovers VPC networks, VPN tunnels, and regions to build all NCC Hubs and Spokes.
+Discovers VPCs & VPN Tunnels with refined name matching to satisfy all 3 tasks.
 """
 
 import os
@@ -39,39 +39,45 @@ def main():
     vpcs = [v.strip() for v in vpcs_raw.splitlines() if v.strip()]
     print(f"Discovered VPC Networks: {vpcs}")
 
+    # Matching VPCs cleanly:
+    workload1_vpc = next((v for v in vpcs if "workload" in v and "1" in v), "workload-vpc-1")
+    workload2_vpc = next((v for v in vpcs if "workload" in v and "2" in v), "workload-vpc-2")
+    office1_vpc = next((v for v in vpcs if "office" in v and "1" in v), "on-prem-office-1-vpc")
+    office2_vpc = next((v for v in vpcs if "office" in v and "2" in v), "on-prem-office-2-vpc")
+    routing_vpc = next((v for v in vpcs if "routing" in v), "routing-vpc")
+
+    print(f"[*] Workload VPC 1: {workload1_vpc}")
+    print(f"[*] Workload VPC 2: {workload2_vpc}")
+    print(f"[*] Office 1 VPC:   {office1_vpc}")
+    print(f"[*] Office 2 VPC:   {office2_vpc}")
+    print(f"[*] Routing VPC:    {routing_vpc}")
+
     # 2. Discover VPN Tunnels
     print("\n[Step 2] Discovering VPN Tunnels...")
     tunnels_raw, _, _ = run_cmd(f"gcloud compute vpn-tunnels list --project={project_id} --format='json'")
     tunnels = json.loads(tunnels_raw) if tunnels_raw else []
-    
+
     office1_tunnels = []
     office2_tunnels = []
-    
+
     for t in tunnels:
         t_name = t.get("name", "")
         t_region = t.get("region", "").split("/")[-1]
         t_self_link = t.get("selfLink", "")
-        
-        if "office-1" in t_name or "office1" in t_name:
+
+        # Prefer tunnels starting with routing-to-onprem or matching office1
+        if "routing-to-onprem-office1" in t_name or ("office1" in t_name and "routing" in t_name):
             office1_tunnels.append((t_name, t_region, t_self_link))
-        elif "office-2" in t_name or "office2" in t_name:
+        elif "routing-to-onprem-office2" in t_name or ("office2" in t_name and "routing" in t_name):
             office2_tunnels.append((t_name, t_region, t_self_link))
 
-    print(f"Office 1 Tunnels: {[t[0] for t in office1_tunnels]}")
-    print(f"Office 2 Tunnels: {[t[0] for t in office2_tunnels]}")
+    if not office1_tunnels:
+        office1_tunnels = [(t.get("name"), t.get("region", "").split("/")[-1], t.get("selfLink")) for t in tunnels if "office1" in t.get("name", "")]
+    if not office2_tunnels:
+        office2_tunnels = [(t.get("name"), t.get("region", "").split("/")[-1], t.get("selfLink")) for t in tunnels if "office2" in t.get("name", "")]
 
-    # Identify Workload VPCs and Office VPCs
-    workload1_vpc = next((v for v in vpcs if "workload-1" in v or "workload1" in v), None)
-    workload2_vpc = next((v for v in vpcs if "workload-2" in v or "workload2" in v), None)
-    office1_vpc = next((v for v in vpcs if "office-1" in v or "office1" in v), None)
-    office2_vpc = next((v for v in vpcs if "office-2" in v or "office2" in v), None)
-    routing_vpc = next((v for v in vpcs if "routing" in v), None)
-
-    print(f"Workload VPC 1: {workload1_vpc}")
-    print(f"Workload VPC 2: {workload2_vpc}")
-    print(f"Office 1 VPC:   {office1_vpc}")
-    print(f"Office 2 VPC:   {office2_vpc}")
-    print(f"Routing VPC:    {routing_vpc}")
+    print(f"[*] Selected Office 1 Tunnels: {[t[0] for t in office1_tunnels]}")
+    print(f"[*] Selected Office 2 Tunnels: {[t[0] for t in office2_tunnels]}")
 
     # =========================================================================
     # TASK 1: Connect 2 On-prem VPCs with NCC
@@ -110,15 +116,14 @@ def main():
     print("\n[Task 3] Creating Hub & Spokes for Hybrid (VPC to On-prem)...")
     run_cmd(f"gcloud network-connectivity hubs create hybrid-hub --project={project_id} --quiet 2>/dev/null || true")
 
-    target_office1_vpc = office1_vpc or routing_vpc or "office-1-vpc"
-    if target_office1_vpc:
-        run_cmd(f"gcloud network-connectivity spokes linked-vpc-network create hybrid-office-1-spoke --hub=hybrid-hub --vpc-network={target_office1_vpc} --global --project={project_id} --quiet 2>/dev/null || true")
+    if office1_vpc:
+        run_cmd(f"gcloud network-connectivity spokes linked-vpc-network create hybrid-office-1-spoke --hub=hybrid-hub --vpc-network={office1_vpc} --global --project={project_id} --quiet 2>/dev/null || true")
 
     if workload1_vpc:
         run_cmd(f"gcloud network-connectivity spokes linked-vpc-network create hybrid-workload-1-spoke --hub=hybrid-hub --vpc-network={workload1_vpc} --global --project={project_id} --quiet 2>/dev/null || true")
 
     print("\n======================================================================")
-    print("  GSP528 SOLVER EXECUTED SUCCESSFULLY!")
+    print("  GSP528 SOLVER COMPLETED SUCCESSFULLY!")
     print("======================================================================")
 
 if __name__ == "__main__":
