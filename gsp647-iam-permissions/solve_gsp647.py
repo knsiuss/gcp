@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """
 GSP647 - Configuring IAM Permissions with gcloud Master Solver
-Ensures commands execute under default configuration (Owner credentials)
-and properly configures user2 profile without credential errors.
+Directly manages gcloud configuration files to create user2 profile safely
+without disrupting active OAuth credentials, then executes all IAM bindings.
 """
 
 import os
@@ -25,15 +25,12 @@ def main():
     print("  GSP647 - Configuring IAM Permissions with gcloud Master Solver")
     print("======================================================================")
 
-    # Force activate default configuration first
-    run_cmd("gcloud config configurations activate default --quiet 2>/dev/null || true")
-
     # Discover Projects
     p_list_raw, _, _ = run_cmd("gcloud projects list --format='value(projectId)'")
     projects = [p.strip() for p in p_list_raw.splitlines() if p.strip()]
     print(f"Discovered Projects: {projects}")
 
-    current_p, _, _ = run_cmd("gcloud config get-value project")
+    current_p, _, _ = run_cmd("gcloud config get-value project 2>/dev/null")
     if not current_p:
         current_p = os.environ.get("DEVSHELL_PROJECT_ID", "")
 
@@ -46,10 +43,26 @@ def main():
     user1 = "student-04-be1599954870@qwiklabs.net"
     user2 = "student-01-bd78082f8847@qwiklabs.net"
 
-    # Set default configuration properties cleanly
-    run_cmd(f"gcloud config set project {project1} --configuration=default --quiet")
-    run_cmd(f"gcloud config set compute/region us-east1 --configuration=default --quiet")
-    run_cmd(f"gcloud config set compute/zone us-east1-b --configuration=default --quiet")
+    # Set compute region and zone for default/active profile
+    run_cmd(f"gcloud config set compute/region us-east1 --quiet")
+    run_cmd(f"gcloud config set compute/zone us-east1-b --quiet")
+
+    # Directly create user2 configuration file in ~/.config/gcloud/configurations/
+    config_dir = os.path.expanduser("~/.config/gcloud/configurations")
+    os.makedirs(config_dir, exist_ok=True)
+    user2_config_file = os.path.join(config_dir, "config_user2")
+
+    user2_config_content = f"""[core]
+account = {user2}
+project = {project2}
+
+[compute]
+region = us-east1
+zone = us-east1-b
+"""
+    with open(user2_config_file, "w") as f:
+        f.write(user2_config_content)
+    print(f"[*] Created user2 gcloud configuration file: {user2_config_file}")
 
     # =========================================================================
     # TASK 1: Create instance lab-1 in Project 1 & Update default zone
@@ -59,19 +72,9 @@ def main():
     run_cmd(f"gcloud config set compute/zone us-east1-b --quiet")
 
     # =========================================================================
-    # TASK 2 & 3: Configure gcloud user2 configuration & Add viewer policy binding
+    # TASK 2 & 3: Grant viewer role to user2 on Project 2
     # =========================================================================
-    print("\n[Task 2 & 3] Creating user2 configuration & binding viewer role on Project 2...")
-    run_cmd(f"gcloud config configurations create user2 --quiet 2>/dev/null || true")
-    run_cmd(f"gcloud config set account {user2} --configuration=user2 --quiet 2>/dev/null || true")
-    run_cmd(f"gcloud config set project {project2} --configuration=user2 --quiet 2>/dev/null || true")
-    run_cmd(f"gcloud config set compute/region us-east1 --configuration=user2 --quiet 2>/dev/null || true")
-    run_cmd(f"gcloud config set compute/zone us-east1-b --configuration=user2 --quiet 2>/dev/null || true")
-
-    # Re-activate default configuration so all IAM/compute commands use Owner credentials
-    run_cmd(f"gcloud config configurations activate default --quiet")
-
-    # Grant viewer role to user2 on project2
+    print("\n[Task 2 & 3] Binding viewer role to user2 on Project 2...")
     run_cmd(f"gcloud projects add-iam-policy-binding {project2} --member=user:{user2} --role=roles/viewer --quiet")
 
     # =========================================================================
@@ -119,14 +122,18 @@ def main():
     vm_zone = vm_zone_out.strip() if vm_zone_out else "us-east1-c"
 
     remote_script = f"""#!/bin/bash
-gcloud config set compute/region us-east1 --quiet
-gcloud config set compute/zone us-east1-b --quiet
-gcloud config configurations create user2 --quiet 2>/dev/null || true
-gcloud config set account {user2} --configuration=user2 --quiet 2>/dev/null || true
-gcloud config set project {project2} --configuration=user2 --quiet 2>/dev/null || true
-gcloud config set compute/region us-east1 --configuration=user2 --quiet 2>/dev/null || true
-gcloud config set compute/zone us-east1-b --configuration=user2 --quiet 2>/dev/null || true
-gcloud config configurations activate default --quiet 2>/dev/null || true
+mkdir -p ~/.config/gcloud/configurations
+cat <<'EOF' > ~/.config/gcloud/configurations/config_user2
+[core]
+account = {user2}
+project = {project2}
+
+[compute]
+region = us-east1
+zone = us-east1-b
+EOF
+gcloud config set compute/region us-east1 --quiet 2>/dev/null || true
+gcloud config set compute/zone us-east1-b --quiet 2>/dev/null || true
 """
     with open("/tmp/vm_setup.sh", "w") as f:
         f.write(remote_script)
