@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-08-24T15:33:32.655Z",
+  "fetchedAt": "2026-08-25T03:42:46.559Z",
   "badges": [
     {
       "title": "Analyze and Reason on Multimodal Data with Gemini",
@@ -75,7 +75,7 @@
       "title": "Build a Smart Cloud Application with Vibe Coding and MCP",
       "level": "intermediate",
       "duration": "1 hour 45 minutes",
-      "description": "Earn a skill badge by completing the Build a Smart Cloud Application with Vibe Coding and MCP course, where you will learn to leverage the power of Google's AI coding assistant and MCP servers",
+      "description": "Earn a skill badge by completing the Build a Smart Cloud Application with Vibe Coding and MCP course, where you will learn to leverage the power of Google's AI coding assistant and MCP servers. Explore other content in the Gemini Enterprise Agent Ready (GEAR) program.",
       "path": "/course_templates/1459?catalog_rank=%7B%22rank%22%3A34%2C%22num_filters%22%3A1%2C%22has_search%22%3Afalse%7D"
     },
     {
@@ -242,8 +242,8 @@
     {
       "title": "Deploy Multi-Agent Architectures",
       "level": "advanced",
-      "duration": "2 hours 15 minutes",
-      "description": "Complete the advanced Deploy Multi-Agent Architectures skill badge to demonstrate skills in the following: building multi-agent systems with ADK, connecting agents with the Agent-to-Agent (A2A) protocol, integrating external tools using the Model Context Protocol (MCP), and deploying a complete multi-agent solution to Agent Engine.",
+      "duration": "2 hours 45 minutes",
+      "description": "Complete the advanced Deploy Multi-Agent Architectures skill badge to demonstrate skills in the following: building multi-agent systems with ADK, connecting agents with the Agent-to-Agent (A2A) protocol, integrating external tools using the Model Context Protocol (MCP), and deploying a complete multi-agent solution to Agent Engine. Explore other content in the Gemini Enterprise Agent Ready (GEAR) program.",
       "path": "/course_templates/1445?catalog_rank=%7B%22rank%22%3A35%2C%22num_filters%22%3A1%2C%22has_search%22%3Afalse%7D"
     },
     {
@@ -257,7 +257,7 @@
       "title": "Develop AI-Powered Prototypes in Google AI Studio",
       "level": "introductory",
       "duration": "45 minutes",
-      "description": "Complete the introductory Develop AI-Powered Prototypes in Google AI Studio skill badge to demonstrate skills in the following: crafting effective prompts, leveraging multimodal capabilities for image and video analysis, prototyping functional AI-driven applications from templates and text prompts, and utilizing API keys to build and deploy custom AI solutions.",
+      "description": "Complete the introductory Develop AI-Powered Prototypes in Google AI Studio skill badge to demonstrate skills in the following: crafting effective prompts, leveraging multimodal capabilities for image and video analysis, prototyping functional AI-driven applications from templates and text prompts, and utilizing API keys to build and deploy custom AI solutions. Explore other content in the Gemini Enterprise Agent Ready (GEAR) program.",
       "path": "/course_templates/1426?catalog_rank=%7B%22rank%22%3A36%2C%22num_filters%22%3A1%2C%22has_search%22%3Afalse%7D"
     },
     {
@@ -270,8 +270,8 @@
     {
       "title": "Develop Gen AI Apps with Gemini and Streamlit",
       "level": "intermediate",
-      "duration": "1 hour",
-      "description": "Complete the intermediate Develop Gen AI Apps with Gemini and Streamlit skill badge course to demonstrate skills in text generation, applying function calls with the Python SDK and Gemini API, and deploying a Streamlit application with Cloud Run. In this course, you learn Gemini prompting, test Streamlit apps in Cloud Shell, and deploy them as Docker containers in Cloud Run.",
+      "duration": "45 minutes",
+      "description": "Complete the intermediate Develop Gen AI Apps with Gemini and Streamlit skill badge course to demonstrate skills in text generation, applying function calls with the Python SDK and Gemini API, and deploying a Streamlit application with Cloud Run. In this course, you learn Gemini prompting, test Streamlit apps in Cloud Shell, and deploy them as Docker containers in Cloud Run. Explore other content in the Gemini Enterprise Agent Ready (GEAR) program.",
       "path": "/course_templates/978?catalog_rank=%7B%22rank%22%3A51%2C%22num_filters%22%3A1%2C%22has_search%22%3Afalse%7D"
     },
     {
@@ -313,7 +313,7 @@
       "title": "Engineer AI Agents with Agent Development Kit (ADK)",
       "level": "intermediate",
       "duration": "1 hour 45 minutes",
-      "description": "Complete the intermediate Engineer AI Agents with Agent Development Kit (ADK) skill badge by completing this course to demonstrate skills in the following: formulating real-world language model research problems; building a simple tokenizer; preparing a dataset for training a transformer language model; running the training loop of a small language model.",
+      "description": "Complete the intermediate Engineer AI Agents with Agent Development Kit (ADK) skill badge by completing this course to demonstrate skills in the following: formulating real-world language model research problems; building a simple tokenizer; preparing a dataset for training a transformer language model; running the training loop of a small language model. Explore other content in the Gemini Enterprise Agent Ready (GEAR) program.",
       "path": "/course_templates/1596?catalog_rank=%7B%22rank%22%3A31%2C%22num_filters%22%3A1%2C%22has_search%22%3Afalse%7D"
     },
     {
@@ -341,7 +341,7 @@
       "title": "Explore Generative AI in Agent Platform",
       "level": "intermediate",
       "duration": "30 minutes",
-      "description": "Complete the intermediate Explore Generative AI in Agent Platform skill badge to demonstrate skills in text generation, image and video analysis for enhanced content creation, and applying function calling techniques within the Gemini API. Discover how to leverage sophisticated Gemini techniques, explore multimodal content generation, and expand the capabilities of your AI-powered projects.",
+      "description": "Complete the intermediate Explore Generative AI in Agent Platform skill badge to demonstrate skills in text generation, image and video analysis for enhanced content creation, and applying function calling techniques within the Gemini API. Discover how to leverage sophisticated Gemini techniques, explore multimodal content generation, and expand the capabilities of your AI-powered projects. Explore other content in the Gemini Enterprise Agent Ready (GEAR) program.",
       "path": "/course_templates/959?catalog_rank=%7B%22rank%22%3A11%2C%22num_filters%22%3A1%2C%22has_search%22%3Afalse%7D"
     },
     {
@@ -425,7 +425,7 @@
       "title": "Inspect Rich Documents with Gemini Multimodality and Multimodal RAG",
       "level": "intermediate",
       "duration": "45 minutes",
-      "description": "Complete the intermediate Inspect Rich Documents with Gemini Multimodality and Multimodal RAG skill badge course to demonstrate skills in the following: using multimodal prompts to extract information from text and visual data, generating a video description, and retrieving extra information beyond the video using multimodality with Gemini; building metadata of documents containing text and images, getting all relevant text chunks, and printing citations by using Multimodal Retrieval Augmented Generation (RAG) with Gemini.",
+      "description": "Complete the intermediate Inspect Rich Documents with Gemini Multimodality and Multimodal RAG skill badge course to demonstrate skills in the following: using multimodal prompts to extract information from text and visual data, generating a video description, and retrieving extra information beyond the video using multimodality with Gemini; building metadata of documents containing text and images, getting all relevant text chunks, and printing citations by using Multimodal Retrieval Augmented Generation (RAG) with Gemini. Explore other content in the Gemini Enterprise Agent Ready (GEAR) program.",
       "path": "/course_templates/981?catalog_rank=%7B%22rank%22%3A50%2C%22num_filters%22%3A1%2C%22has_search%22%3Afalse%7D"
     },
     {
@@ -551,7 +551,7 @@
       "title": "Prompt Design in Agent Platform",
       "level": "introductory",
       "duration": "1 hour",
-      "description": "Complete the introductory Prompt Design in Agent Platform skill badge to demonstrate skills in the following: prompt engineering, image analysis, and multimodal generative techniques, within Agent Platform. Discover how to craft effective prompts, guide generative AI output, and apply Gemini models to real-world marketing scenarios.",
+      "description": "Complete the introductory Prompt Design in Agent Platform skill badge to demonstrate skills in the following: prompt engineering, image analysis, and multimodal generative techniques, within Agent Platform. Discover how to craft effective prompts, guide generative AI output, and apply Gemini models to real-world marketing scenarios. Explore other content in the Gemini Enterprise Agent Ready (GEAR) program.",
       "path": "/course_templates/976?catalog_rank=%7B%22rank%22%3A10%2C%22num_filters%22%3A1%2C%22has_search%22%3Afalse%7D"
     },
     {
