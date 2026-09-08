@@ -6,8 +6,7 @@ const WEB_ROOT = fileURLToPath(new URL('..', import.meta.url))
 const OUT_DIR = join(WEB_ROOT, 'public')
 const OUT_FILE = join(OUT_DIR, 'silabus.json')
 
-const API =
-  'https://rsvp.googleapis.com/v1/engagements/arcade-fasilitator-id:viewSite?key=AIzaSyBGi84vGDxT8DNTFFqIEF78hpwrvoTE7uM'
+
 const UA =
   'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0 Safari/537.36'
 
